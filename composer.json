@@ -1,0 +1,29 @@
+{
+    "name": "eulogix/cool-gendoc-bundle",
+    "type": "library",
+    "description": "Provides facilities for mass document generation",
+    "keywords": [],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Pietro Baricco",
+            "email": "pietro@eulogix.com"
+        }
+    ],
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/eulogix/cool-core-bundle.git",
+            "reference": "origin/master"
+        }
+    ],
+    "require": {
+        "php": ">=7.0.0",
+        "eulogix/cool-core-bundle": "@dev"
+    },
+    "autoload": {
+        "psr-4": {
+            "Eulogix\\Cool\\": ""
+        }
+    }
+}
