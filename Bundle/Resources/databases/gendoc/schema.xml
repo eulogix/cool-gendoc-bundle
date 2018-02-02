@@ -11,7 +11,7 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="http://www.w3schools.com Cool/Resources/xsd/cool_database.xsd"
     baseClass="Eulogix\Cool\Lib\Database\Propel\CoolPropelObject"
-    namespace="Eulogix\Cool\Bundle\GendocBundle\Model"
+    namespace="Eulogix\Cool\Gendoc\Bundle\Model"
     schema="gendoc"
     defaultIdMethod="native"
     >

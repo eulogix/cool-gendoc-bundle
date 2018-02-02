@@ -1,6 +1,6 @@
 <?php
 
-namespace Eulogix\Cool\Bundle\GendocBundle\Model\map;
+namespace Eulogix\Cool\Gendoc\Bundle\Model\map;
 
 use \RelationMap;
 

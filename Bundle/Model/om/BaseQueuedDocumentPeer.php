@@ -1,6 +1,6 @@
 <?php
 
-namespace Eulogix\Cool\Bundle\GendocBundle\Model\om;
+namespace Eulogix\Cool\Gendoc\Bundle\Model\om;
 
 use \BasePeer;
 use \Criteria;
@@ -11,9 +11,9 @@ use \Propel;
 use \PropelException;
 use \PropelPDO;
 use Eulogix\Cool\Bundle\CoreBundle\Model\Core\AccountPeer;
-use Eulogix\Cool\Bundle\GendocBundle\Model\QueuedDocument;
-use Eulogix\Cool\Bundle\GendocBundle\Model\QueuedDocumentPeer;
-use Eulogix\Cool\Bundle\GendocBundle\Model\map\QueuedDocumentTableMap;
+use Eulogix\Cool\Gendoc\Bundle\Model\QueuedDocument;
+use Eulogix\Cool\Gendoc\Bundle\Model\QueuedDocumentPeer;
+use Eulogix\Cool\Gendoc\Bundle\Model\map\QueuedDocumentTableMap;
 
 abstract class BaseQueuedDocumentPeer
 {
@@ -1151,7 +1151,7 @@ abstract class BaseQueuedDocumentPeer
     {
       $dbMap = Propel::getDatabaseMap(BaseQueuedDocumentPeer::DATABASE_NAME);
       if (!$dbMap->hasTable(BaseQueuedDocumentPeer::TABLE_NAME)) {
-        $dbMap->addTableObject(new \Eulogix\Cool\Bundle\GendocBundle\Model\map\QueuedDocumentTableMap());
+        $dbMap->addTableObject(new \Eulogix\Cool\Gendoc\Bundle\Model\map\QueuedDocumentTableMap());
       }
     }
 

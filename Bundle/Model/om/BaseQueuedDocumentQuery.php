@@ -1,6 +1,6 @@
 <?php
 
-namespace Eulogix\Cool\Bundle\GendocBundle\Model\om;
+namespace Eulogix\Cool\Gendoc\Bundle\Model\om;
 
 use \Criteria;
 use \Exception;
@@ -13,9 +13,9 @@ use \PropelException;
 use \PropelObjectCollection;
 use \PropelPDO;
 use Eulogix\Cool\Bundle\CoreBundle\Model\Core\Account;
-use Eulogix\Cool\Bundle\GendocBundle\Model\QueuedDocument;
-use Eulogix\Cool\Bundle\GendocBundle\Model\QueuedDocumentPeer;
-use Eulogix\Cool\Bundle\GendocBundle\Model\QueuedDocumentQuery;
+use Eulogix\Cool\Gendoc\Bundle\Model\QueuedDocument;
+use Eulogix\Cool\Gendoc\Bundle\Model\QueuedDocumentPeer;
+use Eulogix\Cool\Gendoc\Bundle\Model\QueuedDocumentQuery;
 
 /**
  * @method QueuedDocumentQuery orderByQueuedDocumentId($order = Criteria::ASC) Order by the queued_document_id column

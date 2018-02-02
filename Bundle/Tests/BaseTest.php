@@ -9,10 +9,10 @@
  * file that was distributed with this source code.
 */
 
-namespace Eulogix\Cool\Bundle\GendocBundle\Tests;
+namespace Eulogix\Cool\Gendoc\Bundle\Tests;
 
 use Eulogix\Cool\Bundle\CoreBundle\Tests\Cases\baseTestCase;
-use Eulogix\Cool\Bundle\GendocBundle\Model\QueuedDocument;
+use Eulogix\Cool\Gendoc\Bundle\Model\QueuedDocument;
 use Eulogix\Cool\Lib\Cool;
 use Eulogix\Cool\Lib\File\FileRepositoryFactory;
 

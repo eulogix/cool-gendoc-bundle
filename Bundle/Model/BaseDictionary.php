@@ -1,6 +1,6 @@
 <?php
 
-namespace Eulogix\Cool\Bundle\GendocBundle\Model;
+namespace Eulogix\Cool\Gendoc\Bundle\Model;
 
 class BaseDictionary extends \Eulogix\Cool\Lib\Dictionary\Dictionary {
 
@@ -153,7 +153,7 @@ class BaseDictionary extends \Eulogix\Cool\Lib\Dictionary\Dictionary {
     }
     
     public function getNamespace() {
-        return  'Eulogix\Cool\Bundle\GendocBundle\Model';
+        return  'Eulogix\Cool\Gendoc\Bundle\Model';
     }
 
     public function getProjectDir() {

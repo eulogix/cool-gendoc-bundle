@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<database xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="cool_db" xsi:noNamespaceSchemaLocation="http://www.w3schools.com Cool/Resources/xsd/cool_database.xsd" baseClass="Eulogix\Cool\Lib\Database\Propel\CoolPropelObject" namespace="Eulogix\Cool\Bundle\GendocBundle\Model" schema="gendoc" defaultIdMethod="native">
+<database xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="cool_db" xsi:noNamespaceSchemaLocation="http://www.w3schools.com Cool/Resources/xsd/cool_database.xsd" baseClass="Eulogix\Cool\Lib\Database\Propel\CoolPropelObject" namespace="Eulogix\Cool\Gendoc\Bundle\Model" schema="gendoc" defaultIdMethod="native">
 
     <table name="queued_document">
         <column name="queued_document_id" type="INTEGER" primaryKey="true" autoIncrement="true"/>

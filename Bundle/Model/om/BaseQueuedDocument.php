@@ -1,6 +1,6 @@
 <?php
 
-namespace Eulogix\Cool\Bundle\GendocBundle\Model\om;
+namespace Eulogix\Cool\Gendoc\Bundle\Model\om;
 
 use \BasePeer;
 use \Criteria;
@@ -14,9 +14,9 @@ use \PropelException;
 use \PropelPDO;
 use Eulogix\Cool\Bundle\CoreBundle\Model\Core\Account;
 use Eulogix\Cool\Bundle\CoreBundle\Model\Core\AccountQuery;
-use Eulogix\Cool\Bundle\GendocBundle\Model\QueuedDocument;
-use Eulogix\Cool\Bundle\GendocBundle\Model\QueuedDocumentPeer;
-use Eulogix\Cool\Bundle\GendocBundle\Model\QueuedDocumentQuery;
+use Eulogix\Cool\Gendoc\Bundle\Model\QueuedDocument;
+use Eulogix\Cool\Gendoc\Bundle\Model\QueuedDocumentPeer;
+use Eulogix\Cool\Gendoc\Bundle\Model\QueuedDocumentQuery;
 use Eulogix\Cool\Lib\Cool;
 use Eulogix\Cool\Lib\Database\Propel\CoolPropelObject;
 

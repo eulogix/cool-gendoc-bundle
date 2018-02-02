@@ -1,8 +1,8 @@
 <?php
 
-namespace Eulogix\Cool\Bundle\GendocBundle\Model;
+namespace Eulogix\Cool\Gendoc\Bundle\Model;
 
-use Eulogix\Cool\Bundle\GendocBundle\Model\om\BaseQueuedDocument;
+use Eulogix\Cool\Gendoc\Bundle\Model\om\BaseQueuedDocument;
 use Eulogix\Cool\Lib\Cool;
 use Eulogix\Cool\Lib\File\FileRepositoryFactory;
 use Eulogix\Cool\Lib\File\FileRepositoryInterface;
