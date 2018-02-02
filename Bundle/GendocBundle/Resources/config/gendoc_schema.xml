@@ -35,11 +35,13 @@
 
         <column name="attributes" type="LONGVARCHAR" sqlType="json" description="custom attributes"/>
 
+        
+
         <behavior name="extendable"/>
         <behavior name="auditable">
             <parameter name="target" value="EulogixCoolGendocBundle/gendoc"/>
         </behavior>
-        
+
     </table>
 
 </database>

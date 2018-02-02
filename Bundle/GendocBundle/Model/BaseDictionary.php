@@ -20,6 +20,20 @@ class BaseDictionary extends \Eulogix\Cool\Lib\Dictionary\Dictionary {
         'rawname' => 'queued_document',
         'editable' => true,
       ),
+      'files' => 
+      array (
+        'category' => 
+        array (
+          0 => 
+          array (
+            'name' => 'CUSTOM_TEMPLATE',
+            'maxCount' => '1',
+          ),
+        ),
+        'attributes' => 
+        array (
+        ),
+      ),
       'columns' => 
       array (
         'queued_document_id' => 

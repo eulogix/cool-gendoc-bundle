@@ -7,6 +7,15 @@
                     "rawname": "queued_document",
                     "editable": true
                 },
+                "files": {
+                    "category": [
+                        {
+                            "name": "CUSTOM_TEMPLATE",
+                            "maxCount": "1"
+                        }
+                    ],
+                    "attributes": []
+                },
                 "columns": {
                     "queued_document_id": {
                         "attributes": []

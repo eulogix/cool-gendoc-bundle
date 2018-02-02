@@ -1,0 +1,8 @@
+#include this in the main app/config.yml
+
+services:
+
+        file.repository.gendoc_test_templates:
+                class: Eulogix\Cool\Lib\File\FileSystemFileRepository
+                arguments: ["@=service('kernel').locateResource('@EulogixCoolGendocBundle/Tests/app/Resources/templates')"]
+                shared: true

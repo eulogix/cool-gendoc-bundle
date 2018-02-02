@@ -57,6 +57,10 @@
         <column name="attributes" type="LONGVARCHAR" sqlType="json"
                 description="custom attributes"/>
 
+        <_files>
+            <category name="CUSTOM_TEMPLATE" maxCount="1"></category>
+        </_files>
+
         <behavior name="extendable"/>
         <behavior name="auditable">
             <parameter name="target" value="EulogixCoolGendocBundle/gendoc"></parameter>

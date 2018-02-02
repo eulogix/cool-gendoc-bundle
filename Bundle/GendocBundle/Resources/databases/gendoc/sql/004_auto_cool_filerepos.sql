@@ -47,3 +47,18 @@ CREATE INDEX files_idx_8 ON gendoc_files (uploaded_by_user);
 CREATE INDEX files_idx_9 ON gendoc_files (checksum_sha1);
 
         
+    CREATE FUNCTION queued_document_files_delete() RETURNS trigger
+        LANGUAGE plpgsql
+        AS $$
+    BEGIN
+        PERFORM format('DELETE FROM gendoc_files WHERE source_table=%1$L AND source_table_id=%2$L', 'queued_document', OLD.queued_document_id );
+        RETURN OLD;
+    END;
+    $$;
+
+    CREATE TRIGGER queued_document_files_delete_trg
+    AFTER DELETE ON queued_document
+        FOR EACH ROW
+        EXECUTE PROCEDURE queued_document_files_delete();
+
+    
