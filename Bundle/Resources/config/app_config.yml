@@ -3,4 +3,4 @@
 eulogix_cool_core:
     schemas:
         gendoc:
-            namespace:  "\\Eulogix\\Cool\\Bundle\\GendocBundle\\Model"
+            namespace:  "\\Eulogix\\Cool\\Gendoc\\Bundle\\Model"
