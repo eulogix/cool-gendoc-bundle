@@ -79,6 +79,6 @@
         "views": []
     },
     "database_name": "cool_db",
-    "namespace": "Eulogix\\Cool\\Bundle\\GendocBundle\\Model",
+    "namespace": "Eulogix\\Cool\\Gendoc\\Bundle\\Model",
     "package": null
 }

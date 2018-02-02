@@ -1,0 +1,4 @@
+gendoc_base:
+    resource: "@EulogixCoolGendocBundle/Controller/GendocController.php"
+    type:     annotation
+    prefix:   /cool/gendoc

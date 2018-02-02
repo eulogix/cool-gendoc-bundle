@@ -131,7 +131,7 @@ abstract class BaseQueuedDocumentQuery extends ModelCriteria
             $dbName = 'cool_db';
         }
         if (null === $modelName) {
-            $modelName = 'Eulogix\\Cool\\Bundle\\GendocBundle\\Model\\QueuedDocument';
+            $modelName = 'Eulogix\\Cool\\Gendoc\\Bundle\\Model\\QueuedDocument';
         }
         parent::__construct($dbName, $modelName, $modelAlias);
     }

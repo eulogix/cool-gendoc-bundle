@@ -15,7 +15,7 @@ use \RelationMap;
  * ORDER BY clause to know whether it needs to apply SQL to make the ORDER BY case-insensitive
  * (i.e. if it's a text column type).
  *
- * @package    propel.generator.vendor.eulogix.cool-gendoc-bundle.Bundle.GendocBundle.Model.map
+ * @package    propel.generator.vendor.eulogix.cool-gendoc-bundle.Bundle.Model.map
  */
 class QueuedDocumentTableMap extends \Eulogix\Cool\Lib\Database\Propel\CoolTableMap
 {
@@ -23,7 +23,7 @@ class QueuedDocumentTableMap extends \Eulogix\Cool\Lib\Database\Propel\CoolTable
     /**
      * The (dot-path) name of this class
      */
-    const CLASS_NAME = 'vendor.eulogix.cool-gendoc-bundle.Bundle.GendocBundle.Model.map.QueuedDocumentTableMap';
+    const CLASS_NAME = 'vendor.eulogix.cool-gendoc-bundle.Bundle.Model.map.QueuedDocumentTableMap';
 
     /**
      * Initialize the table attributes, columns and validators
@@ -37,8 +37,8 @@ class QueuedDocumentTableMap extends \Eulogix\Cool\Lib\Database\Propel\CoolTable
         // attributes
         $this->setName('gendoc.queued_document');
         $this->setPhpName('QueuedDocument');
-        $this->setClassname('Eulogix\\Cool\\Bundle\\GendocBundle\\Model\\QueuedDocument');
-        $this->setPackage('vendor.eulogix.cool-gendoc-bundle.Bundle.GendocBundle.Model');
+        $this->setClassname('Eulogix\\Cool\\Gendoc\\Bundle\\Model\\QueuedDocument');
+        $this->setPackage('vendor.eulogix.cool-gendoc-bundle.Bundle.Model');
         $this->setUseIdGenerator(true);
         $this->setPrimaryKeyMethodInfo('gendoc.queued_document_queued_document_id_seq');
         // columns

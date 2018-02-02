@@ -25,10 +25,10 @@ abstract class BaseQueuedDocumentPeer
     const TABLE_NAME = 'gendoc.queued_document';
 
     /** the related Propel class for this table */
-    const OM_CLASS = 'Eulogix\\Cool\\Bundle\\GendocBundle\\Model\\QueuedDocument';
+    const OM_CLASS = 'Eulogix\\Cool\\Gendoc\\Bundle\\Model\\QueuedDocument';
 
     /** the related TableMap class for this table */
-    const TM_CLASS = 'Eulogix\\Cool\\Bundle\\GendocBundle\\Model\\map\\QueuedDocumentTableMap';
+    const TM_CLASS = 'Eulogix\\Cool\\Gendoc\\Bundle\\Model\\map\\QueuedDocumentTableMap';
 
     /** The total number of columns. */
     const NUM_COLUMNS = 20;

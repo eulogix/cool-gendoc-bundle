@@ -15,10 +15,12 @@ namespace Eulogix\Cool\Gendoc\Bundle\CWidget\Manager;
  * @author Pietro Baricco <pietro@eulogix.com>
  */
 
+use Eulogix\Cool\Gendoc\Bundle\Model\QueuedDocument;
+use Eulogix\Cool\Gendoc\Bundle\Model\QueuedDocumentQuery;
 use Eulogix\Cool\Gendoc\Lib\DataSource\QueuedDocumentDataSource;
 use Eulogix\Cool\Lib\Lister\Lister;
 
-class AsyncJobLister extends Lister {
+class QueuedDocumentLister extends Lister {
 
     public function __construct($parameters = [])
     {
@@ -27,8 +29,31 @@ class AsyncJobLister extends Lister {
         $this->setDataSource( $ds->build() );
     }
 
+    public function build() {
+        parent::build();
+
+        //$this->addAction('new Expense')->setOnClick("widget.openNewRecordEditor();");
+
+        $this->setUpDefaultColumns();
+        return $this;
+    }
+
     public function getId() {
         return "COOL_GENDOC_QUEUED_DOCUMENT_LISTER";
+    }
+
+    protected function setUpDefaultColumns()
+    {
+        $this->setUpDefaultColumn('queued_document_id', 200, '{{ _value }} <A HREF="javascript:dijit.byId(\'{{_listerId}}\').mixAction(\'preview\', {queued_document_id: {{ _value }} })">Preview</A>');
+    }
+
+    public function onPreview() {
+        $id = $this->getRequest()->get('queued_document_id');
+        /**
+         * @var QueuedDocument $document
+         */
+        $document = QueuedDocumentQuery::create()->findPk($id);
+        $this->previewOrDownloadFile($document->render());
     }
 
 }

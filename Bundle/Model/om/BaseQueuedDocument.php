@@ -25,7 +25,7 @@ abstract class BaseQueuedDocument extends CoolPropelObject implements Persistent
     /**
      * Peer class name
      */
-    const PEER = 'Eulogix\\Cool\\Bundle\\GendocBundle\\Model\\QueuedDocumentPeer';
+    const PEER = 'Eulogix\\Cool\\Gendoc\\Bundle\\Model\\QueuedDocumentPeer';
 
     /**
      * The Peer class.
