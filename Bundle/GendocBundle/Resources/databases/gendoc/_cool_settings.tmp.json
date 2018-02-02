@@ -1,0 +1,75 @@
+{
+    "settings": {
+        "tables": {
+            "gendoc.queued_document": {
+                "attributes": {
+                    "schema": "gendoc",
+                    "rawname": "queued_document",
+                    "editable": true
+                },
+                "columns": {
+                    "queued_document_id": {
+                        "attributes": []
+                    },
+                    "type": {
+                        "attributes": [],
+                        "control": {
+                            "type": "select"
+                        },
+                        "lookup": {
+                            "type": "table",
+                            "domainName": "GENDOC_TYPE"
+                        }
+                    },
+                    "category": {
+                        "attributes": [],
+                        "control": {
+                            "type": "select"
+                        },
+                        "lookup": {
+                            "type": "table",
+                            "domainName": "GENDOC_CATEGORY"
+                        }
+                    },
+                    "description": {
+                        "attributes": []
+                    },
+                    "batch": {
+                        "attributes": []
+                    },
+                    "cluster": {
+                        "attributes": []
+                    },
+                    "template_repository_id": {
+                        "attributes": []
+                    },
+                    "master_template": {
+                        "attributes": []
+                    },
+                    "output_format": {
+                        "attributes": []
+                    },
+                    "output_name": {
+                        "attributes": []
+                    },
+                    "data": {
+                        "attributes": []
+                    },
+                    "overrideable_flag": {
+                        "attributes": []
+                    },
+                    "generation_date": {
+                        "attributes": []
+                    },
+                    "attributes": {
+                        "attributes": []
+                    }
+                }
+            }
+        },
+        "views": []
+    },
+    "database_name": "cool_db",
+    "namespace": "Eulogix\\Cool\\Bundle\\GendocBundle\\Model",
+    "package": null
+}

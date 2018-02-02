@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="cool_db" xsi:noNamespaceSchemaLocation="http://www.w3schools.com Cool/Resources/xsd/cool_database.xsd" baseClass="Eulogix\Cool\Lib\Database\Propel\CoolPropelObject" namespace="Eulogix\Cool\Bundle\GendocBundle\Model" schema="gendoc" defaultIdMethod="native">
+
+    <table name="queued_document">
+        <column name="queued_document_id" type="INTEGER" primaryKey="true" autoIncrement="true"/>
+
+        <column name="type" type="LONGVARCHAR">
+            
+            
+        </column>
+
+        <column name="category" type="LONGVARCHAR">
+            
+            
+        </column>
+
+        <column name="description" type="LONGVARCHAR"/>
+
+        <column name="batch" type="LONGVARCHAR" description="custom identifier used to group documents"/>
+
+        <column name="cluster" type="LONGVARCHAR" description="used to group documents by some attribute"/>
+
+        <column name="template_repository_id" type="LONGVARCHAR" description="the id of the repository in which the master template is stored"/>
+
+        <column name="master_template" type="LONGVARCHAR" description="the name of the master template, will be used if not overridden"/>
+
+        <column name="output_format" type="LONGVARCHAR"/>
+        <column name="output_name" type="LONGVARCHAR"/>
+
+        <column name="data" type="LONGVARCHAR" sqlType="json"/>
+
+        <column name="overrideable_flag" type="BOOLEAN" description="if set, the template will be editable/overrideable"/>
+
+        <column name="generation_date" type="TIMESTAMP" description="date in which the document will be finalized"/>
+
+        <column name="attributes" type="LONGVARCHAR" sqlType="json" description="custom attributes"/>
+
+        <behavior name="extendable"/>
+        <behavior name="auditable">
+            <parameter name="target" value="EulogixCoolGendocBundle/gendoc"/>
+        </behavior>
+        
+    </table>
+
+</database>

@@ -1,0 +1,6 @@
+#include this in the main app/config.yml
+
+eulogix_cool_core:
+    schemas:
+        gendoc:
+            namespace:  "\\Eulogix\\Cool\\Bundle\\GendocBundle\\Model"
