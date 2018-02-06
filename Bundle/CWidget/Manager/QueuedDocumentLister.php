@@ -1,5 +1,4 @@
 <?php
-
 /*
  * This file is part of the Eulogix\Cool package.
  *
@@ -29,22 +28,26 @@ class QueuedDocumentLister extends Lister {
         $this->setDataSource( $ds->build() );
     }
 
+    /**
+     * @inheritdoc
+     */
     public function build() {
         parent::build();
-
-        //$this->addAction('new Expense')->setOnClick("widget.openNewRecordEditor();");
-
         $this->setUpDefaultColumns();
         return $this;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function getId() {
         return "COOL_GENDOC_QUEUED_DOCUMENT_LISTER";
     }
 
     protected function setUpDefaultColumns()
     {
-        $this->setUpDefaultColumn('queued_document_id', 200, '{{ _value }} <A HREF="javascript:dijit.byId(\'{{_listerId}}\').mixAction(\'preview\', {queued_document_id: {{ _value }} })">Preview</A>');
+        $this->setUpDefaultColumn('queued_document_id', 200);
+        $this->setUpDefaultColumn('CUSTOM_TEMPLATE', 200, '<A HREF="javascript:dijit.byId(\'{{_listerId}}\').mixAction(\'editTemplate\', {queued_document_id: {{queued_document_id}} })">Edit</A>&nbsp;<A HREF="javascript:dijit.byId(\'{{_listerId}}\').mixAction(\'preview\', {queued_document_id: {{queued_document_id}} })">Preview</A>');
     }
 
     public function onPreview() {
@@ -54,6 +57,44 @@ class QueuedDocumentLister extends Lister {
          */
         $document = QueuedDocumentQuery::create()->findPk($id);
         $this->previewOrDownloadFile($document->render());
+    }
+
+    public function onEditTemplate() {
+        $id = $this->getRequest()->get('queued_document_id');
+
+        $frepoParameters = json_encode([
+            'repositoryId'  => 'schema',
+            'schema'        => 'gendoc',
+            'table'         => 'queued_document',
+            'pk'            => 'id'
+        ]);
+
+        /**
+         * @var QueuedDocument $document
+         */
+        $document = QueuedDocumentQuery::create()->findPk($id);
+
+        if(!$document->getCustomTemplateProxy()) {
+            $document->setCustomTemplate($document->getMasterTemplateProxy());
+        }
+
+        $filePath = $document->getCustomTemplateProxy()->getId();
+
+        $this->addCommandJs(<<<JS
+
+var d = COOL.getDialogManager().openWidgetDialog(
+    'EulogixCoolCoreBundle/Files/Editor/TwigTemplateEditorForm',
+    'Edit twig template',
+    {filePath: '{$filePath}', repositoryParameters: '{$frepoParameters}', hideCloseButton:true},
+    function(){
+        d.widget.mixAction('cleanup');
+        widget.reloadRows();
+    }
+);
+
+JS
+);
+
     }
 
 }
