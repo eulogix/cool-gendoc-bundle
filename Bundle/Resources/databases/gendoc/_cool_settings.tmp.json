@@ -1,6 +1,39 @@
 {
     "settings": {
         "tables": {
+            "gendoc.document_job": {
+                "attributes": {
+                    "schema": "gendoc",
+                    "rawname": "document_job",
+                    "editable": true
+                },
+                "columns": {
+                    "document_job_id": {
+                        "attributes": []
+                    },
+                    "name": {
+                        "attributes": []
+                    },
+                    "description": {
+                        "attributes": []
+                    },
+                    "data": {
+                        "attributes": []
+                    },
+                    "start_code_snippet_id": {
+                        "attributes": [],
+                        "control": {
+                            "type": "xhrpicker"
+                        }
+                    },
+                    "finish_code_snippet_id": {
+                        "attributes": [],
+                        "control": {
+                            "type": "xhrpicker"
+                        }
+                    }
+                }
+            },
             "gendoc.queued_document": {
                 "attributes": {
                     "schema": "gendoc",
@@ -12,6 +45,10 @@
                         {
                             "name": "CUSTOM_TEMPLATE",
                             "maxCount": "1"
+                        },
+                        {
+                            "name": "RENDERED_FILE",
+                            "maxCount": "1"
                         }
                     ],
                     "attributes": []
@@ -19,6 +56,19 @@
                 "columns": {
                     "queued_document_id": {
                         "attributes": []
+                    },
+                    "document_job_id": {
+                        "attributes": []
+                    },
+                    "status": {
+                        "attributes": [],
+                        "control": {
+                            "type": "select"
+                        },
+                        "lookup": {
+                            "type": "enum",
+                            "validValues": "PENDING,PROCESSING,GENERATED,ERROR"
+                        }
                     },
                     "type": {
                         "attributes": [],
@@ -39,6 +89,9 @@
                             "type": "table",
                             "domainName": "GENDOC_CATEGORY"
                         }
+                    },
+                    "error": {
+                        "attributes": []
                     },
                     "description": {
                         "attributes": []
@@ -72,6 +125,18 @@
                     },
                     "attributes": {
                         "attributes": []
+                    },
+                    "start_code_snippet_id": {
+                        "attributes": [],
+                        "control": {
+                            "type": "xhrpicker"
+                        }
+                    },
+                    "finish_code_snippet_id": {
+                        "attributes": [],
+                        "control": {
+                            "type": "xhrpicker"
+                        }
                     }
                 }
             }

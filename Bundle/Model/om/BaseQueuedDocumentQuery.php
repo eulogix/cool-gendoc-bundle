@@ -13,14 +13,19 @@ use \PropelException;
 use \PropelObjectCollection;
 use \PropelPDO;
 use Eulogix\Cool\Bundle\CoreBundle\Model\Core\Account;
+use Eulogix\Cool\Bundle\CoreBundle\Model\Core\CodeSnippet;
+use Eulogix\Cool\Gendoc\Bundle\Model\DocumentJob;
 use Eulogix\Cool\Gendoc\Bundle\Model\QueuedDocument;
 use Eulogix\Cool\Gendoc\Bundle\Model\QueuedDocumentPeer;
 use Eulogix\Cool\Gendoc\Bundle\Model\QueuedDocumentQuery;
 
 /**
  * @method QueuedDocumentQuery orderByQueuedDocumentId($order = Criteria::ASC) Order by the queued_document_id column
+ * @method QueuedDocumentQuery orderByDocumentJobId($order = Criteria::ASC) Order by the document_job_id column
+ * @method QueuedDocumentQuery orderByStatus($order = Criteria::ASC) Order by the status column
  * @method QueuedDocumentQuery orderByType($order = Criteria::ASC) Order by the type column
  * @method QueuedDocumentQuery orderByCategory($order = Criteria::ASC) Order by the category column
+ * @method QueuedDocumentQuery orderByError($order = Criteria::ASC) Order by the error column
  * @method QueuedDocumentQuery orderByDescription($order = Criteria::ASC) Order by the description column
  * @method QueuedDocumentQuery orderByBatch($order = Criteria::ASC) Order by the batch column
  * @method QueuedDocumentQuery orderByCluster($order = Criteria::ASC) Order by the cluster column
@@ -32,6 +37,8 @@ use Eulogix\Cool\Gendoc\Bundle\Model\QueuedDocumentQuery;
  * @method QueuedDocumentQuery orderByOverrideableFlag($order = Criteria::ASC) Order by the overrideable_flag column
  * @method QueuedDocumentQuery orderByGenerationDate($order = Criteria::ASC) Order by the generation_date column
  * @method QueuedDocumentQuery orderByAttributes($order = Criteria::ASC) Order by the attributes column
+ * @method QueuedDocumentQuery orderByStartCodeSnippetId($order = Criteria::ASC) Order by the start_code_snippet_id column
+ * @method QueuedDocumentQuery orderByFinishCodeSnippetId($order = Criteria::ASC) Order by the finish_code_snippet_id column
  * @method QueuedDocumentQuery orderByExt($order = Criteria::ASC) Order by the ext column
  * @method QueuedDocumentQuery orderByCreationDate($order = Criteria::ASC) Order by the creation_date column
  * @method QueuedDocumentQuery orderByUpdateDate($order = Criteria::ASC) Order by the update_date column
@@ -40,8 +47,11 @@ use Eulogix\Cool\Gendoc\Bundle\Model\QueuedDocumentQuery;
  * @method QueuedDocumentQuery orderByRecordVersion($order = Criteria::ASC) Order by the record_version column
  *
  * @method QueuedDocumentQuery groupByQueuedDocumentId() Group by the queued_document_id column
+ * @method QueuedDocumentQuery groupByDocumentJobId() Group by the document_job_id column
+ * @method QueuedDocumentQuery groupByStatus() Group by the status column
  * @method QueuedDocumentQuery groupByType() Group by the type column
  * @method QueuedDocumentQuery groupByCategory() Group by the category column
+ * @method QueuedDocumentQuery groupByError() Group by the error column
  * @method QueuedDocumentQuery groupByDescription() Group by the description column
  * @method QueuedDocumentQuery groupByBatch() Group by the batch column
  * @method QueuedDocumentQuery groupByCluster() Group by the cluster column
@@ -53,6 +63,8 @@ use Eulogix\Cool\Gendoc\Bundle\Model\QueuedDocumentQuery;
  * @method QueuedDocumentQuery groupByOverrideableFlag() Group by the overrideable_flag column
  * @method QueuedDocumentQuery groupByGenerationDate() Group by the generation_date column
  * @method QueuedDocumentQuery groupByAttributes() Group by the attributes column
+ * @method QueuedDocumentQuery groupByStartCodeSnippetId() Group by the start_code_snippet_id column
+ * @method QueuedDocumentQuery groupByFinishCodeSnippetId() Group by the finish_code_snippet_id column
  * @method QueuedDocumentQuery groupByExt() Group by the ext column
  * @method QueuedDocumentQuery groupByCreationDate() Group by the creation_date column
  * @method QueuedDocumentQuery groupByUpdateDate() Group by the update_date column
@@ -63,6 +75,18 @@ use Eulogix\Cool\Gendoc\Bundle\Model\QueuedDocumentQuery;
  * @method QueuedDocumentQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method QueuedDocumentQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
  * @method QueuedDocumentQuery innerJoin($relation) Adds a INNER JOIN clause to the query
+ *
+ * @method QueuedDocumentQuery leftJoinCodeSnippetRelatedByStartCodeSnippetId($relationAlias = null) Adds a LEFT JOIN clause to the query using the CodeSnippetRelatedByStartCodeSnippetId relation
+ * @method QueuedDocumentQuery rightJoinCodeSnippetRelatedByStartCodeSnippetId($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CodeSnippetRelatedByStartCodeSnippetId relation
+ * @method QueuedDocumentQuery innerJoinCodeSnippetRelatedByStartCodeSnippetId($relationAlias = null) Adds a INNER JOIN clause to the query using the CodeSnippetRelatedByStartCodeSnippetId relation
+ *
+ * @method QueuedDocumentQuery leftJoinCodeSnippetRelatedByFinishCodeSnippetId($relationAlias = null) Adds a LEFT JOIN clause to the query using the CodeSnippetRelatedByFinishCodeSnippetId relation
+ * @method QueuedDocumentQuery rightJoinCodeSnippetRelatedByFinishCodeSnippetId($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CodeSnippetRelatedByFinishCodeSnippetId relation
+ * @method QueuedDocumentQuery innerJoinCodeSnippetRelatedByFinishCodeSnippetId($relationAlias = null) Adds a INNER JOIN clause to the query using the CodeSnippetRelatedByFinishCodeSnippetId relation
+ *
+ * @method QueuedDocumentQuery leftJoinDocumentJob($relationAlias = null) Adds a LEFT JOIN clause to the query using the DocumentJob relation
+ * @method QueuedDocumentQuery rightJoinDocumentJob($relationAlias = null) Adds a RIGHT JOIN clause to the query using the DocumentJob relation
+ * @method QueuedDocumentQuery innerJoinDocumentJob($relationAlias = null) Adds a INNER JOIN clause to the query using the DocumentJob relation
  *
  * @method QueuedDocumentQuery leftJoinAccountRelatedByCreationUserId($relationAlias = null) Adds a LEFT JOIN clause to the query using the AccountRelatedByCreationUserId relation
  * @method QueuedDocumentQuery rightJoinAccountRelatedByCreationUserId($relationAlias = null) Adds a RIGHT JOIN clause to the query using the AccountRelatedByCreationUserId relation
@@ -75,8 +99,11 @@ use Eulogix\Cool\Gendoc\Bundle\Model\QueuedDocumentQuery;
  * @method QueuedDocument findOne(PropelPDO $con = null) Return the first QueuedDocument matching the query
  * @method QueuedDocument findOneOrCreate(PropelPDO $con = null) Return the first QueuedDocument matching the query, or a new QueuedDocument object populated from the query conditions when no match is found
  *
+ * @method QueuedDocument findOneByDocumentJobId(int $document_job_id) Return the first QueuedDocument filtered by the document_job_id column
+ * @method QueuedDocument findOneByStatus(string $status) Return the first QueuedDocument filtered by the status column
  * @method QueuedDocument findOneByType(string $type) Return the first QueuedDocument filtered by the type column
  * @method QueuedDocument findOneByCategory(string $category) Return the first QueuedDocument filtered by the category column
+ * @method QueuedDocument findOneByError(string $error) Return the first QueuedDocument filtered by the error column
  * @method QueuedDocument findOneByDescription(string $description) Return the first QueuedDocument filtered by the description column
  * @method QueuedDocument findOneByBatch(string $batch) Return the first QueuedDocument filtered by the batch column
  * @method QueuedDocument findOneByCluster(string $cluster) Return the first QueuedDocument filtered by the cluster column
@@ -88,6 +115,8 @@ use Eulogix\Cool\Gendoc\Bundle\Model\QueuedDocumentQuery;
  * @method QueuedDocument findOneByOverrideableFlag(boolean $overrideable_flag) Return the first QueuedDocument filtered by the overrideable_flag column
  * @method QueuedDocument findOneByGenerationDate(string $generation_date) Return the first QueuedDocument filtered by the generation_date column
  * @method QueuedDocument findOneByAttributes(string $attributes) Return the first QueuedDocument filtered by the attributes column
+ * @method QueuedDocument findOneByStartCodeSnippetId(int $start_code_snippet_id) Return the first QueuedDocument filtered by the start_code_snippet_id column
+ * @method QueuedDocument findOneByFinishCodeSnippetId(int $finish_code_snippet_id) Return the first QueuedDocument filtered by the finish_code_snippet_id column
  * @method QueuedDocument findOneByExt(string $ext) Return the first QueuedDocument filtered by the ext column
  * @method QueuedDocument findOneByCreationDate(string $creation_date) Return the first QueuedDocument filtered by the creation_date column
  * @method QueuedDocument findOneByUpdateDate(string $update_date) Return the first QueuedDocument filtered by the update_date column
@@ -96,8 +125,11 @@ use Eulogix\Cool\Gendoc\Bundle\Model\QueuedDocumentQuery;
  * @method QueuedDocument findOneByRecordVersion(int $record_version) Return the first QueuedDocument filtered by the record_version column
  *
  * @method array findByQueuedDocumentId(int $queued_document_id) Return QueuedDocument objects filtered by the queued_document_id column
+ * @method array findByDocumentJobId(int $document_job_id) Return QueuedDocument objects filtered by the document_job_id column
+ * @method array findByStatus(string $status) Return QueuedDocument objects filtered by the status column
  * @method array findByType(string $type) Return QueuedDocument objects filtered by the type column
  * @method array findByCategory(string $category) Return QueuedDocument objects filtered by the category column
+ * @method array findByError(string $error) Return QueuedDocument objects filtered by the error column
  * @method array findByDescription(string $description) Return QueuedDocument objects filtered by the description column
  * @method array findByBatch(string $batch) Return QueuedDocument objects filtered by the batch column
  * @method array findByCluster(string $cluster) Return QueuedDocument objects filtered by the cluster column
@@ -109,6 +141,8 @@ use Eulogix\Cool\Gendoc\Bundle\Model\QueuedDocumentQuery;
  * @method array findByOverrideableFlag(boolean $overrideable_flag) Return QueuedDocument objects filtered by the overrideable_flag column
  * @method array findByGenerationDate(string $generation_date) Return QueuedDocument objects filtered by the generation_date column
  * @method array findByAttributes(string $attributes) Return QueuedDocument objects filtered by the attributes column
+ * @method array findByStartCodeSnippetId(int $start_code_snippet_id) Return QueuedDocument objects filtered by the start_code_snippet_id column
+ * @method array findByFinishCodeSnippetId(int $finish_code_snippet_id) Return QueuedDocument objects filtered by the finish_code_snippet_id column
  * @method array findByExt(string $ext) Return QueuedDocument objects filtered by the ext column
  * @method array findByCreationDate(string $creation_date) Return QueuedDocument objects filtered by the creation_date column
  * @method array findByUpdateDate(string $update_date) Return QueuedDocument objects filtered by the update_date column
@@ -220,7 +254,7 @@ abstract class BaseQueuedDocumentQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT queued_document_id, type, category, description, batch, cluster, template_repository_id, master_template, output_format, output_name, data, overrideable_flag, generation_date, attributes, ext, creation_date, update_date, creation_user_id, update_user_id, record_version FROM gendoc.queued_document WHERE queued_document_id = :p0';
+        $sql = 'SELECT queued_document_id, document_job_id, status, type, category, error, description, batch, cluster, template_repository_id, master_template, output_format, output_name, data, overrideable_flag, generation_date, attributes, start_code_snippet_id, finish_code_snippet_id, ext, creation_date, update_date, creation_user_id, update_user_id, record_version FROM gendoc.queued_document WHERE queued_document_id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -376,6 +410,79 @@ abstract class BaseQueuedDocumentQuery extends ModelCriteria
     }
 
     /**
+     * Filter the query on the document_job_id column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByDocumentJobId(1234); // WHERE document_job_id = 1234
+     * $query->filterByDocumentJobId(array(12, 34)); // WHERE document_job_id IN (12, 34)
+     * $query->filterByDocumentJobId(array('min' => 12)); // WHERE document_job_id >= 12
+     * $query->filterByDocumentJobId(array('max' => 12)); // WHERE document_job_id <= 12
+     * </code>
+     *
+     * @see       filterByDocumentJob()
+     *
+     * @param     mixed $documentJobId The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return QueuedDocumentQuery The current query, for fluid interface
+     */
+    public function filterByDocumentJobId($documentJobId = null, $comparison = null)
+    {
+        if (is_array($documentJobId)) {
+            $useMinMax = false;
+            if (isset($documentJobId['min'])) {
+                $this->addUsingAlias(QueuedDocumentPeer::DOCUMENT_JOB_ID, $documentJobId['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($documentJobId['max'])) {
+                $this->addUsingAlias(QueuedDocumentPeer::DOCUMENT_JOB_ID, $documentJobId['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(QueuedDocumentPeer::DOCUMENT_JOB_ID, $documentJobId, $comparison);
+    }
+
+    /**
+     * Filter the query on the status column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByStatus('fooValue');   // WHERE status = 'fooValue'
+     * $query->filterByStatus('%fooValue%'); // WHERE status LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $status The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return QueuedDocumentQuery The current query, for fluid interface
+     */
+    public function filterByStatus($status = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($status)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $status)) {
+                $status = str_replace('*', '%', $status);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(QueuedDocumentPeer::STATUS, $status, $comparison);
+    }
+
+    /**
      * Filter the query on the type column
      *
      * Example usage:
@@ -431,6 +538,35 @@ abstract class BaseQueuedDocumentQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(QueuedDocumentPeer::CATEGORY, $category, $comparison);
+    }
+
+    /**
+     * Filter the query on the error column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByError('fooValue');   // WHERE error = 'fooValue'
+     * $query->filterByError('%fooValue%'); // WHERE error LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $error The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return QueuedDocumentQuery The current query, for fluid interface
+     */
+    public function filterByError($error = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($error)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $error)) {
+                $error = str_replace('*', '%', $error);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(QueuedDocumentPeer::ERROR, $error, $comparison);
     }
 
     /**
@@ -765,6 +901,94 @@ abstract class BaseQueuedDocumentQuery extends ModelCriteria
     }
 
     /**
+     * Filter the query on the start_code_snippet_id column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByStartCodeSnippetId(1234); // WHERE start_code_snippet_id = 1234
+     * $query->filterByStartCodeSnippetId(array(12, 34)); // WHERE start_code_snippet_id IN (12, 34)
+     * $query->filterByStartCodeSnippetId(array('min' => 12)); // WHERE start_code_snippet_id >= 12
+     * $query->filterByStartCodeSnippetId(array('max' => 12)); // WHERE start_code_snippet_id <= 12
+     * </code>
+     *
+     * @see       filterByCodeSnippetRelatedByStartCodeSnippetId()
+     *
+     * @param     mixed $startCodeSnippetId The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return QueuedDocumentQuery The current query, for fluid interface
+     */
+    public function filterByStartCodeSnippetId($startCodeSnippetId = null, $comparison = null)
+    {
+        if (is_array($startCodeSnippetId)) {
+            $useMinMax = false;
+            if (isset($startCodeSnippetId['min'])) {
+                $this->addUsingAlias(QueuedDocumentPeer::START_CODE_SNIPPET_ID, $startCodeSnippetId['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($startCodeSnippetId['max'])) {
+                $this->addUsingAlias(QueuedDocumentPeer::START_CODE_SNIPPET_ID, $startCodeSnippetId['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(QueuedDocumentPeer::START_CODE_SNIPPET_ID, $startCodeSnippetId, $comparison);
+    }
+
+    /**
+     * Filter the query on the finish_code_snippet_id column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByFinishCodeSnippetId(1234); // WHERE finish_code_snippet_id = 1234
+     * $query->filterByFinishCodeSnippetId(array(12, 34)); // WHERE finish_code_snippet_id IN (12, 34)
+     * $query->filterByFinishCodeSnippetId(array('min' => 12)); // WHERE finish_code_snippet_id >= 12
+     * $query->filterByFinishCodeSnippetId(array('max' => 12)); // WHERE finish_code_snippet_id <= 12
+     * </code>
+     *
+     * @see       filterByCodeSnippetRelatedByFinishCodeSnippetId()
+     *
+     * @param     mixed $finishCodeSnippetId The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return QueuedDocumentQuery The current query, for fluid interface
+     */
+    public function filterByFinishCodeSnippetId($finishCodeSnippetId = null, $comparison = null)
+    {
+        if (is_array($finishCodeSnippetId)) {
+            $useMinMax = false;
+            if (isset($finishCodeSnippetId['min'])) {
+                $this->addUsingAlias(QueuedDocumentPeer::FINISH_CODE_SNIPPET_ID, $finishCodeSnippetId['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($finishCodeSnippetId['max'])) {
+                $this->addUsingAlias(QueuedDocumentPeer::FINISH_CODE_SNIPPET_ID, $finishCodeSnippetId['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(QueuedDocumentPeer::FINISH_CODE_SNIPPET_ID, $finishCodeSnippetId, $comparison);
+    }
+
+    /**
      * Filter the query on the ext column
      *
      * Example usage:
@@ -1007,6 +1231,234 @@ abstract class BaseQueuedDocumentQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(QueuedDocumentPeer::RECORD_VERSION, $recordVersion, $comparison);
+    }
+
+    /**
+     * Filter the query by a related CodeSnippet object
+     *
+     * @param   CodeSnippet|PropelObjectCollection $codeSnippet The related object(s) to use as filter
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return                 QueuedDocumentQuery The current query, for fluid interface
+     * @throws PropelException - if the provided filter is invalid.
+     */
+    public function filterByCodeSnippetRelatedByStartCodeSnippetId($codeSnippet, $comparison = null)
+    {
+        if ($codeSnippet instanceof CodeSnippet) {
+            return $this
+                ->addUsingAlias(QueuedDocumentPeer::START_CODE_SNIPPET_ID, $codeSnippet->getCodeSnippetId(), $comparison);
+        } elseif ($codeSnippet instanceof PropelObjectCollection) {
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+
+            return $this
+                ->addUsingAlias(QueuedDocumentPeer::START_CODE_SNIPPET_ID, $codeSnippet->toKeyValue('PrimaryKey', 'CodeSnippetId'), $comparison);
+        } else {
+            throw new PropelException('filterByCodeSnippetRelatedByStartCodeSnippetId() only accepts arguments of type CodeSnippet or PropelCollection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the CodeSnippetRelatedByStartCodeSnippetId relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return QueuedDocumentQuery The current query, for fluid interface
+     */
+    public function joinCodeSnippetRelatedByStartCodeSnippetId($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('CodeSnippetRelatedByStartCodeSnippetId');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'CodeSnippetRelatedByStartCodeSnippetId');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the CodeSnippetRelatedByStartCodeSnippetId relation CodeSnippet object
+     *
+     * @see       useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return   \Eulogix\Cool\Bundle\CoreBundle\Model\Core\CodeSnippetQuery A secondary query class using the current class as primary query
+     */
+    public function useCodeSnippetRelatedByStartCodeSnippetIdQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        return $this
+            ->joinCodeSnippetRelatedByStartCodeSnippetId($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'CodeSnippetRelatedByStartCodeSnippetId', '\Eulogix\Cool\Bundle\CoreBundle\Model\Core\CodeSnippetQuery');
+    }
+
+    /**
+     * Filter the query by a related CodeSnippet object
+     *
+     * @param   CodeSnippet|PropelObjectCollection $codeSnippet The related object(s) to use as filter
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return                 QueuedDocumentQuery The current query, for fluid interface
+     * @throws PropelException - if the provided filter is invalid.
+     */
+    public function filterByCodeSnippetRelatedByFinishCodeSnippetId($codeSnippet, $comparison = null)
+    {
+        if ($codeSnippet instanceof CodeSnippet) {
+            return $this
+                ->addUsingAlias(QueuedDocumentPeer::FINISH_CODE_SNIPPET_ID, $codeSnippet->getCodeSnippetId(), $comparison);
+        } elseif ($codeSnippet instanceof PropelObjectCollection) {
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+
+            return $this
+                ->addUsingAlias(QueuedDocumentPeer::FINISH_CODE_SNIPPET_ID, $codeSnippet->toKeyValue('PrimaryKey', 'CodeSnippetId'), $comparison);
+        } else {
+            throw new PropelException('filterByCodeSnippetRelatedByFinishCodeSnippetId() only accepts arguments of type CodeSnippet or PropelCollection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the CodeSnippetRelatedByFinishCodeSnippetId relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return QueuedDocumentQuery The current query, for fluid interface
+     */
+    public function joinCodeSnippetRelatedByFinishCodeSnippetId($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('CodeSnippetRelatedByFinishCodeSnippetId');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'CodeSnippetRelatedByFinishCodeSnippetId');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the CodeSnippetRelatedByFinishCodeSnippetId relation CodeSnippet object
+     *
+     * @see       useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return   \Eulogix\Cool\Bundle\CoreBundle\Model\Core\CodeSnippetQuery A secondary query class using the current class as primary query
+     */
+    public function useCodeSnippetRelatedByFinishCodeSnippetIdQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        return $this
+            ->joinCodeSnippetRelatedByFinishCodeSnippetId($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'CodeSnippetRelatedByFinishCodeSnippetId', '\Eulogix\Cool\Bundle\CoreBundle\Model\Core\CodeSnippetQuery');
+    }
+
+    /**
+     * Filter the query by a related DocumentJob object
+     *
+     * @param   DocumentJob|PropelObjectCollection $documentJob The related object(s) to use as filter
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return                 QueuedDocumentQuery The current query, for fluid interface
+     * @throws PropelException - if the provided filter is invalid.
+     */
+    public function filterByDocumentJob($documentJob, $comparison = null)
+    {
+        if ($documentJob instanceof DocumentJob) {
+            return $this
+                ->addUsingAlias(QueuedDocumentPeer::DOCUMENT_JOB_ID, $documentJob->getDocumentJobId(), $comparison);
+        } elseif ($documentJob instanceof PropelObjectCollection) {
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+
+            return $this
+                ->addUsingAlias(QueuedDocumentPeer::DOCUMENT_JOB_ID, $documentJob->toKeyValue('PrimaryKey', 'DocumentJobId'), $comparison);
+        } else {
+            throw new PropelException('filterByDocumentJob() only accepts arguments of type DocumentJob or PropelCollection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the DocumentJob relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return QueuedDocumentQuery The current query, for fluid interface
+     */
+    public function joinDocumentJob($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('DocumentJob');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'DocumentJob');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the DocumentJob relation DocumentJob object
+     *
+     * @see       useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return   \Eulogix\Cool\Gendoc\Bundle\Model\DocumentJobQuery A secondary query class using the current class as primary query
+     */
+    public function useDocumentJobQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        return $this
+            ->joinDocumentJob($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'DocumentJob', '\Eulogix\Cool\Gendoc\Bundle\Model\DocumentJobQuery');
     }
 
     /**

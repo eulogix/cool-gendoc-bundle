@@ -1,7 +1,25 @@
-{%
-    include '@EulogixCoolCore/Lib/FullPageLister.html.twig' with {
-        'lister' : 'EulogixCoolGendoc/Manager/QueuedDocumentLister',
-        'listerId' : 'QueuedDocumentLister',
-        'listerParameters' : {}
-    }
-%}
+{% trans_default_domain "cool_gendoc" %}
+
+<div data-dojo-type="dijit/layout/TabContainer" data-dojo-props='nested:true' id="GendocTabContainer">
+
+    <div data-dojo-type="dojox/layout/ContentPane" data-dojo-props="scriptHasHooks:true" id="GendocJobsPane"
+         title="<img src=/bower_components/fugue/icons/database.png>&nbsp;{{ "jobs"|trans }}"
+         href="{{ path('GendocJobsManager', {}) }}"></div>
+
+    <div data-dojo-type="dojox/layout/ContentPane" data-dojo-props="scriptHasHooks:true" id="GendocDocumentsPane"
+         title="<img src=/bower_components/fugue/icons/documents-stack.png>&nbsp;{{ "documents_without_job"|trans }}"
+         href="{{ path('GendocQueuedDocumentsManager', {}) }}"></div>
+
+</div>
+
+<script>
+    dojo.connect(_container_, "onLoad", function(){
+        _container_.domNode.style.padding = '0';
+        _container_.getParent().resize();
+        setTimeout(function(){ _container_.getParent().resize() }, 500);
+    });
+
+    require([ 'dojo/parser' ], function (parser) {
+        parser.parse(_container_.domNode).then( function(){} );
+    });
+</script>

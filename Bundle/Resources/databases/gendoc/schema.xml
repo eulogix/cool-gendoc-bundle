@@ -16,8 +16,44 @@
     defaultIdMethod="native"
     >
 
+    <table name="document_job" _editable="true" >
+        <column name="document_job_id" type="INTEGER" primaryKey="true"  autoIncrement="true"/>
+
+        <column name="name" type="LONGVARCHAR"/>
+        <column name="description" type="LONGVARCHAR"/>
+        <column name="data" type="LONGVARCHAR" sqlType="json"/>
+
+        <column name="start_code_snippet_id" type="INTEGER">
+            <_control type="xhrpicker"></_control>
+        </column>
+
+        <column name="finish_code_snippet_id" type="INTEGER">
+            <_control type="xhrpicker"></_control>
+        </column>
+
+        <foreign-key foreignSchema="core" foreignTable="code_snippet" onDelete="restrict">
+            <reference local="start_code_snippet_id" foreign="code_snippet_id"/>
+        </foreign-key>
+
+        <foreign-key foreignSchema="core" foreignTable="code_snippet" onDelete="restrict">
+            <reference local="finish_code_snippet_id" foreign="code_snippet_id"/>
+        </foreign-key>
+
+        <behavior name="extendable"/>
+        <behavior name="auditable">
+            <parameter name="target" value="EulogixCoolGendocBundle/gendoc"></parameter>
+        </behavior>
+    </table>
+
     <table name="queued_document" _editable="true">
         <column name="queued_document_id" type="INTEGER" primaryKey="true"  autoIncrement="true"/>
+
+        <column name="document_job_id" type="INTEGER"/>
+
+        <column name="status" type="LONGVARCHAR" required="true" default="PENDING">
+            <_lookup type="enum" validValues="PENDING,PROCESSING,GENERATED,ERROR"></_lookup>
+            <_control type="select"></_control>
+        </column>
 
         <column name="type" type="LONGVARCHAR">
             <_lookup type="table" domainName="GENDOC_TYPE"/>
@@ -28,6 +64,8 @@
             <_lookup type="table" domainName="GENDOC_CATEGORY"/>
             <_control type="select"></_control>
         </column>
+
+        <column name="error" type="LONGVARCHAR"/>
 
         <column name="description" type="LONGVARCHAR"/>
 
@@ -57,8 +95,29 @@
         <column name="attributes" type="LONGVARCHAR" sqlType="json"
                 description="custom attributes"/>
 
+        <column name="start_code_snippet_id" type="INTEGER">
+            <_control type="xhrpicker"></_control>
+        </column>
+
+        <column name="finish_code_snippet_id" type="INTEGER">
+            <_control type="xhrpicker"></_control>
+        </column>
+
+        <foreign-key foreignSchema="core" foreignTable="code_snippet" onDelete="restrict">
+            <reference local="start_code_snippet_id" foreign="code_snippet_id"/>
+        </foreign-key>
+
+        <foreign-key foreignSchema="core" foreignTable="code_snippet" onDelete="restrict">
+            <reference local="finish_code_snippet_id" foreign="code_snippet_id"/>
+        </foreign-key>
+
+        <foreign-key foreignTable="document_job" onDelete="cascade">
+            <reference local="document_job_id" foreign="document_job_id"/>
+        </foreign-key>
+
         <_files>
             <category name="CUSTOM_TEMPLATE" maxCount="1"></category>
+            <category name="RENDERED_FILE" maxCount="1"></category>
         </_files>
 
         <behavior name="extendable"/>

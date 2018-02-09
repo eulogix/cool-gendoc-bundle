@@ -46,7 +46,7 @@ CREATE INDEX files_idx_7 ON gendoc_files (last_modification_date);
 CREATE INDEX files_idx_8 ON gendoc_files (uploaded_by_user);
 CREATE INDEX files_idx_9 ON gendoc_files (checksum_sha1);
 
-        
+                
     CREATE FUNCTION queued_document_files_delete() RETURNS trigger
         LANGUAGE plpgsql
         AS $$

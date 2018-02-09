@@ -32,4 +32,16 @@ class QueuedDocumentDataSource extends CD {
             ]
         ]);
     }
+
+    public function getSqlWhere($parameters = array(), $query=null) {
+        $ret = parent::getSqlWhere($parameters, $query);
+
+        if($jobId = $parameters['document_job_id'] ?? null) {
+            $ret['statement'].= " AND document_job_id = :document_job_id";
+            $ret['parameters'][":document_job_id"] = $jobId;
+        } else $ret['statement'].= " AND document_job_id IS NULL";
+
+        return $ret;
+    }
+
 }

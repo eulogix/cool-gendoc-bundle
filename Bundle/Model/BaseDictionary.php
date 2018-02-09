@@ -12,6 +12,62 @@ class BaseDictionary extends \Eulogix\Cool\Lib\Dictionary\Dictionary {
         return array (
   'tables' => 
   array (
+    'gendoc.document_job' => 
+    array (
+      'attributes' => 
+      array (
+        'schema' => 'gendoc',
+        'rawname' => 'document_job',
+        'editable' => true,
+      ),
+      'columns' => 
+      array (
+        'document_job_id' => 
+        array (
+          'attributes' => 
+          array (
+          ),
+        ),
+        'name' => 
+        array (
+          'attributes' => 
+          array (
+          ),
+        ),
+        'description' => 
+        array (
+          'attributes' => 
+          array (
+          ),
+        ),
+        'data' => 
+        array (
+          'attributes' => 
+          array (
+          ),
+        ),
+        'start_code_snippet_id' => 
+        array (
+          'attributes' => 
+          array (
+          ),
+          'control' => 
+          array (
+            'type' => 'xhrpicker',
+          ),
+        ),
+        'finish_code_snippet_id' => 
+        array (
+          'attributes' => 
+          array (
+          ),
+          'control' => 
+          array (
+            'type' => 'xhrpicker',
+          ),
+        ),
+      ),
+    ),
     'gendoc.queued_document' => 
     array (
       'attributes' => 
@@ -29,6 +85,11 @@ class BaseDictionary extends \Eulogix\Cool\Lib\Dictionary\Dictionary {
             'name' => 'CUSTOM_TEMPLATE',
             'maxCount' => '1',
           ),
+          1 => 
+          array (
+            'name' => 'RENDERED_FILE',
+            'maxCount' => '1',
+          ),
         ),
         'attributes' => 
         array (
@@ -40,6 +101,27 @@ class BaseDictionary extends \Eulogix\Cool\Lib\Dictionary\Dictionary {
         array (
           'attributes' => 
           array (
+          ),
+        ),
+        'document_job_id' => 
+        array (
+          'attributes' => 
+          array (
+          ),
+        ),
+        'status' => 
+        array (
+          'attributes' => 
+          array (
+          ),
+          'control' => 
+          array (
+            'type' => 'select',
+          ),
+          'lookup' => 
+          array (
+            'type' => 'enum',
+            'validValues' => 'PENDING,PROCESSING,GENERATED,ERROR',
           ),
         ),
         'type' => 
@@ -70,6 +152,12 @@ class BaseDictionary extends \Eulogix\Cool\Lib\Dictionary\Dictionary {
           array (
             'type' => 'table',
             'domainName' => 'GENDOC_CATEGORY',
+          ),
+        ),
+        'error' => 
+        array (
+          'attributes' => 
+          array (
           ),
         ),
         'description' => 
@@ -136,6 +224,26 @@ class BaseDictionary extends \Eulogix\Cool\Lib\Dictionary\Dictionary {
         array (
           'attributes' => 
           array (
+          ),
+        ),
+        'start_code_snippet_id' => 
+        array (
+          'attributes' => 
+          array (
+          ),
+          'control' => 
+          array (
+            'type' => 'xhrpicker',
+          ),
+        ),
+        'finish_code_snippet_id' => 
+        array (
+          'attributes' => 
+          array (
+          ),
+          'control' => 
+          array (
+            'type' => 'xhrpicker',
           ),
         ),
       ),

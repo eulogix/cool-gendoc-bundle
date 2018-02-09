@@ -1,4 +1,13 @@
-/* file generation UUID: 5a746a20400a0 */
+/* file generation UUID: 5a7c22ec0a61d */
+
+--
+-- Remove Auditing triggers for document_job
+--
+
+DROP FUNCTION if EXISTS document_job_audf() CASCADE;
+
+
+
 
 --
 -- Remove Auditing triggers for queued_document

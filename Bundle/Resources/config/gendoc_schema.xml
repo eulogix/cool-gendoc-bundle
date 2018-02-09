@@ -1,8 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <database xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="cool_db" xsi:noNamespaceSchemaLocation="http://www.w3schools.com Cool/Resources/xsd/cool_database.xsd" baseClass="Eulogix\Cool\Lib\Database\Propel\CoolPropelObject" namespace="Eulogix\Cool\Gendoc\Bundle\Model" schema="gendoc" defaultIdMethod="native">
 
+    <table name="document_job">
+        <column name="document_job_id" type="INTEGER" primaryKey="true" autoIncrement="true"/>
+
+        <column name="name" type="LONGVARCHAR"/>
+        <column name="description" type="LONGVARCHAR"/>
+        <column name="data" type="LONGVARCHAR" sqlType="json"/>
+
+        <column name="start_code_snippet_id" type="INTEGER">
+            
+        </column>
+
+        <column name="finish_code_snippet_id" type="INTEGER">
+            
+        </column>
+
+        <foreign-key foreignSchema="core" foreignTable="code_snippet" onDelete="restrict">
+            <reference local="start_code_snippet_id" foreign="code_snippet_id"/>
+        </foreign-key>
+
+        <foreign-key foreignSchema="core" foreignTable="code_snippet" onDelete="restrict">
+            <reference local="finish_code_snippet_id" foreign="code_snippet_id"/>
+        </foreign-key>
+
+        <behavior name="extendable"/>
+        <behavior name="auditable">
+            <parameter name="target" value="EulogixCoolGendocBundle/gendoc"/>
+        </behavior>
+    </table>
+
     <table name="queued_document">
         <column name="queued_document_id" type="INTEGER" primaryKey="true" autoIncrement="true"/>
+
+        <column name="document_job_id" type="INTEGER"/>
+
+        <column name="status" type="LONGVARCHAR" required="true" default="PENDING">
+            
+            
+        </column>
 
         <column name="type" type="LONGVARCHAR">
             
@@ -13,6 +49,8 @@
             
             
         </column>
+
+        <column name="error" type="LONGVARCHAR"/>
 
         <column name="description" type="LONGVARCHAR"/>
 
@@ -34,6 +72,26 @@
         <column name="generation_date" type="TIMESTAMP" description="date in which the document will be finalized"/>
 
         <column name="attributes" type="LONGVARCHAR" sqlType="json" description="custom attributes"/>
+
+        <column name="start_code_snippet_id" type="INTEGER">
+            
+        </column>
+
+        <column name="finish_code_snippet_id" type="INTEGER">
+            
+        </column>
+
+        <foreign-key foreignSchema="core" foreignTable="code_snippet" onDelete="restrict">
+            <reference local="start_code_snippet_id" foreign="code_snippet_id"/>
+        </foreign-key>
+
+        <foreign-key foreignSchema="core" foreignTable="code_snippet" onDelete="restrict">
+            <reference local="finish_code_snippet_id" foreign="code_snippet_id"/>
+        </foreign-key>
+
+        <foreign-key foreignTable="document_job" onDelete="cascade">
+            <reference local="document_job_id" foreign="document_job_id"/>
+        </foreign-key>
 
         
 

@@ -386,5 +386,8 @@ if(tablePkFields.length == 1) {
 
 $$ LANGUAGE plv8;
 -- set default audit strategy to none
+SELECT {{ auditSchema }}._set_audit_strategy_settings('gendoc.document_job', 'none', 0, FALSE);
+            
+-- set default audit strategy to none
 SELECT {{ auditSchema }}._set_audit_strategy_settings('gendoc.queued_document', 'none', 0, FALSE);
             

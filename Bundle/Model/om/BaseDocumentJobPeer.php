@@ -12,118 +12,79 @@ use \PropelException;
 use \PropelPDO;
 use Eulogix\Cool\Bundle\CoreBundle\Model\Core\AccountPeer;
 use Eulogix\Cool\Bundle\CoreBundle\Model\Core\CodeSnippetPeer;
+use Eulogix\Cool\Gendoc\Bundle\Model\DocumentJob;
 use Eulogix\Cool\Gendoc\Bundle\Model\DocumentJobPeer;
-use Eulogix\Cool\Gendoc\Bundle\Model\QueuedDocument;
 use Eulogix\Cool\Gendoc\Bundle\Model\QueuedDocumentPeer;
-use Eulogix\Cool\Gendoc\Bundle\Model\map\QueuedDocumentTableMap;
+use Eulogix\Cool\Gendoc\Bundle\Model\map\DocumentJobTableMap;
 
-abstract class BaseQueuedDocumentPeer
+abstract class BaseDocumentJobPeer
 {
 
     /** the default database name for this class */
     const DATABASE_NAME = 'cool_db';
 
     /** the table name for this class */
-    const TABLE_NAME = 'gendoc.queued_document';
+    const TABLE_NAME = 'gendoc.document_job';
 
     /** the related Propel class for this table */
-    const OM_CLASS = 'Eulogix\\Cool\\Gendoc\\Bundle\\Model\\QueuedDocument';
+    const OM_CLASS = 'Eulogix\\Cool\\Gendoc\\Bundle\\Model\\DocumentJob';
 
     /** the related TableMap class for this table */
-    const TM_CLASS = 'Eulogix\\Cool\\Gendoc\\Bundle\\Model\\map\\QueuedDocumentTableMap';
+    const TM_CLASS = 'Eulogix\\Cool\\Gendoc\\Bundle\\Model\\map\\DocumentJobTableMap';
 
     /** The total number of columns. */
-    const NUM_COLUMNS = 25;
+    const NUM_COLUMNS = 12;
 
     /** The number of lazy-loaded columns. */
     const NUM_LAZY_LOAD_COLUMNS = 0;
 
     /** The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS) */
-    const NUM_HYDRATE_COLUMNS = 25;
-
-    /** the column name for the queued_document_id field */
-    const QUEUED_DOCUMENT_ID = 'gendoc.queued_document.queued_document_id';
+    const NUM_HYDRATE_COLUMNS = 12;
 
     /** the column name for the document_job_id field */
-    const DOCUMENT_JOB_ID = 'gendoc.queued_document.document_job_id';
+    const DOCUMENT_JOB_ID = 'gendoc.document_job.document_job_id';
 
-    /** the column name for the status field */
-    const STATUS = 'gendoc.queued_document.status';
-
-    /** the column name for the type field */
-    const TYPE = 'gendoc.queued_document.type';
-
-    /** the column name for the category field */
-    const CATEGORY = 'gendoc.queued_document.category';
-
-    /** the column name for the error field */
-    const ERROR = 'gendoc.queued_document.error';
+    /** the column name for the name field */
+    const NAME = 'gendoc.document_job.name';
 
     /** the column name for the description field */
-    const DESCRIPTION = 'gendoc.queued_document.description';
-
-    /** the column name for the batch field */
-    const BATCH = 'gendoc.queued_document.batch';
-
-    /** the column name for the cluster field */
-    const CLUSTER = 'gendoc.queued_document.cluster';
-
-    /** the column name for the template_repository_id field */
-    const TEMPLATE_REPOSITORY_ID = 'gendoc.queued_document.template_repository_id';
-
-    /** the column name for the master_template field */
-    const MASTER_TEMPLATE = 'gendoc.queued_document.master_template';
-
-    /** the column name for the output_format field */
-    const OUTPUT_FORMAT = 'gendoc.queued_document.output_format';
-
-    /** the column name for the output_name field */
-    const OUTPUT_NAME = 'gendoc.queued_document.output_name';
+    const DESCRIPTION = 'gendoc.document_job.description';
 
     /** the column name for the data field */
-    const DATA = 'gendoc.queued_document.data';
-
-    /** the column name for the overrideable_flag field */
-    const OVERRIDEABLE_FLAG = 'gendoc.queued_document.overrideable_flag';
-
-    /** the column name for the generation_date field */
-    const GENERATION_DATE = 'gendoc.queued_document.generation_date';
-
-    /** the column name for the attributes field */
-    const ATTRIBUTES = 'gendoc.queued_document.attributes';
+    const DATA = 'gendoc.document_job.data';
 
     /** the column name for the start_code_snippet_id field */
-    const START_CODE_SNIPPET_ID = 'gendoc.queued_document.start_code_snippet_id';
+    const START_CODE_SNIPPET_ID = 'gendoc.document_job.start_code_snippet_id';
 
     /** the column name for the finish_code_snippet_id field */
-    const FINISH_CODE_SNIPPET_ID = 'gendoc.queued_document.finish_code_snippet_id';
+    const FINISH_CODE_SNIPPET_ID = 'gendoc.document_job.finish_code_snippet_id';
 
     /** the column name for the ext field */
-    const EXT = 'gendoc.queued_document.ext';
+    const EXT = 'gendoc.document_job.ext';
 
     /** the column name for the creation_date field */
-    const CREATION_DATE = 'gendoc.queued_document.creation_date';
+    const CREATION_DATE = 'gendoc.document_job.creation_date';
 
     /** the column name for the update_date field */
-    const UPDATE_DATE = 'gendoc.queued_document.update_date';
+    const UPDATE_DATE = 'gendoc.document_job.update_date';
 
     /** the column name for the creation_user_id field */
-    const CREATION_USER_ID = 'gendoc.queued_document.creation_user_id';
+    const CREATION_USER_ID = 'gendoc.document_job.creation_user_id';
 
     /** the column name for the update_user_id field */
-    const UPDATE_USER_ID = 'gendoc.queued_document.update_user_id';
+    const UPDATE_USER_ID = 'gendoc.document_job.update_user_id';
 
     /** the column name for the record_version field */
-    const RECORD_VERSION = 'gendoc.queued_document.record_version';
+    const RECORD_VERSION = 'gendoc.document_job.record_version';
 
     /** The default string format for model objects of the related table **/
     const DEFAULT_STRING_FORMAT = 'YAML';
 
     /**
-     * An identity map to hold any loaded instances of QueuedDocument objects.
+     * An identity map to hold any loaded instances of DocumentJob objects.
      * This must be public so that other peer classes can access this when hydrating from JOIN
      * queries.
-     * @var        array QueuedDocument[]
+     * @var        array DocumentJob[]
      */
     public static $instances = array();
 
@@ -132,30 +93,30 @@ abstract class BaseQueuedDocumentPeer
      * holds an array of fieldnames
      *
      * first dimension keys are the type constants
-     * e.g. QueuedDocumentPeer::$fieldNames[QueuedDocumentPeer::TYPE_PHPNAME][0] = 'Id'
+     * e.g. DocumentJobPeer::$fieldNames[DocumentJobPeer::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        BasePeer::TYPE_PHPNAME => array ('QueuedDocumentId', 'DocumentJobId', 'Status', 'Type', 'Category', 'Error', 'Description', 'Batch', 'Cluster', 'TemplateRepositoryId', 'MasterTemplate', 'OutputFormat', 'OutputName', 'Data', 'OverrideableFlag', 'GenerationDate', 'Attributes', 'StartCodeSnippetId', 'FinishCodeSnippetId', 'Ext', 'CreationDate', 'UpdateDate', 'CreationUserId', 'UpdateUserId', 'RecordVersion', ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('queuedDocumentId', 'documentJobId', 'status', 'type', 'category', 'error', 'description', 'batch', 'cluster', 'templateRepositoryId', 'masterTemplate', 'outputFormat', 'outputName', 'data', 'overrideableFlag', 'generationDate', 'attributes', 'startCodeSnippetId', 'finishCodeSnippetId', 'ext', 'creationDate', 'updateDate', 'creationUserId', 'updateUserId', 'recordVersion', ),
-        BasePeer::TYPE_COLNAME => array (QueuedDocumentPeer::QUEUED_DOCUMENT_ID, QueuedDocumentPeer::DOCUMENT_JOB_ID, QueuedDocumentPeer::STATUS, QueuedDocumentPeer::TYPE, QueuedDocumentPeer::CATEGORY, QueuedDocumentPeer::ERROR, QueuedDocumentPeer::DESCRIPTION, QueuedDocumentPeer::BATCH, QueuedDocumentPeer::CLUSTER, QueuedDocumentPeer::TEMPLATE_REPOSITORY_ID, QueuedDocumentPeer::MASTER_TEMPLATE, QueuedDocumentPeer::OUTPUT_FORMAT, QueuedDocumentPeer::OUTPUT_NAME, QueuedDocumentPeer::DATA, QueuedDocumentPeer::OVERRIDEABLE_FLAG, QueuedDocumentPeer::GENERATION_DATE, QueuedDocumentPeer::ATTRIBUTES, QueuedDocumentPeer::START_CODE_SNIPPET_ID, QueuedDocumentPeer::FINISH_CODE_SNIPPET_ID, QueuedDocumentPeer::EXT, QueuedDocumentPeer::CREATION_DATE, QueuedDocumentPeer::UPDATE_DATE, QueuedDocumentPeer::CREATION_USER_ID, QueuedDocumentPeer::UPDATE_USER_ID, QueuedDocumentPeer::RECORD_VERSION, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('QUEUED_DOCUMENT_ID', 'DOCUMENT_JOB_ID', 'STATUS', 'TYPE', 'CATEGORY', 'ERROR', 'DESCRIPTION', 'BATCH', 'CLUSTER', 'TEMPLATE_REPOSITORY_ID', 'MASTER_TEMPLATE', 'OUTPUT_FORMAT', 'OUTPUT_NAME', 'DATA', 'OVERRIDEABLE_FLAG', 'GENERATION_DATE', 'ATTRIBUTES', 'START_CODE_SNIPPET_ID', 'FINISH_CODE_SNIPPET_ID', 'EXT', 'CREATION_DATE', 'UPDATE_DATE', 'CREATION_USER_ID', 'UPDATE_USER_ID', 'RECORD_VERSION', ),
-        BasePeer::TYPE_FIELDNAME => array ('queued_document_id', 'document_job_id', 'status', 'type', 'category', 'error', 'description', 'batch', 'cluster', 'template_repository_id', 'master_template', 'output_format', 'output_name', 'data', 'overrideable_flag', 'generation_date', 'attributes', 'start_code_snippet_id', 'finish_code_snippet_id', 'ext', 'creation_date', 'update_date', 'creation_user_id', 'update_user_id', 'record_version', ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, )
+        BasePeer::TYPE_PHPNAME => array ('DocumentJobId', 'Name', 'Description', 'Data', 'StartCodeSnippetId', 'FinishCodeSnippetId', 'Ext', 'CreationDate', 'UpdateDate', 'CreationUserId', 'UpdateUserId', 'RecordVersion', ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('documentJobId', 'name', 'description', 'data', 'startCodeSnippetId', 'finishCodeSnippetId', 'ext', 'creationDate', 'updateDate', 'creationUserId', 'updateUserId', 'recordVersion', ),
+        BasePeer::TYPE_COLNAME => array (DocumentJobPeer::DOCUMENT_JOB_ID, DocumentJobPeer::NAME, DocumentJobPeer::DESCRIPTION, DocumentJobPeer::DATA, DocumentJobPeer::START_CODE_SNIPPET_ID, DocumentJobPeer::FINISH_CODE_SNIPPET_ID, DocumentJobPeer::EXT, DocumentJobPeer::CREATION_DATE, DocumentJobPeer::UPDATE_DATE, DocumentJobPeer::CREATION_USER_ID, DocumentJobPeer::UPDATE_USER_ID, DocumentJobPeer::RECORD_VERSION, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('DOCUMENT_JOB_ID', 'NAME', 'DESCRIPTION', 'DATA', 'START_CODE_SNIPPET_ID', 'FINISH_CODE_SNIPPET_ID', 'EXT', 'CREATION_DATE', 'UPDATE_DATE', 'CREATION_USER_ID', 'UPDATE_USER_ID', 'RECORD_VERSION', ),
+        BasePeer::TYPE_FIELDNAME => array ('document_job_id', 'name', 'description', 'data', 'start_code_snippet_id', 'finish_code_snippet_id', 'ext', 'creation_date', 'update_date', 'creation_user_id', 'update_user_id', 'record_version', ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, )
     );
 
     /**
      * holds an array of keys for quick access to the fieldnames array
      *
      * first dimension keys are the type constants
-     * e.g. QueuedDocumentPeer::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
+     * e.g. DocumentJobPeer::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        BasePeer::TYPE_PHPNAME => array ('QueuedDocumentId' => 0, 'DocumentJobId' => 1, 'Status' => 2, 'Type' => 3, 'Category' => 4, 'Error' => 5, 'Description' => 6, 'Batch' => 7, 'Cluster' => 8, 'TemplateRepositoryId' => 9, 'MasterTemplate' => 10, 'OutputFormat' => 11, 'OutputName' => 12, 'Data' => 13, 'OverrideableFlag' => 14, 'GenerationDate' => 15, 'Attributes' => 16, 'StartCodeSnippetId' => 17, 'FinishCodeSnippetId' => 18, 'Ext' => 19, 'CreationDate' => 20, 'UpdateDate' => 21, 'CreationUserId' => 22, 'UpdateUserId' => 23, 'RecordVersion' => 24, ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('queuedDocumentId' => 0, 'documentJobId' => 1, 'status' => 2, 'type' => 3, 'category' => 4, 'error' => 5, 'description' => 6, 'batch' => 7, 'cluster' => 8, 'templateRepositoryId' => 9, 'masterTemplate' => 10, 'outputFormat' => 11, 'outputName' => 12, 'data' => 13, 'overrideableFlag' => 14, 'generationDate' => 15, 'attributes' => 16, 'startCodeSnippetId' => 17, 'finishCodeSnippetId' => 18, 'ext' => 19, 'creationDate' => 20, 'updateDate' => 21, 'creationUserId' => 22, 'updateUserId' => 23, 'recordVersion' => 24, ),
-        BasePeer::TYPE_COLNAME => array (QueuedDocumentPeer::QUEUED_DOCUMENT_ID => 0, QueuedDocumentPeer::DOCUMENT_JOB_ID => 1, QueuedDocumentPeer::STATUS => 2, QueuedDocumentPeer::TYPE => 3, QueuedDocumentPeer::CATEGORY => 4, QueuedDocumentPeer::ERROR => 5, QueuedDocumentPeer::DESCRIPTION => 6, QueuedDocumentPeer::BATCH => 7, QueuedDocumentPeer::CLUSTER => 8, QueuedDocumentPeer::TEMPLATE_REPOSITORY_ID => 9, QueuedDocumentPeer::MASTER_TEMPLATE => 10, QueuedDocumentPeer::OUTPUT_FORMAT => 11, QueuedDocumentPeer::OUTPUT_NAME => 12, QueuedDocumentPeer::DATA => 13, QueuedDocumentPeer::OVERRIDEABLE_FLAG => 14, QueuedDocumentPeer::GENERATION_DATE => 15, QueuedDocumentPeer::ATTRIBUTES => 16, QueuedDocumentPeer::START_CODE_SNIPPET_ID => 17, QueuedDocumentPeer::FINISH_CODE_SNIPPET_ID => 18, QueuedDocumentPeer::EXT => 19, QueuedDocumentPeer::CREATION_DATE => 20, QueuedDocumentPeer::UPDATE_DATE => 21, QueuedDocumentPeer::CREATION_USER_ID => 22, QueuedDocumentPeer::UPDATE_USER_ID => 23, QueuedDocumentPeer::RECORD_VERSION => 24, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('QUEUED_DOCUMENT_ID' => 0, 'DOCUMENT_JOB_ID' => 1, 'STATUS' => 2, 'TYPE' => 3, 'CATEGORY' => 4, 'ERROR' => 5, 'DESCRIPTION' => 6, 'BATCH' => 7, 'CLUSTER' => 8, 'TEMPLATE_REPOSITORY_ID' => 9, 'MASTER_TEMPLATE' => 10, 'OUTPUT_FORMAT' => 11, 'OUTPUT_NAME' => 12, 'DATA' => 13, 'OVERRIDEABLE_FLAG' => 14, 'GENERATION_DATE' => 15, 'ATTRIBUTES' => 16, 'START_CODE_SNIPPET_ID' => 17, 'FINISH_CODE_SNIPPET_ID' => 18, 'EXT' => 19, 'CREATION_DATE' => 20, 'UPDATE_DATE' => 21, 'CREATION_USER_ID' => 22, 'UPDATE_USER_ID' => 23, 'RECORD_VERSION' => 24, ),
-        BasePeer::TYPE_FIELDNAME => array ('queued_document_id' => 0, 'document_job_id' => 1, 'status' => 2, 'type' => 3, 'category' => 4, 'error' => 5, 'description' => 6, 'batch' => 7, 'cluster' => 8, 'template_repository_id' => 9, 'master_template' => 10, 'output_format' => 11, 'output_name' => 12, 'data' => 13, 'overrideable_flag' => 14, 'generation_date' => 15, 'attributes' => 16, 'start_code_snippet_id' => 17, 'finish_code_snippet_id' => 18, 'ext' => 19, 'creation_date' => 20, 'update_date' => 21, 'creation_user_id' => 22, 'update_user_id' => 23, 'record_version' => 24, ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, )
+        BasePeer::TYPE_PHPNAME => array ('DocumentJobId' => 0, 'Name' => 1, 'Description' => 2, 'Data' => 3, 'StartCodeSnippetId' => 4, 'FinishCodeSnippetId' => 5, 'Ext' => 6, 'CreationDate' => 7, 'UpdateDate' => 8, 'CreationUserId' => 9, 'UpdateUserId' => 10, 'RecordVersion' => 11, ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('documentJobId' => 0, 'name' => 1, 'description' => 2, 'data' => 3, 'startCodeSnippetId' => 4, 'finishCodeSnippetId' => 5, 'ext' => 6, 'creationDate' => 7, 'updateDate' => 8, 'creationUserId' => 9, 'updateUserId' => 10, 'recordVersion' => 11, ),
+        BasePeer::TYPE_COLNAME => array (DocumentJobPeer::DOCUMENT_JOB_ID => 0, DocumentJobPeer::NAME => 1, DocumentJobPeer::DESCRIPTION => 2, DocumentJobPeer::DATA => 3, DocumentJobPeer::START_CODE_SNIPPET_ID => 4, DocumentJobPeer::FINISH_CODE_SNIPPET_ID => 5, DocumentJobPeer::EXT => 6, DocumentJobPeer::CREATION_DATE => 7, DocumentJobPeer::UPDATE_DATE => 8, DocumentJobPeer::CREATION_USER_ID => 9, DocumentJobPeer::UPDATE_USER_ID => 10, DocumentJobPeer::RECORD_VERSION => 11, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('DOCUMENT_JOB_ID' => 0, 'NAME' => 1, 'DESCRIPTION' => 2, 'DATA' => 3, 'START_CODE_SNIPPET_ID' => 4, 'FINISH_CODE_SNIPPET_ID' => 5, 'EXT' => 6, 'CREATION_DATE' => 7, 'UPDATE_DATE' => 8, 'CREATION_USER_ID' => 9, 'UPDATE_USER_ID' => 10, 'RECORD_VERSION' => 11, ),
+        BasePeer::TYPE_FIELDNAME => array ('document_job_id' => 0, 'name' => 1, 'description' => 2, 'data' => 3, 'start_code_snippet_id' => 4, 'finish_code_snippet_id' => 5, 'ext' => 6, 'creation_date' => 7, 'update_date' => 8, 'creation_user_id' => 9, 'update_user_id' => 10, 'record_version' => 11, ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, )
     );
 
     /**
@@ -170,10 +131,10 @@ abstract class BaseQueuedDocumentPeer
      */
     public static function translateFieldName($name, $fromType, $toType)
     {
-        $toNames = QueuedDocumentPeer::getFieldNames($toType);
-        $key = isset(QueuedDocumentPeer::$fieldKeys[$fromType][$name]) ? QueuedDocumentPeer::$fieldKeys[$fromType][$name] : null;
+        $toNames = DocumentJobPeer::getFieldNames($toType);
+        $key = isset(DocumentJobPeer::$fieldKeys[$fromType][$name]) ? DocumentJobPeer::$fieldKeys[$fromType][$name] : null;
         if ($key === null) {
-            throw new PropelException("'$name' could not be found in the field names of type '$fromType'. These are: " . print_r(QueuedDocumentPeer::$fieldKeys[$fromType], true));
+            throw new PropelException("'$name' could not be found in the field names of type '$fromType'. These are: " . print_r(DocumentJobPeer::$fieldKeys[$fromType], true));
         }
 
         return $toNames[$key];
@@ -190,11 +151,11 @@ abstract class BaseQueuedDocumentPeer
      */
     public static function getFieldNames($type = BasePeer::TYPE_PHPNAME)
     {
-        if (!array_key_exists($type, QueuedDocumentPeer::$fieldNames)) {
+        if (!array_key_exists($type, DocumentJobPeer::$fieldNames)) {
             throw new PropelException('Method getFieldNames() expects the parameter $type to be one of the class constants BasePeer::TYPE_PHPNAME, BasePeer::TYPE_STUDLYPHPNAME, BasePeer::TYPE_COLNAME, BasePeer::TYPE_FIELDNAME, BasePeer::TYPE_NUM. ' . $type . ' was given.');
         }
 
-        return QueuedDocumentPeer::$fieldNames[$type];
+        return DocumentJobPeer::$fieldNames[$type];
     }
 
     /**
@@ -206,12 +167,12 @@ abstract class BaseQueuedDocumentPeer
      *		$c->addJoin(TablePeer::alias("alias1", TablePeer::PRIMARY_KEY_COLUMN), TablePeer::PRIMARY_KEY_COLUMN);
      * </code>
      * @param      string $alias The alias for the current table.
-     * @param      string $column The column name for current table. (i.e. QueuedDocumentPeer::COLUMN_NAME).
+     * @param      string $column The column name for current table. (i.e. DocumentJobPeer::COLUMN_NAME).
      * @return string
      */
     public static function alias($alias, $column)
     {
-        return str_replace(QueuedDocumentPeer::TABLE_NAME.'.', $alias.'.', $column);
+        return str_replace(DocumentJobPeer::TABLE_NAME.'.', $alias.'.', $column);
     }
 
     /**
@@ -229,49 +190,23 @@ abstract class BaseQueuedDocumentPeer
     public static function addSelectColumns(Criteria $criteria, $alias = null)
     {
         if (null === $alias) {
-            $criteria->addSelectColumn(QueuedDocumentPeer::QUEUED_DOCUMENT_ID);
-            $criteria->addSelectColumn(QueuedDocumentPeer::DOCUMENT_JOB_ID);
-            $criteria->addSelectColumn(QueuedDocumentPeer::STATUS);
-            $criteria->addSelectColumn(QueuedDocumentPeer::TYPE);
-            $criteria->addSelectColumn(QueuedDocumentPeer::CATEGORY);
-            $criteria->addSelectColumn(QueuedDocumentPeer::ERROR);
-            $criteria->addSelectColumn(QueuedDocumentPeer::DESCRIPTION);
-            $criteria->addSelectColumn(QueuedDocumentPeer::BATCH);
-            $criteria->addSelectColumn(QueuedDocumentPeer::CLUSTER);
-            $criteria->addSelectColumn(QueuedDocumentPeer::TEMPLATE_REPOSITORY_ID);
-            $criteria->addSelectColumn(QueuedDocumentPeer::MASTER_TEMPLATE);
-            $criteria->addSelectColumn(QueuedDocumentPeer::OUTPUT_FORMAT);
-            $criteria->addSelectColumn(QueuedDocumentPeer::OUTPUT_NAME);
-            $criteria->addSelectColumn(QueuedDocumentPeer::DATA);
-            $criteria->addSelectColumn(QueuedDocumentPeer::OVERRIDEABLE_FLAG);
-            $criteria->addSelectColumn(QueuedDocumentPeer::GENERATION_DATE);
-            $criteria->addSelectColumn(QueuedDocumentPeer::ATTRIBUTES);
-            $criteria->addSelectColumn(QueuedDocumentPeer::START_CODE_SNIPPET_ID);
-            $criteria->addSelectColumn(QueuedDocumentPeer::FINISH_CODE_SNIPPET_ID);
-            $criteria->addSelectColumn(QueuedDocumentPeer::EXT);
-            $criteria->addSelectColumn(QueuedDocumentPeer::CREATION_DATE);
-            $criteria->addSelectColumn(QueuedDocumentPeer::UPDATE_DATE);
-            $criteria->addSelectColumn(QueuedDocumentPeer::CREATION_USER_ID);
-            $criteria->addSelectColumn(QueuedDocumentPeer::UPDATE_USER_ID);
-            $criteria->addSelectColumn(QueuedDocumentPeer::RECORD_VERSION);
+            $criteria->addSelectColumn(DocumentJobPeer::DOCUMENT_JOB_ID);
+            $criteria->addSelectColumn(DocumentJobPeer::NAME);
+            $criteria->addSelectColumn(DocumentJobPeer::DESCRIPTION);
+            $criteria->addSelectColumn(DocumentJobPeer::DATA);
+            $criteria->addSelectColumn(DocumentJobPeer::START_CODE_SNIPPET_ID);
+            $criteria->addSelectColumn(DocumentJobPeer::FINISH_CODE_SNIPPET_ID);
+            $criteria->addSelectColumn(DocumentJobPeer::EXT);
+            $criteria->addSelectColumn(DocumentJobPeer::CREATION_DATE);
+            $criteria->addSelectColumn(DocumentJobPeer::UPDATE_DATE);
+            $criteria->addSelectColumn(DocumentJobPeer::CREATION_USER_ID);
+            $criteria->addSelectColumn(DocumentJobPeer::UPDATE_USER_ID);
+            $criteria->addSelectColumn(DocumentJobPeer::RECORD_VERSION);
         } else {
-            $criteria->addSelectColumn($alias . '.queued_document_id');
             $criteria->addSelectColumn($alias . '.document_job_id');
-            $criteria->addSelectColumn($alias . '.status');
-            $criteria->addSelectColumn($alias . '.type');
-            $criteria->addSelectColumn($alias . '.category');
-            $criteria->addSelectColumn($alias . '.error');
+            $criteria->addSelectColumn($alias . '.name');
             $criteria->addSelectColumn($alias . '.description');
-            $criteria->addSelectColumn($alias . '.batch');
-            $criteria->addSelectColumn($alias . '.cluster');
-            $criteria->addSelectColumn($alias . '.template_repository_id');
-            $criteria->addSelectColumn($alias . '.master_template');
-            $criteria->addSelectColumn($alias . '.output_format');
-            $criteria->addSelectColumn($alias . '.output_name');
             $criteria->addSelectColumn($alias . '.data');
-            $criteria->addSelectColumn($alias . '.overrideable_flag');
-            $criteria->addSelectColumn($alias . '.generation_date');
-            $criteria->addSelectColumn($alias . '.attributes');
             $criteria->addSelectColumn($alias . '.start_code_snippet_id');
             $criteria->addSelectColumn($alias . '.finish_code_snippet_id');
             $criteria->addSelectColumn($alias . '.ext');
@@ -299,21 +234,21 @@ abstract class BaseQueuedDocumentPeer
         // We need to set the primary table name, since in the case that there are no WHERE columns
         // it will be impossible for the BasePeer::createSelectSql() method to determine which
         // tables go into the FROM clause.
-        $criteria->setPrimaryTableName(QueuedDocumentPeer::TABLE_NAME);
+        $criteria->setPrimaryTableName(DocumentJobPeer::TABLE_NAME);
 
         if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
             $criteria->setDistinct();
         }
 
         if (!$criteria->hasSelectClause()) {
-            QueuedDocumentPeer::addSelectColumns($criteria);
+            DocumentJobPeer::addSelectColumns($criteria);
         }
 
         $criteria->clearOrderByColumns(); // ORDER BY won't ever affect the count
-        $criteria->setDbName(QueuedDocumentPeer::DATABASE_NAME); // Set the correct dbName
+        $criteria->setDbName(DocumentJobPeer::DATABASE_NAME); // Set the correct dbName
 
         if ($con === null) {
-            $con = Propel::getConnection(QueuedDocumentPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+            $con = Propel::getConnection(DocumentJobPeer::DATABASE_NAME, Propel::CONNECTION_READ);
         }
         // BasePeer returns a PDOStatement
         $stmt = BasePeer::doCount($criteria, $con);
@@ -332,7 +267,7 @@ abstract class BaseQueuedDocumentPeer
      *
      * @param      Criteria $criteria object used to create the SELECT statement.
      * @param      PropelPDO $con
-     * @return QueuedDocument
+     * @return DocumentJob
      * @throws PropelException Any exceptions caught during processing will be
      *		 rethrown wrapped into a PropelException.
      */
@@ -340,7 +275,7 @@ abstract class BaseQueuedDocumentPeer
     {
         $critcopy = clone $criteria;
         $critcopy->setLimit(1);
-        $objects = QueuedDocumentPeer::doSelect($critcopy, $con);
+        $objects = DocumentJobPeer::doSelect($critcopy, $con);
         if ($objects) {
             return $objects[0];
         }
@@ -358,7 +293,7 @@ abstract class BaseQueuedDocumentPeer
      */
     public static function doSelect(Criteria $criteria, PropelPDO $con = null)
     {
-        return QueuedDocumentPeer::populateObjects(QueuedDocumentPeer::doSelectStmt($criteria, $con));
+        return DocumentJobPeer::populateObjects(DocumentJobPeer::doSelectStmt($criteria, $con));
     }
     /**
      * Prepares the Criteria object and uses the parent doSelect() method to execute a PDOStatement.
@@ -376,16 +311,16 @@ abstract class BaseQueuedDocumentPeer
     public static function doSelectStmt(Criteria $criteria, PropelPDO $con = null)
     {
         if ($con === null) {
-            $con = Propel::getConnection(QueuedDocumentPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+            $con = Propel::getConnection(DocumentJobPeer::DATABASE_NAME, Propel::CONNECTION_READ);
         }
 
         if (!$criteria->hasSelectClause()) {
             $criteria = clone $criteria;
-            QueuedDocumentPeer::addSelectColumns($criteria);
+            DocumentJobPeer::addSelectColumns($criteria);
         }
 
         // Set the correct dbName
-        $criteria->setDbName(QueuedDocumentPeer::DATABASE_NAME);
+        $criteria->setDbName(DocumentJobPeer::DATABASE_NAME);
 
         // BasePeer returns a PDOStatement
         return BasePeer::doSelect($criteria, $con);
@@ -399,16 +334,16 @@ abstract class BaseQueuedDocumentPeer
      * to the cache in order to ensure that the same objects are always returned by doSelect*()
      * and retrieveByPK*() calls.
      *
-     * @param QueuedDocument $obj A QueuedDocument object.
+     * @param DocumentJob $obj A DocumentJob object.
      * @param      string $key (optional) key to use for instance map (for performance boost if key was already calculated externally).
      */
     public static function addInstanceToPool($obj, $key = null)
     {
         if (Propel::isInstancePoolingEnabled()) {
             if ($key === null) {
-                $key = (string) $obj->getQueuedDocumentId();
+                $key = (string) $obj->getDocumentJobId();
             } // if key === null
-            QueuedDocumentPeer::$instances[$key] = $obj;
+            DocumentJobPeer::$instances[$key] = $obj;
         }
     }
 
@@ -420,7 +355,7 @@ abstract class BaseQueuedDocumentPeer
      * methods in your stub classes -- you may need to explicitly remove objects
      * from the cache in order to prevent returning objects that no longer exist.
      *
-     * @param      mixed $value A QueuedDocument object or a primary key value.
+     * @param      mixed $value A DocumentJob object or a primary key value.
      *
      * @return void
      * @throws PropelException - if the value is invalid.
@@ -428,17 +363,17 @@ abstract class BaseQueuedDocumentPeer
     public static function removeInstanceFromPool($value)
     {
         if (Propel::isInstancePoolingEnabled() && $value !== null) {
-            if (is_object($value) && $value instanceof QueuedDocument) {
-                $key = (string) $value->getQueuedDocumentId();
+            if (is_object($value) && $value instanceof DocumentJob) {
+                $key = (string) $value->getDocumentJobId();
             } elseif (is_scalar($value)) {
                 // assume we've been passed a primary key
                 $key = (string) $value;
             } else {
-                $e = new PropelException("Invalid value passed to removeInstanceFromPool().  Expected primary key or QueuedDocument object; got " . (is_object($value) ? get_class($value) . ' object.' : var_export($value,true)));
+                $e = new PropelException("Invalid value passed to removeInstanceFromPool().  Expected primary key or DocumentJob object; got " . (is_object($value) ? get_class($value) . ' object.' : var_export($value,true)));
                 throw $e;
             }
 
-            unset(QueuedDocumentPeer::$instances[$key]);
+            unset(DocumentJobPeer::$instances[$key]);
         }
     } // removeInstanceFromPool()
 
@@ -449,14 +384,14 @@ abstract class BaseQueuedDocumentPeer
      * a multi-column primary key, a serialize()d version of the primary key will be returned.
      *
      * @param      string $key The key (@see getPrimaryKeyHash()) for this instance.
-     * @return QueuedDocument Found object or null if 1) no instance exists for specified key or 2) instance pooling has been disabled.
+     * @return DocumentJob Found object or null if 1) no instance exists for specified key or 2) instance pooling has been disabled.
      * @see        getPrimaryKeyHash()
      */
     public static function getInstanceFromPool($key)
     {
         if (Propel::isInstancePoolingEnabled()) {
-            if (isset(QueuedDocumentPeer::$instances[$key])) {
-                return QueuedDocumentPeer::$instances[$key];
+            if (isset(DocumentJobPeer::$instances[$key])) {
+                return DocumentJobPeer::$instances[$key];
             }
         }
 
@@ -471,19 +406,22 @@ abstract class BaseQueuedDocumentPeer
     public static function clearInstancePool($and_clear_all_references = false)
     {
       if ($and_clear_all_references) {
-        foreach (QueuedDocumentPeer::$instances as $instance) {
+        foreach (DocumentJobPeer::$instances as $instance) {
           $instance->clearAllReferences(true);
         }
       }
-        QueuedDocumentPeer::$instances = array();
+        DocumentJobPeer::$instances = array();
     }
 
     /**
-     * Method to invalidate the instance pool of all tables related to gendoc.queued_document
+     * Method to invalidate the instance pool of all tables related to gendoc.document_job
      * by a foreign key with ON DELETE CASCADE
      */
     public static function clearRelatedInstancePool()
     {
+        // Invalidate objects in QueuedDocumentPeer instance pool,
+        // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
+        QueuedDocumentPeer::clearInstancePool();
     }
 
     /**
@@ -533,11 +471,11 @@ abstract class BaseQueuedDocumentPeer
         $results = array();
 
         // set the class once to avoid overhead in the loop
-        $cls = QueuedDocumentPeer::getOMClass();
+        $cls = DocumentJobPeer::getOMClass();
         // populate the object(s)
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-            $key = QueuedDocumentPeer::getPrimaryKeyHashFromRow($row, 0);
-            if (null !== ($obj = QueuedDocumentPeer::getInstanceFromPool($key))) {
+            $key = DocumentJobPeer::getPrimaryKeyHashFromRow($row, 0);
+            if (null !== ($obj = DocumentJobPeer::getInstanceFromPool($key))) {
                 // We no longer rehydrate the object, since this can cause data loss.
                 // See http://www.propelorm.org/ticket/509
                 // $obj->hydrate($row, 0, true); // rehydrate
@@ -546,7 +484,7 @@ abstract class BaseQueuedDocumentPeer
                 $obj = new $cls();
                 $obj->hydrate($row);
                 $results[] = $obj;
-                QueuedDocumentPeer::addInstanceToPool($obj, $key);
+                DocumentJobPeer::addInstanceToPool($obj, $key);
             } // if key exists
         }
         $stmt->closeCursor();
@@ -560,21 +498,21 @@ abstract class BaseQueuedDocumentPeer
      * @param      int $startcol The 0-based offset for reading from the resultset row.
      * @throws PropelException Any exceptions caught during processing will be
      *		 rethrown wrapped into a PropelException.
-     * @return array (QueuedDocument object, last column rank)
+     * @return array (DocumentJob object, last column rank)
      */
     public static function populateObject($row, $startcol = 0)
     {
-        $key = QueuedDocumentPeer::getPrimaryKeyHashFromRow($row, $startcol);
-        if (null !== ($obj = QueuedDocumentPeer::getInstanceFromPool($key))) {
+        $key = DocumentJobPeer::getPrimaryKeyHashFromRow($row, $startcol);
+        if (null !== ($obj = DocumentJobPeer::getInstanceFromPool($key))) {
             // We no longer rehydrate the object, since this can cause data loss.
             // See http://www.propelorm.org/ticket/509
             // $obj->hydrate($row, $startcol, true); // rehydrate
-            $col = $startcol + QueuedDocumentPeer::NUM_HYDRATE_COLUMNS;
+            $col = $startcol + DocumentJobPeer::NUM_HYDRATE_COLUMNS;
         } else {
-            $cls = QueuedDocumentPeer::OM_CLASS;
+            $cls = DocumentJobPeer::OM_CLASS;
             $obj = new $cls();
             $col = $obj->hydrate($row, $startcol);
-            QueuedDocumentPeer::addInstanceToPool($obj, $key);
+            DocumentJobPeer::addInstanceToPool($obj, $key);
         }
 
         return array($obj, $col);
@@ -598,26 +536,26 @@ abstract class BaseQueuedDocumentPeer
         // We need to set the primary table name, since in the case that there are no WHERE columns
         // it will be impossible for the BasePeer::createSelectSql() method to determine which
         // tables go into the FROM clause.
-        $criteria->setPrimaryTableName(QueuedDocumentPeer::TABLE_NAME);
+        $criteria->setPrimaryTableName(DocumentJobPeer::TABLE_NAME);
 
         if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
             $criteria->setDistinct();
         }
 
         if (!$criteria->hasSelectClause()) {
-            QueuedDocumentPeer::addSelectColumns($criteria);
+            DocumentJobPeer::addSelectColumns($criteria);
         }
 
         $criteria->clearOrderByColumns(); // ORDER BY won't ever affect the count
 
         // Set the correct dbName
-        $criteria->setDbName(QueuedDocumentPeer::DATABASE_NAME);
+        $criteria->setDbName(DocumentJobPeer::DATABASE_NAME);
 
         if ($con === null) {
-            $con = Propel::getConnection(QueuedDocumentPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+            $con = Propel::getConnection(DocumentJobPeer::DATABASE_NAME, Propel::CONNECTION_READ);
         }
 
-        $criteria->addJoin(QueuedDocumentPeer::START_CODE_SNIPPET_ID, CodeSnippetPeer::CODE_SNIPPET_ID, $join_behavior);
+        $criteria->addJoin(DocumentJobPeer::START_CODE_SNIPPET_ID, CodeSnippetPeer::CODE_SNIPPET_ID, $join_behavior);
 
         $stmt = BasePeer::doCount($criteria, $con);
 
@@ -649,77 +587,26 @@ abstract class BaseQueuedDocumentPeer
         // We need to set the primary table name, since in the case that there are no WHERE columns
         // it will be impossible for the BasePeer::createSelectSql() method to determine which
         // tables go into the FROM clause.
-        $criteria->setPrimaryTableName(QueuedDocumentPeer::TABLE_NAME);
+        $criteria->setPrimaryTableName(DocumentJobPeer::TABLE_NAME);
 
         if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
             $criteria->setDistinct();
         }
 
         if (!$criteria->hasSelectClause()) {
-            QueuedDocumentPeer::addSelectColumns($criteria);
+            DocumentJobPeer::addSelectColumns($criteria);
         }
 
         $criteria->clearOrderByColumns(); // ORDER BY won't ever affect the count
 
         // Set the correct dbName
-        $criteria->setDbName(QueuedDocumentPeer::DATABASE_NAME);
+        $criteria->setDbName(DocumentJobPeer::DATABASE_NAME);
 
         if ($con === null) {
-            $con = Propel::getConnection(QueuedDocumentPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+            $con = Propel::getConnection(DocumentJobPeer::DATABASE_NAME, Propel::CONNECTION_READ);
         }
 
-        $criteria->addJoin(QueuedDocumentPeer::FINISH_CODE_SNIPPET_ID, CodeSnippetPeer::CODE_SNIPPET_ID, $join_behavior);
-
-        $stmt = BasePeer::doCount($criteria, $con);
-
-        if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-            $count = (int) $row[0];
-        } else {
-            $count = 0; // no rows returned; we infer that means 0 matches.
-        }
-        $stmt->closeCursor();
-
-        return $count;
-    }
-
-
-    /**
-     * Returns the number of rows matching criteria, joining the related DocumentJob table
-     *
-     * @param      Criteria $criteria
-     * @param      boolean $distinct Whether to select only distinct columns; deprecated: use Criteria->setDistinct() instead.
-     * @param      PropelPDO $con
-     * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
-     * @return int Number of matching rows.
-     */
-    public static function doCountJoinDocumentJob(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
-    {
-        // we're going to modify criteria, so copy it first
-        $criteria = clone $criteria;
-
-        // We need to set the primary table name, since in the case that there are no WHERE columns
-        // it will be impossible for the BasePeer::createSelectSql() method to determine which
-        // tables go into the FROM clause.
-        $criteria->setPrimaryTableName(QueuedDocumentPeer::TABLE_NAME);
-
-        if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
-            $criteria->setDistinct();
-        }
-
-        if (!$criteria->hasSelectClause()) {
-            QueuedDocumentPeer::addSelectColumns($criteria);
-        }
-
-        $criteria->clearOrderByColumns(); // ORDER BY won't ever affect the count
-
-        // Set the correct dbName
-        $criteria->setDbName(QueuedDocumentPeer::DATABASE_NAME);
-
-        if ($con === null) {
-            $con = Propel::getConnection(QueuedDocumentPeer::DATABASE_NAME, Propel::CONNECTION_READ);
-        }
-
-        $criteria->addJoin(QueuedDocumentPeer::DOCUMENT_JOB_ID, DocumentJobPeer::DOCUMENT_JOB_ID, $join_behavior);
+        $criteria->addJoin(DocumentJobPeer::FINISH_CODE_SNIPPET_ID, CodeSnippetPeer::CODE_SNIPPET_ID, $join_behavior);
 
         $stmt = BasePeer::doCount($criteria, $con);
 
@@ -751,26 +638,26 @@ abstract class BaseQueuedDocumentPeer
         // We need to set the primary table name, since in the case that there are no WHERE columns
         // it will be impossible for the BasePeer::createSelectSql() method to determine which
         // tables go into the FROM clause.
-        $criteria->setPrimaryTableName(QueuedDocumentPeer::TABLE_NAME);
+        $criteria->setPrimaryTableName(DocumentJobPeer::TABLE_NAME);
 
         if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
             $criteria->setDistinct();
         }
 
         if (!$criteria->hasSelectClause()) {
-            QueuedDocumentPeer::addSelectColumns($criteria);
+            DocumentJobPeer::addSelectColumns($criteria);
         }
 
         $criteria->clearOrderByColumns(); // ORDER BY won't ever affect the count
 
         // Set the correct dbName
-        $criteria->setDbName(QueuedDocumentPeer::DATABASE_NAME);
+        $criteria->setDbName(DocumentJobPeer::DATABASE_NAME);
 
         if ($con === null) {
-            $con = Propel::getConnection(QueuedDocumentPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+            $con = Propel::getConnection(DocumentJobPeer::DATABASE_NAME, Propel::CONNECTION_READ);
         }
 
-        $criteria->addJoin(QueuedDocumentPeer::CREATION_USER_ID, AccountPeer::ACCOUNT_ID, $join_behavior);
+        $criteria->addJoin(DocumentJobPeer::CREATION_USER_ID, AccountPeer::ACCOUNT_ID, $join_behavior);
 
         $stmt = BasePeer::doCount($criteria, $con);
 
@@ -802,26 +689,26 @@ abstract class BaseQueuedDocumentPeer
         // We need to set the primary table name, since in the case that there are no WHERE columns
         // it will be impossible for the BasePeer::createSelectSql() method to determine which
         // tables go into the FROM clause.
-        $criteria->setPrimaryTableName(QueuedDocumentPeer::TABLE_NAME);
+        $criteria->setPrimaryTableName(DocumentJobPeer::TABLE_NAME);
 
         if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
             $criteria->setDistinct();
         }
 
         if (!$criteria->hasSelectClause()) {
-            QueuedDocumentPeer::addSelectColumns($criteria);
+            DocumentJobPeer::addSelectColumns($criteria);
         }
 
         $criteria->clearOrderByColumns(); // ORDER BY won't ever affect the count
 
         // Set the correct dbName
-        $criteria->setDbName(QueuedDocumentPeer::DATABASE_NAME);
+        $criteria->setDbName(DocumentJobPeer::DATABASE_NAME);
 
         if ($con === null) {
-            $con = Propel::getConnection(QueuedDocumentPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+            $con = Propel::getConnection(DocumentJobPeer::DATABASE_NAME, Propel::CONNECTION_READ);
         }
 
-        $criteria->addJoin(QueuedDocumentPeer::UPDATE_USER_ID, AccountPeer::ACCOUNT_ID, $join_behavior);
+        $criteria->addJoin(DocumentJobPeer::UPDATE_USER_ID, AccountPeer::ACCOUNT_ID, $join_behavior);
 
         $stmt = BasePeer::doCount($criteria, $con);
 
@@ -837,11 +724,11 @@ abstract class BaseQueuedDocumentPeer
 
 
     /**
-     * Selects a collection of QueuedDocument objects pre-filled with their CodeSnippet objects.
+     * Selects a collection of DocumentJob objects pre-filled with their CodeSnippet objects.
      * @param      Criteria  $criteria
      * @param      PropelPDO $con
      * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
-     * @return array           Array of QueuedDocument objects.
+     * @return array           Array of DocumentJob objects.
      * @throws PropelException Any exceptions caught during processing will be
      *		 rethrown wrapped into a PropelException.
      */
@@ -851,31 +738,31 @@ abstract class BaseQueuedDocumentPeer
 
         // Set the correct dbName if it has not been overridden
         if ($criteria->getDbName() == Propel::getDefaultDB()) {
-            $criteria->setDbName(QueuedDocumentPeer::DATABASE_NAME);
+            $criteria->setDbName(DocumentJobPeer::DATABASE_NAME);
         }
 
-        QueuedDocumentPeer::addSelectColumns($criteria);
-        $startcol = QueuedDocumentPeer::NUM_HYDRATE_COLUMNS;
+        DocumentJobPeer::addSelectColumns($criteria);
+        $startcol = DocumentJobPeer::NUM_HYDRATE_COLUMNS;
         CodeSnippetPeer::addSelectColumns($criteria);
 
-        $criteria->addJoin(QueuedDocumentPeer::START_CODE_SNIPPET_ID, CodeSnippetPeer::CODE_SNIPPET_ID, $join_behavior);
+        $criteria->addJoin(DocumentJobPeer::START_CODE_SNIPPET_ID, CodeSnippetPeer::CODE_SNIPPET_ID, $join_behavior);
 
         $stmt = BasePeer::doSelect($criteria, $con);
         $results = array();
 
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-            $key1 = QueuedDocumentPeer::getPrimaryKeyHashFromRow($row, 0);
-            if (null !== ($obj1 = QueuedDocumentPeer::getInstanceFromPool($key1))) {
+            $key1 = DocumentJobPeer::getPrimaryKeyHashFromRow($row, 0);
+            if (null !== ($obj1 = DocumentJobPeer::getInstanceFromPool($key1))) {
                 // We no longer rehydrate the object, since this can cause data loss.
                 // See http://www.propelorm.org/ticket/509
                 // $obj1->hydrate($row, 0, true); // rehydrate
             } else {
 
-                $cls = QueuedDocumentPeer::getOMClass();
+                $cls = DocumentJobPeer::getOMClass();
 
                 $obj1 = new $cls();
                 $obj1->hydrate($row);
-                QueuedDocumentPeer::addInstanceToPool($obj1, $key1);
+                DocumentJobPeer::addInstanceToPool($obj1, $key1);
             } // if $obj1 already loaded
 
             $key2 = CodeSnippetPeer::getPrimaryKeyHashFromRow($row, $startcol);
@@ -890,8 +777,8 @@ abstract class BaseQueuedDocumentPeer
                     CodeSnippetPeer::addInstanceToPool($obj2, $key2);
                 } // if obj2 already loaded
 
-                // Add the $obj1 (QueuedDocument) to $obj2 (CodeSnippet)
-                $obj2->addQueuedDocumentRelatedByStartCodeSnippetId($obj1);
+                // Add the $obj1 (DocumentJob) to $obj2 (CodeSnippet)
+                $obj2->addDocumentJobRelatedByStartCodeSnippetId($obj1);
 
             } // if joined row was not null
 
@@ -904,11 +791,11 @@ abstract class BaseQueuedDocumentPeer
 
 
     /**
-     * Selects a collection of QueuedDocument objects pre-filled with their CodeSnippet objects.
+     * Selects a collection of DocumentJob objects pre-filled with their CodeSnippet objects.
      * @param      Criteria  $criteria
      * @param      PropelPDO $con
      * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
-     * @return array           Array of QueuedDocument objects.
+     * @return array           Array of DocumentJob objects.
      * @throws PropelException Any exceptions caught during processing will be
      *		 rethrown wrapped into a PropelException.
      */
@@ -918,31 +805,31 @@ abstract class BaseQueuedDocumentPeer
 
         // Set the correct dbName if it has not been overridden
         if ($criteria->getDbName() == Propel::getDefaultDB()) {
-            $criteria->setDbName(QueuedDocumentPeer::DATABASE_NAME);
+            $criteria->setDbName(DocumentJobPeer::DATABASE_NAME);
         }
 
-        QueuedDocumentPeer::addSelectColumns($criteria);
-        $startcol = QueuedDocumentPeer::NUM_HYDRATE_COLUMNS;
+        DocumentJobPeer::addSelectColumns($criteria);
+        $startcol = DocumentJobPeer::NUM_HYDRATE_COLUMNS;
         CodeSnippetPeer::addSelectColumns($criteria);
 
-        $criteria->addJoin(QueuedDocumentPeer::FINISH_CODE_SNIPPET_ID, CodeSnippetPeer::CODE_SNIPPET_ID, $join_behavior);
+        $criteria->addJoin(DocumentJobPeer::FINISH_CODE_SNIPPET_ID, CodeSnippetPeer::CODE_SNIPPET_ID, $join_behavior);
 
         $stmt = BasePeer::doSelect($criteria, $con);
         $results = array();
 
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-            $key1 = QueuedDocumentPeer::getPrimaryKeyHashFromRow($row, 0);
-            if (null !== ($obj1 = QueuedDocumentPeer::getInstanceFromPool($key1))) {
+            $key1 = DocumentJobPeer::getPrimaryKeyHashFromRow($row, 0);
+            if (null !== ($obj1 = DocumentJobPeer::getInstanceFromPool($key1))) {
                 // We no longer rehydrate the object, since this can cause data loss.
                 // See http://www.propelorm.org/ticket/509
                 // $obj1->hydrate($row, 0, true); // rehydrate
             } else {
 
-                $cls = QueuedDocumentPeer::getOMClass();
+                $cls = DocumentJobPeer::getOMClass();
 
                 $obj1 = new $cls();
                 $obj1->hydrate($row);
-                QueuedDocumentPeer::addInstanceToPool($obj1, $key1);
+                DocumentJobPeer::addInstanceToPool($obj1, $key1);
             } // if $obj1 already loaded
 
             $key2 = CodeSnippetPeer::getPrimaryKeyHashFromRow($row, $startcol);
@@ -957,8 +844,8 @@ abstract class BaseQueuedDocumentPeer
                     CodeSnippetPeer::addInstanceToPool($obj2, $key2);
                 } // if obj2 already loaded
 
-                // Add the $obj1 (QueuedDocument) to $obj2 (CodeSnippet)
-                $obj2->addQueuedDocumentRelatedByFinishCodeSnippetId($obj1);
+                // Add the $obj1 (DocumentJob) to $obj2 (CodeSnippet)
+                $obj2->addDocumentJobRelatedByFinishCodeSnippetId($obj1);
 
             } // if joined row was not null
 
@@ -971,78 +858,11 @@ abstract class BaseQueuedDocumentPeer
 
 
     /**
-     * Selects a collection of QueuedDocument objects pre-filled with their DocumentJob objects.
+     * Selects a collection of DocumentJob objects pre-filled with their Account objects.
      * @param      Criteria  $criteria
      * @param      PropelPDO $con
      * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
-     * @return array           Array of QueuedDocument objects.
-     * @throws PropelException Any exceptions caught during processing will be
-     *		 rethrown wrapped into a PropelException.
-     */
-    public static function doSelectJoinDocumentJob(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
-    {
-        $criteria = clone $criteria;
-
-        // Set the correct dbName if it has not been overridden
-        if ($criteria->getDbName() == Propel::getDefaultDB()) {
-            $criteria->setDbName(QueuedDocumentPeer::DATABASE_NAME);
-        }
-
-        QueuedDocumentPeer::addSelectColumns($criteria);
-        $startcol = QueuedDocumentPeer::NUM_HYDRATE_COLUMNS;
-        DocumentJobPeer::addSelectColumns($criteria);
-
-        $criteria->addJoin(QueuedDocumentPeer::DOCUMENT_JOB_ID, DocumentJobPeer::DOCUMENT_JOB_ID, $join_behavior);
-
-        $stmt = BasePeer::doSelect($criteria, $con);
-        $results = array();
-
-        while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-            $key1 = QueuedDocumentPeer::getPrimaryKeyHashFromRow($row, 0);
-            if (null !== ($obj1 = QueuedDocumentPeer::getInstanceFromPool($key1))) {
-                // We no longer rehydrate the object, since this can cause data loss.
-                // See http://www.propelorm.org/ticket/509
-                // $obj1->hydrate($row, 0, true); // rehydrate
-            } else {
-
-                $cls = QueuedDocumentPeer::getOMClass();
-
-                $obj1 = new $cls();
-                $obj1->hydrate($row);
-                QueuedDocumentPeer::addInstanceToPool($obj1, $key1);
-            } // if $obj1 already loaded
-
-            $key2 = DocumentJobPeer::getPrimaryKeyHashFromRow($row, $startcol);
-            if ($key2 !== null) {
-                $obj2 = DocumentJobPeer::getInstanceFromPool($key2);
-                if (!$obj2) {
-
-                    $cls = DocumentJobPeer::getOMClass();
-
-                    $obj2 = new $cls();
-                    $obj2->hydrate($row, $startcol);
-                    DocumentJobPeer::addInstanceToPool($obj2, $key2);
-                } // if obj2 already loaded
-
-                // Add the $obj1 (QueuedDocument) to $obj2 (DocumentJob)
-                $obj2->addQueuedDocument($obj1);
-
-            } // if joined row was not null
-
-            $results[] = $obj1;
-        }
-        $stmt->closeCursor();
-
-        return $results;
-    }
-
-
-    /**
-     * Selects a collection of QueuedDocument objects pre-filled with their Account objects.
-     * @param      Criteria  $criteria
-     * @param      PropelPDO $con
-     * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
-     * @return array           Array of QueuedDocument objects.
+     * @return array           Array of DocumentJob objects.
      * @throws PropelException Any exceptions caught during processing will be
      *		 rethrown wrapped into a PropelException.
      */
@@ -1052,31 +872,31 @@ abstract class BaseQueuedDocumentPeer
 
         // Set the correct dbName if it has not been overridden
         if ($criteria->getDbName() == Propel::getDefaultDB()) {
-            $criteria->setDbName(QueuedDocumentPeer::DATABASE_NAME);
+            $criteria->setDbName(DocumentJobPeer::DATABASE_NAME);
         }
 
-        QueuedDocumentPeer::addSelectColumns($criteria);
-        $startcol = QueuedDocumentPeer::NUM_HYDRATE_COLUMNS;
+        DocumentJobPeer::addSelectColumns($criteria);
+        $startcol = DocumentJobPeer::NUM_HYDRATE_COLUMNS;
         AccountPeer::addSelectColumns($criteria);
 
-        $criteria->addJoin(QueuedDocumentPeer::CREATION_USER_ID, AccountPeer::ACCOUNT_ID, $join_behavior);
+        $criteria->addJoin(DocumentJobPeer::CREATION_USER_ID, AccountPeer::ACCOUNT_ID, $join_behavior);
 
         $stmt = BasePeer::doSelect($criteria, $con);
         $results = array();
 
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-            $key1 = QueuedDocumentPeer::getPrimaryKeyHashFromRow($row, 0);
-            if (null !== ($obj1 = QueuedDocumentPeer::getInstanceFromPool($key1))) {
+            $key1 = DocumentJobPeer::getPrimaryKeyHashFromRow($row, 0);
+            if (null !== ($obj1 = DocumentJobPeer::getInstanceFromPool($key1))) {
                 // We no longer rehydrate the object, since this can cause data loss.
                 // See http://www.propelorm.org/ticket/509
                 // $obj1->hydrate($row, 0, true); // rehydrate
             } else {
 
-                $cls = QueuedDocumentPeer::getOMClass();
+                $cls = DocumentJobPeer::getOMClass();
 
                 $obj1 = new $cls();
                 $obj1->hydrate($row);
-                QueuedDocumentPeer::addInstanceToPool($obj1, $key1);
+                DocumentJobPeer::addInstanceToPool($obj1, $key1);
             } // if $obj1 already loaded
 
             $key2 = AccountPeer::getPrimaryKeyHashFromRow($row, $startcol);
@@ -1091,8 +911,8 @@ abstract class BaseQueuedDocumentPeer
                     AccountPeer::addInstanceToPool($obj2, $key2);
                 } // if obj2 already loaded
 
-                // Add the $obj1 (QueuedDocument) to $obj2 (Account)
-                $obj2->addQueuedDocumentRelatedByCreationUserId($obj1);
+                // Add the $obj1 (DocumentJob) to $obj2 (Account)
+                $obj2->addDocumentJobRelatedByCreationUserId($obj1);
 
             } // if joined row was not null
 
@@ -1105,11 +925,11 @@ abstract class BaseQueuedDocumentPeer
 
 
     /**
-     * Selects a collection of QueuedDocument objects pre-filled with their Account objects.
+     * Selects a collection of DocumentJob objects pre-filled with their Account objects.
      * @param      Criteria  $criteria
      * @param      PropelPDO $con
      * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
-     * @return array           Array of QueuedDocument objects.
+     * @return array           Array of DocumentJob objects.
      * @throws PropelException Any exceptions caught during processing will be
      *		 rethrown wrapped into a PropelException.
      */
@@ -1119,31 +939,31 @@ abstract class BaseQueuedDocumentPeer
 
         // Set the correct dbName if it has not been overridden
         if ($criteria->getDbName() == Propel::getDefaultDB()) {
-            $criteria->setDbName(QueuedDocumentPeer::DATABASE_NAME);
+            $criteria->setDbName(DocumentJobPeer::DATABASE_NAME);
         }
 
-        QueuedDocumentPeer::addSelectColumns($criteria);
-        $startcol = QueuedDocumentPeer::NUM_HYDRATE_COLUMNS;
+        DocumentJobPeer::addSelectColumns($criteria);
+        $startcol = DocumentJobPeer::NUM_HYDRATE_COLUMNS;
         AccountPeer::addSelectColumns($criteria);
 
-        $criteria->addJoin(QueuedDocumentPeer::UPDATE_USER_ID, AccountPeer::ACCOUNT_ID, $join_behavior);
+        $criteria->addJoin(DocumentJobPeer::UPDATE_USER_ID, AccountPeer::ACCOUNT_ID, $join_behavior);
 
         $stmt = BasePeer::doSelect($criteria, $con);
         $results = array();
 
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-            $key1 = QueuedDocumentPeer::getPrimaryKeyHashFromRow($row, 0);
-            if (null !== ($obj1 = QueuedDocumentPeer::getInstanceFromPool($key1))) {
+            $key1 = DocumentJobPeer::getPrimaryKeyHashFromRow($row, 0);
+            if (null !== ($obj1 = DocumentJobPeer::getInstanceFromPool($key1))) {
                 // We no longer rehydrate the object, since this can cause data loss.
                 // See http://www.propelorm.org/ticket/509
                 // $obj1->hydrate($row, 0, true); // rehydrate
             } else {
 
-                $cls = QueuedDocumentPeer::getOMClass();
+                $cls = DocumentJobPeer::getOMClass();
 
                 $obj1 = new $cls();
                 $obj1->hydrate($row);
-                QueuedDocumentPeer::addInstanceToPool($obj1, $key1);
+                DocumentJobPeer::addInstanceToPool($obj1, $key1);
             } // if $obj1 already loaded
 
             $key2 = AccountPeer::getPrimaryKeyHashFromRow($row, $startcol);
@@ -1158,8 +978,8 @@ abstract class BaseQueuedDocumentPeer
                     AccountPeer::addInstanceToPool($obj2, $key2);
                 } // if obj2 already loaded
 
-                // Add the $obj1 (QueuedDocument) to $obj2 (Account)
-                $obj2->addQueuedDocumentRelatedByUpdateUserId($obj1);
+                // Add the $obj1 (DocumentJob) to $obj2 (Account)
+                $obj2->addDocumentJobRelatedByUpdateUserId($obj1);
 
             } // if joined row was not null
 
@@ -1188,34 +1008,32 @@ abstract class BaseQueuedDocumentPeer
         // We need to set the primary table name, since in the case that there are no WHERE columns
         // it will be impossible for the BasePeer::createSelectSql() method to determine which
         // tables go into the FROM clause.
-        $criteria->setPrimaryTableName(QueuedDocumentPeer::TABLE_NAME);
+        $criteria->setPrimaryTableName(DocumentJobPeer::TABLE_NAME);
 
         if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
             $criteria->setDistinct();
         }
 
         if (!$criteria->hasSelectClause()) {
-            QueuedDocumentPeer::addSelectColumns($criteria);
+            DocumentJobPeer::addSelectColumns($criteria);
         }
 
         $criteria->clearOrderByColumns(); // ORDER BY won't ever affect the count
 
         // Set the correct dbName
-        $criteria->setDbName(QueuedDocumentPeer::DATABASE_NAME);
+        $criteria->setDbName(DocumentJobPeer::DATABASE_NAME);
 
         if ($con === null) {
-            $con = Propel::getConnection(QueuedDocumentPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+            $con = Propel::getConnection(DocumentJobPeer::DATABASE_NAME, Propel::CONNECTION_READ);
         }
 
-        $criteria->addJoin(QueuedDocumentPeer::START_CODE_SNIPPET_ID, CodeSnippetPeer::CODE_SNIPPET_ID, $join_behavior);
+        $criteria->addJoin(DocumentJobPeer::START_CODE_SNIPPET_ID, CodeSnippetPeer::CODE_SNIPPET_ID, $join_behavior);
 
-        $criteria->addJoin(QueuedDocumentPeer::FINISH_CODE_SNIPPET_ID, CodeSnippetPeer::CODE_SNIPPET_ID, $join_behavior);
+        $criteria->addJoin(DocumentJobPeer::FINISH_CODE_SNIPPET_ID, CodeSnippetPeer::CODE_SNIPPET_ID, $join_behavior);
 
-        $criteria->addJoin(QueuedDocumentPeer::DOCUMENT_JOB_ID, DocumentJobPeer::DOCUMENT_JOB_ID, $join_behavior);
+        $criteria->addJoin(DocumentJobPeer::CREATION_USER_ID, AccountPeer::ACCOUNT_ID, $join_behavior);
 
-        $criteria->addJoin(QueuedDocumentPeer::CREATION_USER_ID, AccountPeer::ACCOUNT_ID, $join_behavior);
-
-        $criteria->addJoin(QueuedDocumentPeer::UPDATE_USER_ID, AccountPeer::ACCOUNT_ID, $join_behavior);
+        $criteria->addJoin(DocumentJobPeer::UPDATE_USER_ID, AccountPeer::ACCOUNT_ID, $join_behavior);
 
         $stmt = BasePeer::doCount($criteria, $con);
 
@@ -1230,12 +1048,12 @@ abstract class BaseQueuedDocumentPeer
     }
 
     /**
-     * Selects a collection of QueuedDocument objects pre-filled with all related objects.
+     * Selects a collection of DocumentJob objects pre-filled with all related objects.
      *
      * @param      Criteria  $criteria
      * @param      PropelPDO $con
      * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
-     * @return array           Array of QueuedDocument objects.
+     * @return array           Array of DocumentJob objects.
      * @throws PropelException Any exceptions caught during processing will be
      *		 rethrown wrapped into a PropelException.
      */
@@ -1245,11 +1063,11 @@ abstract class BaseQueuedDocumentPeer
 
         // Set the correct dbName if it has not been overridden
         if ($criteria->getDbName() == Propel::getDefaultDB()) {
-            $criteria->setDbName(QueuedDocumentPeer::DATABASE_NAME);
+            $criteria->setDbName(DocumentJobPeer::DATABASE_NAME);
         }
 
-        QueuedDocumentPeer::addSelectColumns($criteria);
-        $startcol2 = QueuedDocumentPeer::NUM_HYDRATE_COLUMNS;
+        DocumentJobPeer::addSelectColumns($criteria);
+        $startcol2 = DocumentJobPeer::NUM_HYDRATE_COLUMNS;
 
         CodeSnippetPeer::addSelectColumns($criteria);
         $startcol3 = $startcol2 + CodeSnippetPeer::NUM_HYDRATE_COLUMNS;
@@ -1257,40 +1075,35 @@ abstract class BaseQueuedDocumentPeer
         CodeSnippetPeer::addSelectColumns($criteria);
         $startcol4 = $startcol3 + CodeSnippetPeer::NUM_HYDRATE_COLUMNS;
 
-        DocumentJobPeer::addSelectColumns($criteria);
-        $startcol5 = $startcol4 + DocumentJobPeer::NUM_HYDRATE_COLUMNS;
+        AccountPeer::addSelectColumns($criteria);
+        $startcol5 = $startcol4 + AccountPeer::NUM_HYDRATE_COLUMNS;
 
         AccountPeer::addSelectColumns($criteria);
         $startcol6 = $startcol5 + AccountPeer::NUM_HYDRATE_COLUMNS;
 
-        AccountPeer::addSelectColumns($criteria);
-        $startcol7 = $startcol6 + AccountPeer::NUM_HYDRATE_COLUMNS;
+        $criteria->addJoin(DocumentJobPeer::START_CODE_SNIPPET_ID, CodeSnippetPeer::CODE_SNIPPET_ID, $join_behavior);
 
-        $criteria->addJoin(QueuedDocumentPeer::START_CODE_SNIPPET_ID, CodeSnippetPeer::CODE_SNIPPET_ID, $join_behavior);
+        $criteria->addJoin(DocumentJobPeer::FINISH_CODE_SNIPPET_ID, CodeSnippetPeer::CODE_SNIPPET_ID, $join_behavior);
 
-        $criteria->addJoin(QueuedDocumentPeer::FINISH_CODE_SNIPPET_ID, CodeSnippetPeer::CODE_SNIPPET_ID, $join_behavior);
+        $criteria->addJoin(DocumentJobPeer::CREATION_USER_ID, AccountPeer::ACCOUNT_ID, $join_behavior);
 
-        $criteria->addJoin(QueuedDocumentPeer::DOCUMENT_JOB_ID, DocumentJobPeer::DOCUMENT_JOB_ID, $join_behavior);
-
-        $criteria->addJoin(QueuedDocumentPeer::CREATION_USER_ID, AccountPeer::ACCOUNT_ID, $join_behavior);
-
-        $criteria->addJoin(QueuedDocumentPeer::UPDATE_USER_ID, AccountPeer::ACCOUNT_ID, $join_behavior);
+        $criteria->addJoin(DocumentJobPeer::UPDATE_USER_ID, AccountPeer::ACCOUNT_ID, $join_behavior);
 
         $stmt = BasePeer::doSelect($criteria, $con);
         $results = array();
 
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-            $key1 = QueuedDocumentPeer::getPrimaryKeyHashFromRow($row, 0);
-            if (null !== ($obj1 = QueuedDocumentPeer::getInstanceFromPool($key1))) {
+            $key1 = DocumentJobPeer::getPrimaryKeyHashFromRow($row, 0);
+            if (null !== ($obj1 = DocumentJobPeer::getInstanceFromPool($key1))) {
                 // We no longer rehydrate the object, since this can cause data loss.
                 // See http://www.propelorm.org/ticket/509
                 // $obj1->hydrate($row, 0, true); // rehydrate
             } else {
-                $cls = QueuedDocumentPeer::getOMClass();
+                $cls = DocumentJobPeer::getOMClass();
 
                 $obj1 = new $cls();
                 $obj1->hydrate($row);
-                QueuedDocumentPeer::addInstanceToPool($obj1, $key1);
+                DocumentJobPeer::addInstanceToPool($obj1, $key1);
             } // if obj1 already loaded
 
             // Add objects for joined CodeSnippet rows
@@ -1307,8 +1120,8 @@ abstract class BaseQueuedDocumentPeer
                     CodeSnippetPeer::addInstanceToPool($obj2, $key2);
                 } // if obj2 loaded
 
-                // Add the $obj1 (QueuedDocument) to the collection in $obj2 (CodeSnippet)
-                $obj2->addQueuedDocumentRelatedByStartCodeSnippetId($obj1);
+                // Add the $obj1 (DocumentJob) to the collection in $obj2 (CodeSnippet)
+                $obj2->addDocumentJobRelatedByStartCodeSnippetId($obj1);
             } // if joined row not null
 
             // Add objects for joined CodeSnippet rows
@@ -1325,26 +1138,26 @@ abstract class BaseQueuedDocumentPeer
                     CodeSnippetPeer::addInstanceToPool($obj3, $key3);
                 } // if obj3 loaded
 
-                // Add the $obj1 (QueuedDocument) to the collection in $obj3 (CodeSnippet)
-                $obj3->addQueuedDocumentRelatedByFinishCodeSnippetId($obj1);
+                // Add the $obj1 (DocumentJob) to the collection in $obj3 (CodeSnippet)
+                $obj3->addDocumentJobRelatedByFinishCodeSnippetId($obj1);
             } // if joined row not null
 
-            // Add objects for joined DocumentJob rows
+            // Add objects for joined Account rows
 
-            $key4 = DocumentJobPeer::getPrimaryKeyHashFromRow($row, $startcol4);
+            $key4 = AccountPeer::getPrimaryKeyHashFromRow($row, $startcol4);
             if ($key4 !== null) {
-                $obj4 = DocumentJobPeer::getInstanceFromPool($key4);
+                $obj4 = AccountPeer::getInstanceFromPool($key4);
                 if (!$obj4) {
 
-                    $cls = DocumentJobPeer::getOMClass();
+                    $cls = AccountPeer::getOMClass();
 
                     $obj4 = new $cls();
                     $obj4->hydrate($row, $startcol4);
-                    DocumentJobPeer::addInstanceToPool($obj4, $key4);
+                    AccountPeer::addInstanceToPool($obj4, $key4);
                 } // if obj4 loaded
 
-                // Add the $obj1 (QueuedDocument) to the collection in $obj4 (DocumentJob)
-                $obj4->addQueuedDocument($obj1);
+                // Add the $obj1 (DocumentJob) to the collection in $obj4 (Account)
+                $obj4->addDocumentJobRelatedByCreationUserId($obj1);
             } // if joined row not null
 
             // Add objects for joined Account rows
@@ -1361,26 +1174,8 @@ abstract class BaseQueuedDocumentPeer
                     AccountPeer::addInstanceToPool($obj5, $key5);
                 } // if obj5 loaded
 
-                // Add the $obj1 (QueuedDocument) to the collection in $obj5 (Account)
-                $obj5->addQueuedDocumentRelatedByCreationUserId($obj1);
-            } // if joined row not null
-
-            // Add objects for joined Account rows
-
-            $key6 = AccountPeer::getPrimaryKeyHashFromRow($row, $startcol6);
-            if ($key6 !== null) {
-                $obj6 = AccountPeer::getInstanceFromPool($key6);
-                if (!$obj6) {
-
-                    $cls = AccountPeer::getOMClass();
-
-                    $obj6 = new $cls();
-                    $obj6->hydrate($row, $startcol6);
-                    AccountPeer::addInstanceToPool($obj6, $key6);
-                } // if obj6 loaded
-
-                // Add the $obj1 (QueuedDocument) to the collection in $obj6 (Account)
-                $obj6->addQueuedDocumentRelatedByUpdateUserId($obj1);
+                // Add the $obj1 (DocumentJob) to the collection in $obj5 (Account)
+                $obj5->addDocumentJobRelatedByUpdateUserId($obj1);
             } // if joined row not null
 
             $results[] = $obj1;
@@ -1408,30 +1203,28 @@ abstract class BaseQueuedDocumentPeer
         // We need to set the primary table name, since in the case that there are no WHERE columns
         // it will be impossible for the BasePeer::createSelectSql() method to determine which
         // tables go into the FROM clause.
-        $criteria->setPrimaryTableName(QueuedDocumentPeer::TABLE_NAME);
+        $criteria->setPrimaryTableName(DocumentJobPeer::TABLE_NAME);
 
         if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
             $criteria->setDistinct();
         }
 
         if (!$criteria->hasSelectClause()) {
-            QueuedDocumentPeer::addSelectColumns($criteria);
+            DocumentJobPeer::addSelectColumns($criteria);
         }
 
         $criteria->clearOrderByColumns(); // ORDER BY should not affect count
 
         // Set the correct dbName
-        $criteria->setDbName(QueuedDocumentPeer::DATABASE_NAME);
+        $criteria->setDbName(DocumentJobPeer::DATABASE_NAME);
 
         if ($con === null) {
-            $con = Propel::getConnection(QueuedDocumentPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+            $con = Propel::getConnection(DocumentJobPeer::DATABASE_NAME, Propel::CONNECTION_READ);
         }
 
-        $criteria->addJoin(QueuedDocumentPeer::DOCUMENT_JOB_ID, DocumentJobPeer::DOCUMENT_JOB_ID, $join_behavior);
+        $criteria->addJoin(DocumentJobPeer::CREATION_USER_ID, AccountPeer::ACCOUNT_ID, $join_behavior);
 
-        $criteria->addJoin(QueuedDocumentPeer::CREATION_USER_ID, AccountPeer::ACCOUNT_ID, $join_behavior);
-
-        $criteria->addJoin(QueuedDocumentPeer::UPDATE_USER_ID, AccountPeer::ACCOUNT_ID, $join_behavior);
+        $criteria->addJoin(DocumentJobPeer::UPDATE_USER_ID, AccountPeer::ACCOUNT_ID, $join_behavior);
 
         $stmt = BasePeer::doCount($criteria, $con);
 
@@ -1463,87 +1256,28 @@ abstract class BaseQueuedDocumentPeer
         // We need to set the primary table name, since in the case that there are no WHERE columns
         // it will be impossible for the BasePeer::createSelectSql() method to determine which
         // tables go into the FROM clause.
-        $criteria->setPrimaryTableName(QueuedDocumentPeer::TABLE_NAME);
+        $criteria->setPrimaryTableName(DocumentJobPeer::TABLE_NAME);
 
         if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
             $criteria->setDistinct();
         }
 
         if (!$criteria->hasSelectClause()) {
-            QueuedDocumentPeer::addSelectColumns($criteria);
+            DocumentJobPeer::addSelectColumns($criteria);
         }
 
         $criteria->clearOrderByColumns(); // ORDER BY should not affect count
 
         // Set the correct dbName
-        $criteria->setDbName(QueuedDocumentPeer::DATABASE_NAME);
+        $criteria->setDbName(DocumentJobPeer::DATABASE_NAME);
 
         if ($con === null) {
-            $con = Propel::getConnection(QueuedDocumentPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+            $con = Propel::getConnection(DocumentJobPeer::DATABASE_NAME, Propel::CONNECTION_READ);
         }
 
-        $criteria->addJoin(QueuedDocumentPeer::DOCUMENT_JOB_ID, DocumentJobPeer::DOCUMENT_JOB_ID, $join_behavior);
+        $criteria->addJoin(DocumentJobPeer::CREATION_USER_ID, AccountPeer::ACCOUNT_ID, $join_behavior);
 
-        $criteria->addJoin(QueuedDocumentPeer::CREATION_USER_ID, AccountPeer::ACCOUNT_ID, $join_behavior);
-
-        $criteria->addJoin(QueuedDocumentPeer::UPDATE_USER_ID, AccountPeer::ACCOUNT_ID, $join_behavior);
-
-        $stmt = BasePeer::doCount($criteria, $con);
-
-        if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-            $count = (int) $row[0];
-        } else {
-            $count = 0; // no rows returned; we infer that means 0 matches.
-        }
-        $stmt->closeCursor();
-
-        return $count;
-    }
-
-
-    /**
-     * Returns the number of rows matching criteria, joining the related DocumentJob table
-     *
-     * @param      Criteria $criteria
-     * @param      boolean $distinct Whether to select only distinct columns; deprecated: use Criteria->setDistinct() instead.
-     * @param      PropelPDO $con
-     * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
-     * @return int Number of matching rows.
-     */
-    public static function doCountJoinAllExceptDocumentJob(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
-    {
-        // we're going to modify criteria, so copy it first
-        $criteria = clone $criteria;
-
-        // We need to set the primary table name, since in the case that there are no WHERE columns
-        // it will be impossible for the BasePeer::createSelectSql() method to determine which
-        // tables go into the FROM clause.
-        $criteria->setPrimaryTableName(QueuedDocumentPeer::TABLE_NAME);
-
-        if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
-            $criteria->setDistinct();
-        }
-
-        if (!$criteria->hasSelectClause()) {
-            QueuedDocumentPeer::addSelectColumns($criteria);
-        }
-
-        $criteria->clearOrderByColumns(); // ORDER BY should not affect count
-
-        // Set the correct dbName
-        $criteria->setDbName(QueuedDocumentPeer::DATABASE_NAME);
-
-        if ($con === null) {
-            $con = Propel::getConnection(QueuedDocumentPeer::DATABASE_NAME, Propel::CONNECTION_READ);
-        }
-
-        $criteria->addJoin(QueuedDocumentPeer::START_CODE_SNIPPET_ID, CodeSnippetPeer::CODE_SNIPPET_ID, $join_behavior);
-
-        $criteria->addJoin(QueuedDocumentPeer::FINISH_CODE_SNIPPET_ID, CodeSnippetPeer::CODE_SNIPPET_ID, $join_behavior);
-
-        $criteria->addJoin(QueuedDocumentPeer::CREATION_USER_ID, AccountPeer::ACCOUNT_ID, $join_behavior);
-
-        $criteria->addJoin(QueuedDocumentPeer::UPDATE_USER_ID, AccountPeer::ACCOUNT_ID, $join_behavior);
+        $criteria->addJoin(DocumentJobPeer::UPDATE_USER_ID, AccountPeer::ACCOUNT_ID, $join_behavior);
 
         $stmt = BasePeer::doCount($criteria, $con);
 
@@ -1575,30 +1309,28 @@ abstract class BaseQueuedDocumentPeer
         // We need to set the primary table name, since in the case that there are no WHERE columns
         // it will be impossible for the BasePeer::createSelectSql() method to determine which
         // tables go into the FROM clause.
-        $criteria->setPrimaryTableName(QueuedDocumentPeer::TABLE_NAME);
+        $criteria->setPrimaryTableName(DocumentJobPeer::TABLE_NAME);
 
         if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
             $criteria->setDistinct();
         }
 
         if (!$criteria->hasSelectClause()) {
-            QueuedDocumentPeer::addSelectColumns($criteria);
+            DocumentJobPeer::addSelectColumns($criteria);
         }
 
         $criteria->clearOrderByColumns(); // ORDER BY should not affect count
 
         // Set the correct dbName
-        $criteria->setDbName(QueuedDocumentPeer::DATABASE_NAME);
+        $criteria->setDbName(DocumentJobPeer::DATABASE_NAME);
 
         if ($con === null) {
-            $con = Propel::getConnection(QueuedDocumentPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+            $con = Propel::getConnection(DocumentJobPeer::DATABASE_NAME, Propel::CONNECTION_READ);
         }
 
-        $criteria->addJoin(QueuedDocumentPeer::START_CODE_SNIPPET_ID, CodeSnippetPeer::CODE_SNIPPET_ID, $join_behavior);
+        $criteria->addJoin(DocumentJobPeer::START_CODE_SNIPPET_ID, CodeSnippetPeer::CODE_SNIPPET_ID, $join_behavior);
 
-        $criteria->addJoin(QueuedDocumentPeer::FINISH_CODE_SNIPPET_ID, CodeSnippetPeer::CODE_SNIPPET_ID, $join_behavior);
-
-        $criteria->addJoin(QueuedDocumentPeer::DOCUMENT_JOB_ID, DocumentJobPeer::DOCUMENT_JOB_ID, $join_behavior);
+        $criteria->addJoin(DocumentJobPeer::FINISH_CODE_SNIPPET_ID, CodeSnippetPeer::CODE_SNIPPET_ID, $join_behavior);
 
         $stmt = BasePeer::doCount($criteria, $con);
 
@@ -1630,30 +1362,28 @@ abstract class BaseQueuedDocumentPeer
         // We need to set the primary table name, since in the case that there are no WHERE columns
         // it will be impossible for the BasePeer::createSelectSql() method to determine which
         // tables go into the FROM clause.
-        $criteria->setPrimaryTableName(QueuedDocumentPeer::TABLE_NAME);
+        $criteria->setPrimaryTableName(DocumentJobPeer::TABLE_NAME);
 
         if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
             $criteria->setDistinct();
         }
 
         if (!$criteria->hasSelectClause()) {
-            QueuedDocumentPeer::addSelectColumns($criteria);
+            DocumentJobPeer::addSelectColumns($criteria);
         }
 
         $criteria->clearOrderByColumns(); // ORDER BY should not affect count
 
         // Set the correct dbName
-        $criteria->setDbName(QueuedDocumentPeer::DATABASE_NAME);
+        $criteria->setDbName(DocumentJobPeer::DATABASE_NAME);
 
         if ($con === null) {
-            $con = Propel::getConnection(QueuedDocumentPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+            $con = Propel::getConnection(DocumentJobPeer::DATABASE_NAME, Propel::CONNECTION_READ);
         }
 
-        $criteria->addJoin(QueuedDocumentPeer::START_CODE_SNIPPET_ID, CodeSnippetPeer::CODE_SNIPPET_ID, $join_behavior);
+        $criteria->addJoin(DocumentJobPeer::START_CODE_SNIPPET_ID, CodeSnippetPeer::CODE_SNIPPET_ID, $join_behavior);
 
-        $criteria->addJoin(QueuedDocumentPeer::FINISH_CODE_SNIPPET_ID, CodeSnippetPeer::CODE_SNIPPET_ID, $join_behavior);
-
-        $criteria->addJoin(QueuedDocumentPeer::DOCUMENT_JOB_ID, DocumentJobPeer::DOCUMENT_JOB_ID, $join_behavior);
+        $criteria->addJoin(DocumentJobPeer::FINISH_CODE_SNIPPET_ID, CodeSnippetPeer::CODE_SNIPPET_ID, $join_behavior);
 
         $stmt = BasePeer::doCount($criteria, $con);
 
@@ -1669,12 +1399,12 @@ abstract class BaseQueuedDocumentPeer
 
 
     /**
-     * Selects a collection of QueuedDocument objects pre-filled with all related objects except CodeSnippetRelatedByStartCodeSnippetId.
+     * Selects a collection of DocumentJob objects pre-filled with all related objects except CodeSnippetRelatedByStartCodeSnippetId.
      *
      * @param      Criteria  $criteria
      * @param      PropelPDO $con
      * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
-     * @return array           Array of QueuedDocument objects.
+     * @return array           Array of DocumentJob objects.
      * @throws PropelException Any exceptions caught during processing will be
      *		 rethrown wrapped into a PropelException.
      */
@@ -1686,61 +1416,56 @@ abstract class BaseQueuedDocumentPeer
         // $criteria->getDbName() will return the same object if not set to another value
         // so == check is okay and faster
         if ($criteria->getDbName() == Propel::getDefaultDB()) {
-            $criteria->setDbName(QueuedDocumentPeer::DATABASE_NAME);
+            $criteria->setDbName(DocumentJobPeer::DATABASE_NAME);
         }
 
-        QueuedDocumentPeer::addSelectColumns($criteria);
-        $startcol2 = QueuedDocumentPeer::NUM_HYDRATE_COLUMNS;
-
         DocumentJobPeer::addSelectColumns($criteria);
-        $startcol3 = $startcol2 + DocumentJobPeer::NUM_HYDRATE_COLUMNS;
+        $startcol2 = DocumentJobPeer::NUM_HYDRATE_COLUMNS;
+
+        AccountPeer::addSelectColumns($criteria);
+        $startcol3 = $startcol2 + AccountPeer::NUM_HYDRATE_COLUMNS;
 
         AccountPeer::addSelectColumns($criteria);
         $startcol4 = $startcol3 + AccountPeer::NUM_HYDRATE_COLUMNS;
 
-        AccountPeer::addSelectColumns($criteria);
-        $startcol5 = $startcol4 + AccountPeer::NUM_HYDRATE_COLUMNS;
+        $criteria->addJoin(DocumentJobPeer::CREATION_USER_ID, AccountPeer::ACCOUNT_ID, $join_behavior);
 
-        $criteria->addJoin(QueuedDocumentPeer::DOCUMENT_JOB_ID, DocumentJobPeer::DOCUMENT_JOB_ID, $join_behavior);
-
-        $criteria->addJoin(QueuedDocumentPeer::CREATION_USER_ID, AccountPeer::ACCOUNT_ID, $join_behavior);
-
-        $criteria->addJoin(QueuedDocumentPeer::UPDATE_USER_ID, AccountPeer::ACCOUNT_ID, $join_behavior);
+        $criteria->addJoin(DocumentJobPeer::UPDATE_USER_ID, AccountPeer::ACCOUNT_ID, $join_behavior);
 
 
         $stmt = BasePeer::doSelect($criteria, $con);
         $results = array();
 
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-            $key1 = QueuedDocumentPeer::getPrimaryKeyHashFromRow($row, 0);
-            if (null !== ($obj1 = QueuedDocumentPeer::getInstanceFromPool($key1))) {
+            $key1 = DocumentJobPeer::getPrimaryKeyHashFromRow($row, 0);
+            if (null !== ($obj1 = DocumentJobPeer::getInstanceFromPool($key1))) {
                 // We no longer rehydrate the object, since this can cause data loss.
                 // See http://www.propelorm.org/ticket/509
                 // $obj1->hydrate($row, 0, true); // rehydrate
             } else {
-                $cls = QueuedDocumentPeer::getOMClass();
+                $cls = DocumentJobPeer::getOMClass();
 
                 $obj1 = new $cls();
                 $obj1->hydrate($row);
-                QueuedDocumentPeer::addInstanceToPool($obj1, $key1);
+                DocumentJobPeer::addInstanceToPool($obj1, $key1);
             } // if obj1 already loaded
 
-                // Add objects for joined DocumentJob rows
+                // Add objects for joined Account rows
 
-                $key2 = DocumentJobPeer::getPrimaryKeyHashFromRow($row, $startcol2);
+                $key2 = AccountPeer::getPrimaryKeyHashFromRow($row, $startcol2);
                 if ($key2 !== null) {
-                    $obj2 = DocumentJobPeer::getInstanceFromPool($key2);
+                    $obj2 = AccountPeer::getInstanceFromPool($key2);
                     if (!$obj2) {
 
-                        $cls = DocumentJobPeer::getOMClass();
+                        $cls = AccountPeer::getOMClass();
 
                     $obj2 = new $cls();
                     $obj2->hydrate($row, $startcol2);
-                    DocumentJobPeer::addInstanceToPool($obj2, $key2);
+                    AccountPeer::addInstanceToPool($obj2, $key2);
                 } // if $obj2 already loaded
 
-                // Add the $obj1 (QueuedDocument) to the collection in $obj2 (DocumentJob)
-                $obj2->addQueuedDocument($obj1);
+                // Add the $obj1 (DocumentJob) to the collection in $obj2 (Account)
+                $obj2->addDocumentJobRelatedByCreationUserId($obj1);
 
             } // if joined row is not null
 
@@ -1758,27 +1483,8 @@ abstract class BaseQueuedDocumentPeer
                     AccountPeer::addInstanceToPool($obj3, $key3);
                 } // if $obj3 already loaded
 
-                // Add the $obj1 (QueuedDocument) to the collection in $obj3 (Account)
-                $obj3->addQueuedDocumentRelatedByCreationUserId($obj1);
-
-            } // if joined row is not null
-
-                // Add objects for joined Account rows
-
-                $key4 = AccountPeer::getPrimaryKeyHashFromRow($row, $startcol4);
-                if ($key4 !== null) {
-                    $obj4 = AccountPeer::getInstanceFromPool($key4);
-                    if (!$obj4) {
-
-                        $cls = AccountPeer::getOMClass();
-
-                    $obj4 = new $cls();
-                    $obj4->hydrate($row, $startcol4);
-                    AccountPeer::addInstanceToPool($obj4, $key4);
-                } // if $obj4 already loaded
-
-                // Add the $obj1 (QueuedDocument) to the collection in $obj4 (Account)
-                $obj4->addQueuedDocumentRelatedByUpdateUserId($obj1);
+                // Add the $obj1 (DocumentJob) to the collection in $obj3 (Account)
+                $obj3->addDocumentJobRelatedByUpdateUserId($obj1);
 
             } // if joined row is not null
 
@@ -1791,12 +1497,12 @@ abstract class BaseQueuedDocumentPeer
 
 
     /**
-     * Selects a collection of QueuedDocument objects pre-filled with all related objects except CodeSnippetRelatedByFinishCodeSnippetId.
+     * Selects a collection of DocumentJob objects pre-filled with all related objects except CodeSnippetRelatedByFinishCodeSnippetId.
      *
      * @param      Criteria  $criteria
      * @param      PropelPDO $con
      * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
-     * @return array           Array of QueuedDocument objects.
+     * @return array           Array of DocumentJob objects.
      * @throws PropelException Any exceptions caught during processing will be
      *		 rethrown wrapped into a PropelException.
      */
@@ -1808,61 +1514,56 @@ abstract class BaseQueuedDocumentPeer
         // $criteria->getDbName() will return the same object if not set to another value
         // so == check is okay and faster
         if ($criteria->getDbName() == Propel::getDefaultDB()) {
-            $criteria->setDbName(QueuedDocumentPeer::DATABASE_NAME);
+            $criteria->setDbName(DocumentJobPeer::DATABASE_NAME);
         }
 
-        QueuedDocumentPeer::addSelectColumns($criteria);
-        $startcol2 = QueuedDocumentPeer::NUM_HYDRATE_COLUMNS;
-
         DocumentJobPeer::addSelectColumns($criteria);
-        $startcol3 = $startcol2 + DocumentJobPeer::NUM_HYDRATE_COLUMNS;
+        $startcol2 = DocumentJobPeer::NUM_HYDRATE_COLUMNS;
+
+        AccountPeer::addSelectColumns($criteria);
+        $startcol3 = $startcol2 + AccountPeer::NUM_HYDRATE_COLUMNS;
 
         AccountPeer::addSelectColumns($criteria);
         $startcol4 = $startcol3 + AccountPeer::NUM_HYDRATE_COLUMNS;
 
-        AccountPeer::addSelectColumns($criteria);
-        $startcol5 = $startcol4 + AccountPeer::NUM_HYDRATE_COLUMNS;
+        $criteria->addJoin(DocumentJobPeer::CREATION_USER_ID, AccountPeer::ACCOUNT_ID, $join_behavior);
 
-        $criteria->addJoin(QueuedDocumentPeer::DOCUMENT_JOB_ID, DocumentJobPeer::DOCUMENT_JOB_ID, $join_behavior);
-
-        $criteria->addJoin(QueuedDocumentPeer::CREATION_USER_ID, AccountPeer::ACCOUNT_ID, $join_behavior);
-
-        $criteria->addJoin(QueuedDocumentPeer::UPDATE_USER_ID, AccountPeer::ACCOUNT_ID, $join_behavior);
+        $criteria->addJoin(DocumentJobPeer::UPDATE_USER_ID, AccountPeer::ACCOUNT_ID, $join_behavior);
 
 
         $stmt = BasePeer::doSelect($criteria, $con);
         $results = array();
 
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-            $key1 = QueuedDocumentPeer::getPrimaryKeyHashFromRow($row, 0);
-            if (null !== ($obj1 = QueuedDocumentPeer::getInstanceFromPool($key1))) {
+            $key1 = DocumentJobPeer::getPrimaryKeyHashFromRow($row, 0);
+            if (null !== ($obj1 = DocumentJobPeer::getInstanceFromPool($key1))) {
                 // We no longer rehydrate the object, since this can cause data loss.
                 // See http://www.propelorm.org/ticket/509
                 // $obj1->hydrate($row, 0, true); // rehydrate
             } else {
-                $cls = QueuedDocumentPeer::getOMClass();
+                $cls = DocumentJobPeer::getOMClass();
 
                 $obj1 = new $cls();
                 $obj1->hydrate($row);
-                QueuedDocumentPeer::addInstanceToPool($obj1, $key1);
+                DocumentJobPeer::addInstanceToPool($obj1, $key1);
             } // if obj1 already loaded
 
-                // Add objects for joined DocumentJob rows
+                // Add objects for joined Account rows
 
-                $key2 = DocumentJobPeer::getPrimaryKeyHashFromRow($row, $startcol2);
+                $key2 = AccountPeer::getPrimaryKeyHashFromRow($row, $startcol2);
                 if ($key2 !== null) {
-                    $obj2 = DocumentJobPeer::getInstanceFromPool($key2);
+                    $obj2 = AccountPeer::getInstanceFromPool($key2);
                     if (!$obj2) {
 
-                        $cls = DocumentJobPeer::getOMClass();
+                        $cls = AccountPeer::getOMClass();
 
                     $obj2 = new $cls();
                     $obj2->hydrate($row, $startcol2);
-                    DocumentJobPeer::addInstanceToPool($obj2, $key2);
+                    AccountPeer::addInstanceToPool($obj2, $key2);
                 } // if $obj2 already loaded
 
-                // Add the $obj1 (QueuedDocument) to the collection in $obj2 (DocumentJob)
-                $obj2->addQueuedDocument($obj1);
+                // Add the $obj1 (DocumentJob) to the collection in $obj2 (Account)
+                $obj2->addDocumentJobRelatedByCreationUserId($obj1);
 
             } // if joined row is not null
 
@@ -1880,27 +1581,8 @@ abstract class BaseQueuedDocumentPeer
                     AccountPeer::addInstanceToPool($obj3, $key3);
                 } // if $obj3 already loaded
 
-                // Add the $obj1 (QueuedDocument) to the collection in $obj3 (Account)
-                $obj3->addQueuedDocumentRelatedByCreationUserId($obj1);
-
-            } // if joined row is not null
-
-                // Add objects for joined Account rows
-
-                $key4 = AccountPeer::getPrimaryKeyHashFromRow($row, $startcol4);
-                if ($key4 !== null) {
-                    $obj4 = AccountPeer::getInstanceFromPool($key4);
-                    if (!$obj4) {
-
-                        $cls = AccountPeer::getOMClass();
-
-                    $obj4 = new $cls();
-                    $obj4->hydrate($row, $startcol4);
-                    AccountPeer::addInstanceToPool($obj4, $key4);
-                } // if $obj4 already loaded
-
-                // Add the $obj1 (QueuedDocument) to the collection in $obj4 (Account)
-                $obj4->addQueuedDocumentRelatedByUpdateUserId($obj1);
+                // Add the $obj1 (DocumentJob) to the collection in $obj3 (Account)
+                $obj3->addDocumentJobRelatedByUpdateUserId($obj1);
 
             } // if joined row is not null
 
@@ -1913,158 +1595,12 @@ abstract class BaseQueuedDocumentPeer
 
 
     /**
-     * Selects a collection of QueuedDocument objects pre-filled with all related objects except DocumentJob.
+     * Selects a collection of DocumentJob objects pre-filled with all related objects except AccountRelatedByCreationUserId.
      *
      * @param      Criteria  $criteria
      * @param      PropelPDO $con
      * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
-     * @return array           Array of QueuedDocument objects.
-     * @throws PropelException Any exceptions caught during processing will be
-     *		 rethrown wrapped into a PropelException.
-     */
-    public static function doSelectJoinAllExceptDocumentJob(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
-    {
-        $criteria = clone $criteria;
-
-        // Set the correct dbName if it has not been overridden
-        // $criteria->getDbName() will return the same object if not set to another value
-        // so == check is okay and faster
-        if ($criteria->getDbName() == Propel::getDefaultDB()) {
-            $criteria->setDbName(QueuedDocumentPeer::DATABASE_NAME);
-        }
-
-        QueuedDocumentPeer::addSelectColumns($criteria);
-        $startcol2 = QueuedDocumentPeer::NUM_HYDRATE_COLUMNS;
-
-        CodeSnippetPeer::addSelectColumns($criteria);
-        $startcol3 = $startcol2 + CodeSnippetPeer::NUM_HYDRATE_COLUMNS;
-
-        CodeSnippetPeer::addSelectColumns($criteria);
-        $startcol4 = $startcol3 + CodeSnippetPeer::NUM_HYDRATE_COLUMNS;
-
-        AccountPeer::addSelectColumns($criteria);
-        $startcol5 = $startcol4 + AccountPeer::NUM_HYDRATE_COLUMNS;
-
-        AccountPeer::addSelectColumns($criteria);
-        $startcol6 = $startcol5 + AccountPeer::NUM_HYDRATE_COLUMNS;
-
-        $criteria->addJoin(QueuedDocumentPeer::START_CODE_SNIPPET_ID, CodeSnippetPeer::CODE_SNIPPET_ID, $join_behavior);
-
-        $criteria->addJoin(QueuedDocumentPeer::FINISH_CODE_SNIPPET_ID, CodeSnippetPeer::CODE_SNIPPET_ID, $join_behavior);
-
-        $criteria->addJoin(QueuedDocumentPeer::CREATION_USER_ID, AccountPeer::ACCOUNT_ID, $join_behavior);
-
-        $criteria->addJoin(QueuedDocumentPeer::UPDATE_USER_ID, AccountPeer::ACCOUNT_ID, $join_behavior);
-
-
-        $stmt = BasePeer::doSelect($criteria, $con);
-        $results = array();
-
-        while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-            $key1 = QueuedDocumentPeer::getPrimaryKeyHashFromRow($row, 0);
-            if (null !== ($obj1 = QueuedDocumentPeer::getInstanceFromPool($key1))) {
-                // We no longer rehydrate the object, since this can cause data loss.
-                // See http://www.propelorm.org/ticket/509
-                // $obj1->hydrate($row, 0, true); // rehydrate
-            } else {
-                $cls = QueuedDocumentPeer::getOMClass();
-
-                $obj1 = new $cls();
-                $obj1->hydrate($row);
-                QueuedDocumentPeer::addInstanceToPool($obj1, $key1);
-            } // if obj1 already loaded
-
-                // Add objects for joined CodeSnippet rows
-
-                $key2 = CodeSnippetPeer::getPrimaryKeyHashFromRow($row, $startcol2);
-                if ($key2 !== null) {
-                    $obj2 = CodeSnippetPeer::getInstanceFromPool($key2);
-                    if (!$obj2) {
-
-                        $cls = CodeSnippetPeer::getOMClass();
-
-                    $obj2 = new $cls();
-                    $obj2->hydrate($row, $startcol2);
-                    CodeSnippetPeer::addInstanceToPool($obj2, $key2);
-                } // if $obj2 already loaded
-
-                // Add the $obj1 (QueuedDocument) to the collection in $obj2 (CodeSnippet)
-                $obj2->addQueuedDocumentRelatedByStartCodeSnippetId($obj1);
-
-            } // if joined row is not null
-
-                // Add objects for joined CodeSnippet rows
-
-                $key3 = CodeSnippetPeer::getPrimaryKeyHashFromRow($row, $startcol3);
-                if ($key3 !== null) {
-                    $obj3 = CodeSnippetPeer::getInstanceFromPool($key3);
-                    if (!$obj3) {
-
-                        $cls = CodeSnippetPeer::getOMClass();
-
-                    $obj3 = new $cls();
-                    $obj3->hydrate($row, $startcol3);
-                    CodeSnippetPeer::addInstanceToPool($obj3, $key3);
-                } // if $obj3 already loaded
-
-                // Add the $obj1 (QueuedDocument) to the collection in $obj3 (CodeSnippet)
-                $obj3->addQueuedDocumentRelatedByFinishCodeSnippetId($obj1);
-
-            } // if joined row is not null
-
-                // Add objects for joined Account rows
-
-                $key4 = AccountPeer::getPrimaryKeyHashFromRow($row, $startcol4);
-                if ($key4 !== null) {
-                    $obj4 = AccountPeer::getInstanceFromPool($key4);
-                    if (!$obj4) {
-
-                        $cls = AccountPeer::getOMClass();
-
-                    $obj4 = new $cls();
-                    $obj4->hydrate($row, $startcol4);
-                    AccountPeer::addInstanceToPool($obj4, $key4);
-                } // if $obj4 already loaded
-
-                // Add the $obj1 (QueuedDocument) to the collection in $obj4 (Account)
-                $obj4->addQueuedDocumentRelatedByCreationUserId($obj1);
-
-            } // if joined row is not null
-
-                // Add objects for joined Account rows
-
-                $key5 = AccountPeer::getPrimaryKeyHashFromRow($row, $startcol5);
-                if ($key5 !== null) {
-                    $obj5 = AccountPeer::getInstanceFromPool($key5);
-                    if (!$obj5) {
-
-                        $cls = AccountPeer::getOMClass();
-
-                    $obj5 = new $cls();
-                    $obj5->hydrate($row, $startcol5);
-                    AccountPeer::addInstanceToPool($obj5, $key5);
-                } // if $obj5 already loaded
-
-                // Add the $obj1 (QueuedDocument) to the collection in $obj5 (Account)
-                $obj5->addQueuedDocumentRelatedByUpdateUserId($obj1);
-
-            } // if joined row is not null
-
-            $results[] = $obj1;
-        }
-        $stmt->closeCursor();
-
-        return $results;
-    }
-
-
-    /**
-     * Selects a collection of QueuedDocument objects pre-filled with all related objects except AccountRelatedByCreationUserId.
-     *
-     * @param      Criteria  $criteria
-     * @param      PropelPDO $con
-     * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
-     * @return array           Array of QueuedDocument objects.
+     * @return array           Array of DocumentJob objects.
      * @throws PropelException Any exceptions caught during processing will be
      *		 rethrown wrapped into a PropelException.
      */
@@ -2076,11 +1612,11 @@ abstract class BaseQueuedDocumentPeer
         // $criteria->getDbName() will return the same object if not set to another value
         // so == check is okay and faster
         if ($criteria->getDbName() == Propel::getDefaultDB()) {
-            $criteria->setDbName(QueuedDocumentPeer::DATABASE_NAME);
+            $criteria->setDbName(DocumentJobPeer::DATABASE_NAME);
         }
 
-        QueuedDocumentPeer::addSelectColumns($criteria);
-        $startcol2 = QueuedDocumentPeer::NUM_HYDRATE_COLUMNS;
+        DocumentJobPeer::addSelectColumns($criteria);
+        $startcol2 = DocumentJobPeer::NUM_HYDRATE_COLUMNS;
 
         CodeSnippetPeer::addSelectColumns($criteria);
         $startcol3 = $startcol2 + CodeSnippetPeer::NUM_HYDRATE_COLUMNS;
@@ -2088,31 +1624,26 @@ abstract class BaseQueuedDocumentPeer
         CodeSnippetPeer::addSelectColumns($criteria);
         $startcol4 = $startcol3 + CodeSnippetPeer::NUM_HYDRATE_COLUMNS;
 
-        DocumentJobPeer::addSelectColumns($criteria);
-        $startcol5 = $startcol4 + DocumentJobPeer::NUM_HYDRATE_COLUMNS;
+        $criteria->addJoin(DocumentJobPeer::START_CODE_SNIPPET_ID, CodeSnippetPeer::CODE_SNIPPET_ID, $join_behavior);
 
-        $criteria->addJoin(QueuedDocumentPeer::START_CODE_SNIPPET_ID, CodeSnippetPeer::CODE_SNIPPET_ID, $join_behavior);
-
-        $criteria->addJoin(QueuedDocumentPeer::FINISH_CODE_SNIPPET_ID, CodeSnippetPeer::CODE_SNIPPET_ID, $join_behavior);
-
-        $criteria->addJoin(QueuedDocumentPeer::DOCUMENT_JOB_ID, DocumentJobPeer::DOCUMENT_JOB_ID, $join_behavior);
+        $criteria->addJoin(DocumentJobPeer::FINISH_CODE_SNIPPET_ID, CodeSnippetPeer::CODE_SNIPPET_ID, $join_behavior);
 
 
         $stmt = BasePeer::doSelect($criteria, $con);
         $results = array();
 
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-            $key1 = QueuedDocumentPeer::getPrimaryKeyHashFromRow($row, 0);
-            if (null !== ($obj1 = QueuedDocumentPeer::getInstanceFromPool($key1))) {
+            $key1 = DocumentJobPeer::getPrimaryKeyHashFromRow($row, 0);
+            if (null !== ($obj1 = DocumentJobPeer::getInstanceFromPool($key1))) {
                 // We no longer rehydrate the object, since this can cause data loss.
                 // See http://www.propelorm.org/ticket/509
                 // $obj1->hydrate($row, 0, true); // rehydrate
             } else {
-                $cls = QueuedDocumentPeer::getOMClass();
+                $cls = DocumentJobPeer::getOMClass();
 
                 $obj1 = new $cls();
                 $obj1->hydrate($row);
-                QueuedDocumentPeer::addInstanceToPool($obj1, $key1);
+                DocumentJobPeer::addInstanceToPool($obj1, $key1);
             } // if obj1 already loaded
 
                 // Add objects for joined CodeSnippet rows
@@ -2129,8 +1660,8 @@ abstract class BaseQueuedDocumentPeer
                     CodeSnippetPeer::addInstanceToPool($obj2, $key2);
                 } // if $obj2 already loaded
 
-                // Add the $obj1 (QueuedDocument) to the collection in $obj2 (CodeSnippet)
-                $obj2->addQueuedDocumentRelatedByStartCodeSnippetId($obj1);
+                // Add the $obj1 (DocumentJob) to the collection in $obj2 (CodeSnippet)
+                $obj2->addDocumentJobRelatedByStartCodeSnippetId($obj1);
 
             } // if joined row is not null
 
@@ -2148,27 +1679,8 @@ abstract class BaseQueuedDocumentPeer
                     CodeSnippetPeer::addInstanceToPool($obj3, $key3);
                 } // if $obj3 already loaded
 
-                // Add the $obj1 (QueuedDocument) to the collection in $obj3 (CodeSnippet)
-                $obj3->addQueuedDocumentRelatedByFinishCodeSnippetId($obj1);
-
-            } // if joined row is not null
-
-                // Add objects for joined DocumentJob rows
-
-                $key4 = DocumentJobPeer::getPrimaryKeyHashFromRow($row, $startcol4);
-                if ($key4 !== null) {
-                    $obj4 = DocumentJobPeer::getInstanceFromPool($key4);
-                    if (!$obj4) {
-
-                        $cls = DocumentJobPeer::getOMClass();
-
-                    $obj4 = new $cls();
-                    $obj4->hydrate($row, $startcol4);
-                    DocumentJobPeer::addInstanceToPool($obj4, $key4);
-                } // if $obj4 already loaded
-
-                // Add the $obj1 (QueuedDocument) to the collection in $obj4 (DocumentJob)
-                $obj4->addQueuedDocument($obj1);
+                // Add the $obj1 (DocumentJob) to the collection in $obj3 (CodeSnippet)
+                $obj3->addDocumentJobRelatedByFinishCodeSnippetId($obj1);
 
             } // if joined row is not null
 
@@ -2181,12 +1693,12 @@ abstract class BaseQueuedDocumentPeer
 
 
     /**
-     * Selects a collection of QueuedDocument objects pre-filled with all related objects except AccountRelatedByUpdateUserId.
+     * Selects a collection of DocumentJob objects pre-filled with all related objects except AccountRelatedByUpdateUserId.
      *
      * @param      Criteria  $criteria
      * @param      PropelPDO $con
      * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
-     * @return array           Array of QueuedDocument objects.
+     * @return array           Array of DocumentJob objects.
      * @throws PropelException Any exceptions caught during processing will be
      *		 rethrown wrapped into a PropelException.
      */
@@ -2198,11 +1710,11 @@ abstract class BaseQueuedDocumentPeer
         // $criteria->getDbName() will return the same object if not set to another value
         // so == check is okay and faster
         if ($criteria->getDbName() == Propel::getDefaultDB()) {
-            $criteria->setDbName(QueuedDocumentPeer::DATABASE_NAME);
+            $criteria->setDbName(DocumentJobPeer::DATABASE_NAME);
         }
 
-        QueuedDocumentPeer::addSelectColumns($criteria);
-        $startcol2 = QueuedDocumentPeer::NUM_HYDRATE_COLUMNS;
+        DocumentJobPeer::addSelectColumns($criteria);
+        $startcol2 = DocumentJobPeer::NUM_HYDRATE_COLUMNS;
 
         CodeSnippetPeer::addSelectColumns($criteria);
         $startcol3 = $startcol2 + CodeSnippetPeer::NUM_HYDRATE_COLUMNS;
@@ -2210,31 +1722,26 @@ abstract class BaseQueuedDocumentPeer
         CodeSnippetPeer::addSelectColumns($criteria);
         $startcol4 = $startcol3 + CodeSnippetPeer::NUM_HYDRATE_COLUMNS;
 
-        DocumentJobPeer::addSelectColumns($criteria);
-        $startcol5 = $startcol4 + DocumentJobPeer::NUM_HYDRATE_COLUMNS;
+        $criteria->addJoin(DocumentJobPeer::START_CODE_SNIPPET_ID, CodeSnippetPeer::CODE_SNIPPET_ID, $join_behavior);
 
-        $criteria->addJoin(QueuedDocumentPeer::START_CODE_SNIPPET_ID, CodeSnippetPeer::CODE_SNIPPET_ID, $join_behavior);
-
-        $criteria->addJoin(QueuedDocumentPeer::FINISH_CODE_SNIPPET_ID, CodeSnippetPeer::CODE_SNIPPET_ID, $join_behavior);
-
-        $criteria->addJoin(QueuedDocumentPeer::DOCUMENT_JOB_ID, DocumentJobPeer::DOCUMENT_JOB_ID, $join_behavior);
+        $criteria->addJoin(DocumentJobPeer::FINISH_CODE_SNIPPET_ID, CodeSnippetPeer::CODE_SNIPPET_ID, $join_behavior);
 
 
         $stmt = BasePeer::doSelect($criteria, $con);
         $results = array();
 
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-            $key1 = QueuedDocumentPeer::getPrimaryKeyHashFromRow($row, 0);
-            if (null !== ($obj1 = QueuedDocumentPeer::getInstanceFromPool($key1))) {
+            $key1 = DocumentJobPeer::getPrimaryKeyHashFromRow($row, 0);
+            if (null !== ($obj1 = DocumentJobPeer::getInstanceFromPool($key1))) {
                 // We no longer rehydrate the object, since this can cause data loss.
                 // See http://www.propelorm.org/ticket/509
                 // $obj1->hydrate($row, 0, true); // rehydrate
             } else {
-                $cls = QueuedDocumentPeer::getOMClass();
+                $cls = DocumentJobPeer::getOMClass();
 
                 $obj1 = new $cls();
                 $obj1->hydrate($row);
-                QueuedDocumentPeer::addInstanceToPool($obj1, $key1);
+                DocumentJobPeer::addInstanceToPool($obj1, $key1);
             } // if obj1 already loaded
 
                 // Add objects for joined CodeSnippet rows
@@ -2251,8 +1758,8 @@ abstract class BaseQueuedDocumentPeer
                     CodeSnippetPeer::addInstanceToPool($obj2, $key2);
                 } // if $obj2 already loaded
 
-                // Add the $obj1 (QueuedDocument) to the collection in $obj2 (CodeSnippet)
-                $obj2->addQueuedDocumentRelatedByStartCodeSnippetId($obj1);
+                // Add the $obj1 (DocumentJob) to the collection in $obj2 (CodeSnippet)
+                $obj2->addDocumentJobRelatedByStartCodeSnippetId($obj1);
 
             } // if joined row is not null
 
@@ -2270,27 +1777,8 @@ abstract class BaseQueuedDocumentPeer
                     CodeSnippetPeer::addInstanceToPool($obj3, $key3);
                 } // if $obj3 already loaded
 
-                // Add the $obj1 (QueuedDocument) to the collection in $obj3 (CodeSnippet)
-                $obj3->addQueuedDocumentRelatedByFinishCodeSnippetId($obj1);
-
-            } // if joined row is not null
-
-                // Add objects for joined DocumentJob rows
-
-                $key4 = DocumentJobPeer::getPrimaryKeyHashFromRow($row, $startcol4);
-                if ($key4 !== null) {
-                    $obj4 = DocumentJobPeer::getInstanceFromPool($key4);
-                    if (!$obj4) {
-
-                        $cls = DocumentJobPeer::getOMClass();
-
-                    $obj4 = new $cls();
-                    $obj4->hydrate($row, $startcol4);
-                    DocumentJobPeer::addInstanceToPool($obj4, $key4);
-                } // if $obj4 already loaded
-
-                // Add the $obj1 (QueuedDocument) to the collection in $obj4 (DocumentJob)
-                $obj4->addQueuedDocument($obj1);
+                // Add the $obj1 (DocumentJob) to the collection in $obj3 (CodeSnippet)
+                $obj3->addDocumentJobRelatedByFinishCodeSnippetId($obj1);
 
             } // if joined row is not null
 
@@ -2310,7 +1798,7 @@ abstract class BaseQueuedDocumentPeer
      */
     public static function getTableMap()
     {
-        return Propel::getDatabaseMap(QueuedDocumentPeer::DATABASE_NAME)->getTable(QueuedDocumentPeer::TABLE_NAME);
+        return Propel::getDatabaseMap(DocumentJobPeer::DATABASE_NAME)->getTable(DocumentJobPeer::TABLE_NAME);
     }
 
     /**
@@ -2318,9 +1806,9 @@ abstract class BaseQueuedDocumentPeer
      */
     public static function buildTableMap()
     {
-      $dbMap = Propel::getDatabaseMap(BaseQueuedDocumentPeer::DATABASE_NAME);
-      if (!$dbMap->hasTable(BaseQueuedDocumentPeer::TABLE_NAME)) {
-        $dbMap->addTableObject(new \Eulogix\Cool\Gendoc\Bundle\Model\map\QueuedDocumentTableMap());
+      $dbMap = Propel::getDatabaseMap(BaseDocumentJobPeer::DATABASE_NAME);
+      if (!$dbMap->hasTable(BaseDocumentJobPeer::TABLE_NAME)) {
+        $dbMap->addTableObject(new \Eulogix\Cool\Gendoc\Bundle\Model\map\DocumentJobTableMap());
       }
     }
 
@@ -2332,13 +1820,13 @@ abstract class BaseQueuedDocumentPeer
      */
     public static function getOMClass($row = 0, $colnum = 0)
     {
-        return QueuedDocumentPeer::OM_CLASS;
+        return DocumentJobPeer::OM_CLASS;
     }
 
     /**
-     * Performs an INSERT on the database, given a QueuedDocument or Criteria object.
+     * Performs an INSERT on the database, given a DocumentJob or Criteria object.
      *
-     * @param      mixed $values Criteria or QueuedDocument object containing data that is used to create the INSERT statement.
+     * @param      mixed $values Criteria or DocumentJob object containing data that is used to create the INSERT statement.
      * @param      PropelPDO $con the PropelPDO connection to use
      * @return mixed           The new primary key.
      * @throws PropelException Any exceptions caught during processing will be
@@ -2347,22 +1835,22 @@ abstract class BaseQueuedDocumentPeer
     public static function doInsert($values, PropelPDO $con = null)
     {
         if ($con === null) {
-            $con = Propel::getConnection(QueuedDocumentPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
+            $con = Propel::getConnection(DocumentJobPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
         }
 
         if ($values instanceof Criteria) {
             $criteria = clone $values; // rename for clarity
         } else {
-            $criteria = $values->buildCriteria(); // build Criteria from QueuedDocument object
+            $criteria = $values->buildCriteria(); // build Criteria from DocumentJob object
         }
 
-        if ($criteria->containsKey(QueuedDocumentPeer::QUEUED_DOCUMENT_ID) && $criteria->keyContainsValue(QueuedDocumentPeer::QUEUED_DOCUMENT_ID) ) {
-            throw new PropelException('Cannot insert a value for auto-increment primary key ('.QueuedDocumentPeer::QUEUED_DOCUMENT_ID.')');
+        if ($criteria->containsKey(DocumentJobPeer::DOCUMENT_JOB_ID) && $criteria->keyContainsValue(DocumentJobPeer::DOCUMENT_JOB_ID) ) {
+            throw new PropelException('Cannot insert a value for auto-increment primary key ('.DocumentJobPeer::DOCUMENT_JOB_ID.')');
         }
 
 
         // Set the correct dbName
-        $criteria->setDbName(QueuedDocumentPeer::DATABASE_NAME);
+        $criteria->setDbName(DocumentJobPeer::DATABASE_NAME);
 
         try {
             // use transaction because $criteria could contain info
@@ -2379,9 +1867,9 @@ abstract class BaseQueuedDocumentPeer
     }
 
     /**
-     * Performs an UPDATE on the database, given a QueuedDocument or Criteria object.
+     * Performs an UPDATE on the database, given a DocumentJob or Criteria object.
      *
-     * @param      mixed $values Criteria or QueuedDocument object containing data that is used to create the UPDATE statement.
+     * @param      mixed $values Criteria or DocumentJob object containing data that is used to create the UPDATE statement.
      * @param      PropelPDO $con The connection to use (specify PropelPDO connection object to exert more control over transactions).
      * @return int             The number of affected rows (if supported by underlying database driver).
      * @throws PropelException Any exceptions caught during processing will be
@@ -2390,35 +1878,35 @@ abstract class BaseQueuedDocumentPeer
     public static function doUpdate($values, PropelPDO $con = null)
     {
         if ($con === null) {
-            $con = Propel::getConnection(QueuedDocumentPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
+            $con = Propel::getConnection(DocumentJobPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
         }
 
-        $selectCriteria = new Criteria(QueuedDocumentPeer::DATABASE_NAME);
+        $selectCriteria = new Criteria(DocumentJobPeer::DATABASE_NAME);
 
         if ($values instanceof Criteria) {
             $criteria = clone $values; // rename for clarity
 
-            $comparison = $criteria->getComparison(QueuedDocumentPeer::QUEUED_DOCUMENT_ID);
-            $value = $criteria->remove(QueuedDocumentPeer::QUEUED_DOCUMENT_ID);
+            $comparison = $criteria->getComparison(DocumentJobPeer::DOCUMENT_JOB_ID);
+            $value = $criteria->remove(DocumentJobPeer::DOCUMENT_JOB_ID);
             if ($value) {
-                $selectCriteria->add(QueuedDocumentPeer::QUEUED_DOCUMENT_ID, $value, $comparison);
+                $selectCriteria->add(DocumentJobPeer::DOCUMENT_JOB_ID, $value, $comparison);
             } else {
-                $selectCriteria->setPrimaryTableName(QueuedDocumentPeer::TABLE_NAME);
+                $selectCriteria->setPrimaryTableName(DocumentJobPeer::TABLE_NAME);
             }
 
-        } else { // $values is QueuedDocument object
+        } else { // $values is DocumentJob object
             $criteria = $values->buildCriteria(); // gets full criteria
             $selectCriteria = $values->buildPkeyCriteria(); // gets criteria w/ primary key(s)
         }
 
         // set the correct dbName
-        $criteria->setDbName(QueuedDocumentPeer::DATABASE_NAME);
+        $criteria->setDbName(DocumentJobPeer::DATABASE_NAME);
 
         return BasePeer::doUpdate($selectCriteria, $criteria, $con);
     }
 
     /**
-     * Deletes all rows from the gendoc.queued_document table.
+     * Deletes all rows from the gendoc.document_job table.
      *
      * @param      PropelPDO $con the connection to use
      * @return int             The number of affected rows (if supported by underlying database driver).
@@ -2427,19 +1915,19 @@ abstract class BaseQueuedDocumentPeer
     public static function doDeleteAll(PropelPDO $con = null)
     {
         if ($con === null) {
-            $con = Propel::getConnection(QueuedDocumentPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
+            $con = Propel::getConnection(DocumentJobPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
         }
         $affectedRows = 0; // initialize var to track total num of affected rows
         try {
             // use transaction because $criteria could contain info
             // for more than one table or we could emulating ON DELETE CASCADE, etc.
             $con->beginTransaction();
-            $affectedRows += BasePeer::doDeleteAll(QueuedDocumentPeer::TABLE_NAME, $con, QueuedDocumentPeer::DATABASE_NAME);
+            $affectedRows += BasePeer::doDeleteAll(DocumentJobPeer::TABLE_NAME, $con, DocumentJobPeer::DATABASE_NAME);
             // Because this db requires some delete cascade/set null emulation, we have to
             // clear the cached instance *after* the emulation has happened (since
             // instances get re-added by the select statement contained therein).
-            QueuedDocumentPeer::clearInstancePool();
-            QueuedDocumentPeer::clearRelatedInstancePool();
+            DocumentJobPeer::clearInstancePool();
+            DocumentJobPeer::clearRelatedInstancePool();
             $con->commit();
 
             return $affectedRows;
@@ -2450,9 +1938,9 @@ abstract class BaseQueuedDocumentPeer
     }
 
     /**
-     * Performs a DELETE on the database, given a QueuedDocument or Criteria object OR a primary key value.
+     * Performs a DELETE on the database, given a DocumentJob or Criteria object OR a primary key value.
      *
-     * @param      mixed $values Criteria or QueuedDocument object or primary key or array of primary keys
+     * @param      mixed $values Criteria or DocumentJob object or primary key or array of primary keys
      *              which is used to create the DELETE statement
      * @param      PropelPDO $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
@@ -2463,32 +1951,32 @@ abstract class BaseQueuedDocumentPeer
      public static function doDelete($values, PropelPDO $con = null)
      {
         if ($con === null) {
-            $con = Propel::getConnection(QueuedDocumentPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
+            $con = Propel::getConnection(DocumentJobPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
         }
 
         if ($values instanceof Criteria) {
             // invalidate the cache for all objects of this type, since we have no
             // way of knowing (without running a query) what objects should be invalidated
             // from the cache based on this Criteria.
-            QueuedDocumentPeer::clearInstancePool();
+            DocumentJobPeer::clearInstancePool();
             // rename for clarity
             $criteria = clone $values;
-        } elseif ($values instanceof QueuedDocument) { // it's a model object
+        } elseif ($values instanceof DocumentJob) { // it's a model object
             // invalidate the cache for this single object
-            QueuedDocumentPeer::removeInstanceFromPool($values);
+            DocumentJobPeer::removeInstanceFromPool($values);
             // create criteria based on pk values
             $criteria = $values->buildPkeyCriteria();
         } else { // it's a primary key, or an array of pks
-            $criteria = new Criteria(QueuedDocumentPeer::DATABASE_NAME);
-            $criteria->add(QueuedDocumentPeer::QUEUED_DOCUMENT_ID, (array) $values, Criteria::IN);
+            $criteria = new Criteria(DocumentJobPeer::DATABASE_NAME);
+            $criteria->add(DocumentJobPeer::DOCUMENT_JOB_ID, (array) $values, Criteria::IN);
             // invalidate the cache for this object(s)
             foreach ((array) $values as $singleval) {
-                QueuedDocumentPeer::removeInstanceFromPool($singleval);
+                DocumentJobPeer::removeInstanceFromPool($singleval);
             }
         }
 
         // Set the correct dbName
-        $criteria->setDbName(QueuedDocumentPeer::DATABASE_NAME);
+        $criteria->setDbName(DocumentJobPeer::DATABASE_NAME);
 
         $affectedRows = 0; // initialize var to track total num of affected rows
 
@@ -2498,7 +1986,7 @@ abstract class BaseQueuedDocumentPeer
             $con->beginTransaction();
 
             $affectedRows += BasePeer::doDelete($criteria, $con);
-            QueuedDocumentPeer::clearRelatedInstancePool();
+            DocumentJobPeer::clearRelatedInstancePool();
             $con->commit();
 
             return $affectedRows;
@@ -2509,13 +1997,13 @@ abstract class BaseQueuedDocumentPeer
     }
 
     /**
-     * Validates all modified columns of given QueuedDocument object.
+     * Validates all modified columns of given DocumentJob object.
      * If parameter $columns is either a single column name or an array of column names
      * than only those columns are validated.
      *
      * NOTICE: This does not apply to primary or foreign keys for now.
      *
-     * @param QueuedDocument $obj The object to validate.
+     * @param DocumentJob $obj The object to validate.
      * @param      mixed $cols Column name or array of column names.
      *
      * @return mixed TRUE if all columns are valid or the error message of the first invalid column.
@@ -2525,8 +2013,8 @@ abstract class BaseQueuedDocumentPeer
         $columns = array();
 
         if ($cols) {
-            $dbMap = Propel::getDatabaseMap(QueuedDocumentPeer::DATABASE_NAME);
-            $tableMap = $dbMap->getTable(QueuedDocumentPeer::TABLE_NAME);
+            $dbMap = Propel::getDatabaseMap(DocumentJobPeer::DATABASE_NAME);
+            $tableMap = $dbMap->getTable(DocumentJobPeer::TABLE_NAME);
 
             if (! is_array($cols)) {
                 $cols = array($cols);
@@ -2542,7 +2030,7 @@ abstract class BaseQueuedDocumentPeer
 
         }
 
-        return BasePeer::doValidate(QueuedDocumentPeer::DATABASE_NAME, QueuedDocumentPeer::TABLE_NAME, $columns);
+        return BasePeer::doValidate(DocumentJobPeer::DATABASE_NAME, DocumentJobPeer::TABLE_NAME, $columns);
     }
 
     /**
@@ -2550,23 +2038,23 @@ abstract class BaseQueuedDocumentPeer
      *
      * @param int $pk the primary key.
      * @param      PropelPDO $con the connection to use
-     * @return QueuedDocument
+     * @return DocumentJob
      */
     public static function retrieveByPK($pk, PropelPDO $con = null)
     {
 
-        if (null !== ($obj = QueuedDocumentPeer::getInstanceFromPool((string) $pk))) {
+        if (null !== ($obj = DocumentJobPeer::getInstanceFromPool((string) $pk))) {
             return $obj;
         }
 
         if ($con === null) {
-            $con = Propel::getConnection(QueuedDocumentPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+            $con = Propel::getConnection(DocumentJobPeer::DATABASE_NAME, Propel::CONNECTION_READ);
         }
 
-        $criteria = new Criteria(QueuedDocumentPeer::DATABASE_NAME);
-        $criteria->add(QueuedDocumentPeer::QUEUED_DOCUMENT_ID, $pk);
+        $criteria = new Criteria(DocumentJobPeer::DATABASE_NAME);
+        $criteria->add(DocumentJobPeer::DOCUMENT_JOB_ID, $pk);
 
-        $v = QueuedDocumentPeer::doSelect($criteria, $con);
+        $v = DocumentJobPeer::doSelect($criteria, $con);
 
         return !empty($v) > 0 ? $v[0] : null;
     }
@@ -2576,31 +2064,31 @@ abstract class BaseQueuedDocumentPeer
      *
      * @param      array $pks List of primary keys
      * @param      PropelPDO $con the connection to use
-     * @return QueuedDocument[]
+     * @return DocumentJob[]
      * @throws PropelException Any exceptions caught during processing will be
      *		 rethrown wrapped into a PropelException.
      */
     public static function retrieveByPKs($pks, PropelPDO $con = null)
     {
         if ($con === null) {
-            $con = Propel::getConnection(QueuedDocumentPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+            $con = Propel::getConnection(DocumentJobPeer::DATABASE_NAME, Propel::CONNECTION_READ);
         }
 
         $objs = null;
         if (empty($pks)) {
             $objs = array();
         } else {
-            $criteria = new Criteria(QueuedDocumentPeer::DATABASE_NAME);
-            $criteria->add(QueuedDocumentPeer::QUEUED_DOCUMENT_ID, $pks, Criteria::IN);
-            $objs = QueuedDocumentPeer::doSelect($criteria, $con);
+            $criteria = new Criteria(DocumentJobPeer::DATABASE_NAME);
+            $criteria->add(DocumentJobPeer::DOCUMENT_JOB_ID, $pks, Criteria::IN);
+            $objs = DocumentJobPeer::doSelect($criteria, $con);
         }
 
         return $objs;
     }
 
-} // BaseQueuedDocumentPeer
+} // BaseDocumentJobPeer
 
 // This is the static code needed to register the TableMap for this table with the main Propel class.
 //
-BaseQueuedDocumentPeer::buildTableMap();
+BaseDocumentJobPeer::buildTableMap();
 

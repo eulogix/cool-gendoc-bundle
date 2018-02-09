@@ -6,7 +6,7 @@ use \RelationMap;
 
 
 /**
- * This class defines the structure of the 'gendoc.queued_document' table.
+ * This class defines the structure of the 'gendoc.document_job' table.
  *
  *
  *
@@ -17,13 +17,13 @@ use \RelationMap;
  *
  * @package    propel.generator.vendor.eulogix.cool-gendoc-bundle.Bundle.Model.map
  */
-class QueuedDocumentTableMap extends \Eulogix\Cool\Lib\Database\Propel\CoolTableMap
+class DocumentJobTableMap extends \Eulogix\Cool\Lib\Database\Propel\CoolTableMap
 {
 
     /**
      * The (dot-path) name of this class
      */
-    const CLASS_NAME = 'vendor.eulogix.cool-gendoc-bundle.Bundle.Model.map.QueuedDocumentTableMap';
+    const CLASS_NAME = 'vendor.eulogix.cool-gendoc-bundle.Bundle.Model.map.DocumentJobTableMap';
 
     /**
      * Initialize the table attributes, columns and validators
@@ -35,30 +35,17 @@ class QueuedDocumentTableMap extends \Eulogix\Cool\Lib\Database\Propel\CoolTable
     public function initialize()
     {
         // attributes
-        $this->setName('gendoc.queued_document');
-        $this->setPhpName('QueuedDocument');
-        $this->setClassname('Eulogix\\Cool\\Gendoc\\Bundle\\Model\\QueuedDocument');
+        $this->setName('gendoc.document_job');
+        $this->setPhpName('DocumentJob');
+        $this->setClassname('Eulogix\\Cool\\Gendoc\\Bundle\\Model\\DocumentJob');
         $this->setPackage('vendor.eulogix.cool-gendoc-bundle.Bundle.Model');
         $this->setUseIdGenerator(true);
-        $this->setPrimaryKeyMethodInfo('gendoc.queued_document_queued_document_id_seq');
+        $this->setPrimaryKeyMethodInfo('gendoc.document_job_document_job_id_seq');
         // columns
-        $this->addPrimaryKey('queued_document_id', 'QueuedDocumentId', 'INTEGER', true, null, null);
-        $this->addForeignKey('document_job_id', 'DocumentJobId', 'INTEGER', 'gendoc.document_job', 'document_job_id', false, null, null);
-        $this->addColumn('status', 'Status', 'LONGVARCHAR', true, null, 'PENDING');
-        $this->addColumn('type', 'Type', 'LONGVARCHAR', false, null, null);
-        $this->addColumn('category', 'Category', 'LONGVARCHAR', false, null, null);
-        $this->addColumn('error', 'Error', 'LONGVARCHAR', false, null, null);
+        $this->addPrimaryKey('document_job_id', 'DocumentJobId', 'INTEGER', true, null, null);
+        $this->addColumn('name', 'Name', 'LONGVARCHAR', false, null, null);
         $this->addColumn('description', 'Description', 'LONGVARCHAR', false, null, null);
-        $this->addColumn('batch', 'Batch', 'LONGVARCHAR', false, null, null);
-        $this->addColumn('cluster', 'Cluster', 'LONGVARCHAR', false, null, null);
-        $this->addColumn('template_repository_id', 'TemplateRepositoryId', 'LONGVARCHAR', false, null, null);
-        $this->addColumn('master_template', 'MasterTemplate', 'LONGVARCHAR', false, null, null);
-        $this->addColumn('output_format', 'OutputFormat', 'LONGVARCHAR', false, null, null);
-        $this->addColumn('output_name', 'OutputName', 'LONGVARCHAR', false, null, null);
         $this->addColumn('data', 'Data', 'LONGVARCHAR', false, null, null);
-        $this->addColumn('overrideable_flag', 'OverrideableFlag', 'BOOLEAN', false, null, null);
-        $this->addColumn('generation_date', 'GenerationDate', 'TIMESTAMP', false, null, null);
-        $this->addColumn('attributes', 'Attributes', 'LONGVARCHAR', false, null, null);
         $this->addForeignKey('start_code_snippet_id', 'StartCodeSnippetId', 'INTEGER', 'core.code_snippet', 'code_snippet_id', false, null, null);
         $this->addForeignKey('finish_code_snippet_id', 'FinishCodeSnippetId', 'INTEGER', 'core.code_snippet', 'code_snippet_id', false, null, null);
         $this->addColumn('ext', 'Ext', 'LONGVARCHAR', false, null, null);
@@ -77,9 +64,9 @@ class QueuedDocumentTableMap extends \Eulogix\Cool\Lib\Database\Propel\CoolTable
     {
         $this->addRelation('CodeSnippetRelatedByStartCodeSnippetId', 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\CodeSnippet', RelationMap::MANY_TO_ONE, array('start_code_snippet_id' => 'code_snippet_id', ), 'RESTRICT', null);
         $this->addRelation('CodeSnippetRelatedByFinishCodeSnippetId', 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\CodeSnippet', RelationMap::MANY_TO_ONE, array('finish_code_snippet_id' => 'code_snippet_id', ), 'RESTRICT', null);
-        $this->addRelation('DocumentJob', 'Eulogix\\Cool\\Gendoc\\Bundle\\Model\\DocumentJob', RelationMap::MANY_TO_ONE, array('document_job_id' => 'document_job_id', ), 'CASCADE', null);
         $this->addRelation('AccountRelatedByCreationUserId', 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\Account', RelationMap::MANY_TO_ONE, array('creation_user_id' => 'account_id', ), 'RESTRICT', null);
         $this->addRelation('AccountRelatedByUpdateUserId', 'Eulogix\\Cool\\Bundle\\CoreBundle\\Model\\Core\\Account', RelationMap::MANY_TO_ONE, array('update_user_id' => 'account_id', ), 'RESTRICT', null);
+        $this->addRelation('QueuedDocument', 'Eulogix\\Cool\\Gendoc\\Bundle\\Model\\QueuedDocument', RelationMap::ONE_TO_MANY, array('document_job_id' => 'document_job_id', ), 'CASCADE', null, 'QueuedDocuments');
     } // buildRelations()
 
     /**
@@ -105,4 +92,4 @@ class QueuedDocumentTableMap extends \Eulogix\Cool\Lib\Database\Propel\CoolTable
         );
     } // getBehaviors()
 
-} // QueuedDocumentTableMap
+} // DocumentJobTableMap

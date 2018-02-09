@@ -46,8 +46,16 @@ class QueuedDocumentLister extends Lister {
 
     protected function setUpDefaultColumns()
     {
-        $this->setUpDefaultColumn('queued_document_id', 200);
-        $this->setUpDefaultColumn('CUSTOM_TEMPLATE', 200, '<A HREF="javascript:dijit.byId(\'{{_listerId}}\').mixAction(\'editTemplate\', {queued_document_id: {{queued_document_id}} })">Edit</A>&nbsp;<A HREF="javascript:dijit.byId(\'{{_listerId}}\').mixAction(\'preview\', {queued_document_id: {{queued_document_id}} })">Preview</A>');
+        foreach($this->getColumns() as $c)
+            $c->setWidth(100);
+
+        $this->setUpDefaultColumn('CUSTOM_TEMPLATE', 200,'
+            <A HREF="javascript:dijit.byId(\'{{_listerId}}\').mixAction(\'editTemplate\', {queued_document_id: {{queued_document_id}} })">Edit</A>&nbsp;
+            {{#if CUSTOM_TEMPLATE}}
+                <A HREF="javascript:dijit.byId(\'{{_listerId}}\').mixAction(\'removeTemplate\', {queued_document_id: {{queued_document_id}} })">Remove</A>&nbsp;
+            {{/if}}
+            <A HREF="javascript:dijit.byId(\'{{_listerId}}\').mixAction(\'preview\', {queued_document_id: {{queued_document_id}} })">Preview</A>
+         ');
     }
 
     public function onPreview() {
@@ -57,6 +65,17 @@ class QueuedDocumentLister extends Lister {
          */
         $document = QueuedDocumentQuery::create()->findPk($id);
         $this->previewOrDownloadFile($document->render());
+    }
+
+    public function onRemoveTemplate() {
+        $id = $this->getRequest()->get('queued_document_id');
+        /**
+         * @var QueuedDocument $document
+         */
+        $document = QueuedDocumentQuery::create()->findPk($id);
+        if($t = $document->getCustomTemplateProxy())
+            $document->getFileRepository()->delete($t->getId());
+        $this->reloadRows();
     }
 
     public function onEditTemplate() {
@@ -82,18 +101,17 @@ class QueuedDocumentLister extends Lister {
 
         $this->addCommandJs(<<<JS
 
-var d = COOL.getDialogManager().openWidgetDialog(
-    'EulogixCoolCoreBundle/Files/Editor/TwigTemplateEditorForm',
-    'Edit twig template',
-    {filePath: '{$filePath}', repositoryParameters: '{$frepoParameters}', hideCloseButton:true},
-    function(){
-        d.widget.mixAction('cleanup');
-        widget.reloadRows();
-    }
-);
-
+            var d = COOL.getDialogManager().openWidgetDialog(
+                'EulogixCoolCoreBundle/Files/Editor/TwigTemplateEditorForm',
+                'Edit twig template',
+                {filePath: '{$filePath}', repositoryParameters: '{$frepoParameters}', hideCloseButton:true},
+                function(){
+                    d.widget.mixAction('cleanup');
+                    widget.reloadRows();
+                }
+            );
 JS
-);
+        );
 
     }
 
