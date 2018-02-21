@@ -6,6 +6,7 @@ use Eulogix\Cool\Gendoc\Bundle\Model\om\BaseQueuedDocument;
 use Eulogix\Cool\Lib\Cool;
 use Eulogix\Cool\Lib\File\FileRepositoryFactory;
 use Eulogix\Cool\Lib\File\FileRepositoryInterface;
+use Eulogix\Cool\Lib\Template\Template;
 use Eulogix\Lib\File\Proxy\FileProxyInterface;
 
 class QueuedDocument extends BaseQueuedDocument
@@ -60,16 +61,27 @@ class QueuedDocument extends BaseQueuedDocument
     }
 
     /**
+     * @param string|null $outputFormat
      * @return FileProxyInterface
      * @throws \Exception
      */
-    public function render() {
+    public function render($outputFormat = null) {
+        $wkOutputFormat = $outputFormat ?? $this->getOutputFormat();
+        $renderer = $this->getRenderer();
+        $output = $renderer->getRenderedOutput($wkOutputFormat);
+        $output->setName( $this->getOutputName() ?? $this->getPrimaryKey().'.'.$wkOutputFormat);
+        return $output;
+    }
+
+    /**
+     * @return Template
+     * @throws \Exception
+     */
+    public function getRenderer() {
         $template = $this->getTemplateProxy();
         if($renderer = Cool::getInstance()->getFactory()->getTemplateRendererFactory()->getRendererFor($template)) {
             $renderer->setData($this->getDataAsArray());
-            $output = $renderer->getRenderedOutput($this->getOutputFormat());
-            $output->setName( $this->getOutputName() ?? $this->getPrimaryKey().'.'.$this->getOutputFormat());
-            return $output;
+            return $renderer;
         } else throw new \Exception("no valid renderers found for document {$this->getPrimaryKey()} (template format: {$template->getCompleteExtension()})");
     }
 

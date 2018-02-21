@@ -88,13 +88,11 @@ class QueuedDocumentLister extends Lister {
             'pk'            => 'id'
         ]);
 
-        /**
-         * @var QueuedDocument $document
-         */
+        /** @var QueuedDocument $document */
         $document = QueuedDocumentQuery::create()->findPk($id);
 
         if(!$document->getCustomTemplateProxy()) {
-            $document->setCustomTemplate($document->getMasterTemplateProxy());
+            $document->setCustomTemplate($document->getRenderer()->getRenderedTemplateFile() ?? $document->getMasterTemplateProxy());
         }
 
         $filePath = $document->getCustomTemplateProxy()->getId();
