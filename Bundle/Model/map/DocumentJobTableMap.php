@@ -46,6 +46,11 @@ class DocumentJobTableMap extends \Eulogix\Cool\Lib\Database\Propel\CoolTableMap
         $this->addColumn('name', 'Name', 'LONGVARCHAR', false, null, null);
         $this->addColumn('description', 'Description', 'LONGVARCHAR', false, null, null);
         $this->addColumn('data', 'Data', 'LONGVARCHAR', false, null, null);
+        $this->addColumn('documents_per_iteration', 'DocumentsPerIteration', 'INTEGER', false, null, null);
+        $this->addColumn('minutes_between_iterations', 'MinutesBetweenIterations', 'INTEGER', false, null, null);
+        $this->addColumn('schedule_weekdays', 'ScheduleWeekdays', 'LONGVARCHAR', false, null, null);
+        $this->addColumn('schedule_hours', 'ScheduleHours', 'LONGVARCHAR', false, null, null);
+        $this->addColumn('last_iteration_date', 'LastIterationDate', 'TIMESTAMP', false, null, null);
         $this->addForeignKey('start_code_snippet_id', 'StartCodeSnippetId', 'INTEGER', 'core.code_snippet', 'code_snippet_id', false, null, null);
         $this->addForeignKey('finish_code_snippet_id', 'FinishCodeSnippetId', 'INTEGER', 'core.code_snippet', 'code_snippet_id', false, null, null);
         $this->addColumn('ext', 'Ext', 'LONGVARCHAR', false, null, null);

@@ -58,7 +58,6 @@ EOF
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         parent::execute($input, $output);
-        $command = $this;
 
         $cacher = Cool::getInstance()->getFactory()->getSharedCacher();
         $input = $cacher->fetch($input->getArgument('input_key'));
@@ -93,6 +92,10 @@ EOF
             ])*/
             ->setName($formData['job_name'])
             ->setDescription($formData['job_description'])
+            ->setScheduleHours($formData['schedule_hours'])
+            ->setScheduleWeekdays($formData['schedule_weekdays'])
+            ->setDocumentsPerIteration($formData['documents_per_iteration'])
+            ->setMinutesBetweenIterations($formData['minutes_between_iterations'])
             ->save();
 
         $tempRepo = Cool::getInstance()->getFactory()->getTempFileRepository();

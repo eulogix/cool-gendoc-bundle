@@ -23,6 +23,21 @@
         <column name="description" type="LONGVARCHAR"/>
         <column name="data" type="LONGVARCHAR" sqlType="json"/>
 
+        <column name="documents_per_iteration" type="INTEGER"
+                description="if set, limits the amount of processed jobs per iteration"/>
+
+        <column name="minutes_between_iterations" type="INTEGER"
+                description="if set, limits the rate of executions"/>
+
+        <column name="schedule_weekdays" type="LONGVARCHAR"
+                description="comma separated list of day numbers from 1 to 7 (cron style) in which the automatic scheduler will attempt to process documents"/>
+
+        <column name="schedule_hours" type="LONGVARCHAR"
+                description="comma separated list of hours from 0 to 23 (cron style) in which the automatic scheduler will attempt to process documents"/>
+
+        <column name="last_iteration_date" type="TIMESTAMP"
+                description="the system stores here the date in which the last batch of documents has been processed"/>
+
         <column name="start_code_snippet_id" type="INTEGER">
             <_control type="xhrpicker"></_control>
         </column>

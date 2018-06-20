@@ -20,6 +20,21 @@
                     "data": {
                         "attributes": []
                     },
+                    "documents_per_iteration": {
+                        "attributes": []
+                    },
+                    "minutes_between_iterations": {
+                        "attributes": []
+                    },
+                    "schedule_weekdays": {
+                        "attributes": []
+                    },
+                    "schedule_hours": {
+                        "attributes": []
+                    },
+                    "last_iteration_date": {
+                        "attributes": []
+                    },
                     "start_code_snippet_id": {
                         "attributes": [],
                         "control": {

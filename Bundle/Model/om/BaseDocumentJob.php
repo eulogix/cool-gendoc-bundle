@@ -72,6 +72,36 @@ abstract class BaseDocumentJob extends CoolPropelObject implements Persistent
     protected $data;
 
     /**
+     * The value for the documents_per_iteration field.
+     * @var        int
+     */
+    protected $documents_per_iteration;
+
+    /**
+     * The value for the minutes_between_iterations field.
+     * @var        int
+     */
+    protected $minutes_between_iterations;
+
+    /**
+     * The value for the schedule_weekdays field.
+     * @var        string
+     */
+    protected $schedule_weekdays;
+
+    /**
+     * The value for the schedule_hours field.
+     * @var        string
+     */
+    protected $schedule_hours;
+
+    /**
+     * The value for the last_iteration_date field.
+     * @var        string
+     */
+    protected $last_iteration_date;
+
+    /**
      * The value for the start_code_snippet_id field.
      * @var        int
      */
@@ -213,6 +243,85 @@ abstract class BaseDocumentJob extends CoolPropelObject implements Persistent
     {
 
         return $this->data;
+    }
+
+    /**
+     * Get the [documents_per_iteration] column value.
+     * if set, limits the amount of processed jobs per iteration
+     * @return int
+     */
+    public function getDocumentsPerIteration()
+    {
+
+        return $this->documents_per_iteration;
+    }
+
+    /**
+     * Get the [minutes_between_iterations] column value.
+     * if set, limits the rate of executions
+     * @return int
+     */
+    public function getMinutesBetweenIterations()
+    {
+
+        return $this->minutes_between_iterations;
+    }
+
+    /**
+     * Get the [schedule_weekdays] column value.
+     * comma separated list of day numbers from 1 to 7 (cron style) in which the automatic scheduler will attempt to process documents
+     * @return string
+     */
+    public function getScheduleWeekdays()
+    {
+
+        return $this->schedule_weekdays;
+    }
+
+    /**
+     * Get the [schedule_hours] column value.
+     * comma separated list of hours from 0 to 23 (cron style) in which the automatic scheduler will attempt to process documents
+     * @return string
+     */
+    public function getScheduleHours()
+    {
+
+        return $this->schedule_hours;
+    }
+
+    /**
+     * Get the [optionally formatted] temporal [last_iteration_date] column value.
+     * the system stores here the date in which the last batch of documents has been processed
+     *
+     * @param string $format The date/time format string (either date()-style or strftime()-style).
+     *				 If format is null, then the raw DateTime object will be returned.
+     * @return mixed Formatted date/time value as string or DateTime object (if format is null), null if column is null
+     * @throws PropelException - if unable to parse/validate the date/time value.
+     */
+    public function getLastIterationDate($format = null)
+    {
+        if ($this->last_iteration_date === null) {
+            return null;
+        }
+
+
+        try {
+            $dt = new DateTime($this->last_iteration_date);
+        } catch (Exception $x) {
+            throw new PropelException("Internally stored date/time/timestamp value could not be converted to DateTime: " . var_export($this->last_iteration_date, true), $x);
+        }
+
+        if ($format === null) {
+            // Because propel.useDateTimeClass is true, we return a DateTime object.
+            return $dt;
+        }
+
+        if (strpos($format, '%') !== false) {
+            return strftime($format, $dt->format('U'));
+        }
+
+        return $dt->format($format);
+
     }
 
     /**
@@ -434,6 +543,113 @@ abstract class BaseDocumentJob extends CoolPropelObject implements Persistent
 
         return $this;
     } // setData()
+
+    /**
+     * Set the value of [documents_per_iteration] column.
+     * if set, limits the amount of processed jobs per iteration
+     * @param  int $v new value
+     * @return DocumentJob The current object (for fluent API support)
+     */
+    public function setDocumentsPerIteration($v)
+    {
+        if ($v !== null && is_numeric($v)) {
+            $v = (int) $v;
+        }
+
+        if ($this->documents_per_iteration !== $v) {
+            $this->documents_per_iteration = $v;
+            $this->modifiedColumns[] = DocumentJobPeer::DOCUMENTS_PER_ITERATION;
+        }
+
+
+        return $this;
+    } // setDocumentsPerIteration()
+
+    /**
+     * Set the value of [minutes_between_iterations] column.
+     * if set, limits the rate of executions
+     * @param  int $v new value
+     * @return DocumentJob The current object (for fluent API support)
+     */
+    public function setMinutesBetweenIterations($v)
+    {
+        if ($v !== null && is_numeric($v)) {
+            $v = (int) $v;
+        }
+
+        if ($this->minutes_between_iterations !== $v) {
+            $this->minutes_between_iterations = $v;
+            $this->modifiedColumns[] = DocumentJobPeer::MINUTES_BETWEEN_ITERATIONS;
+        }
+
+
+        return $this;
+    } // setMinutesBetweenIterations()
+
+    /**
+     * Set the value of [schedule_weekdays] column.
+     * comma separated list of day numbers from 1 to 7 (cron style) in which the automatic scheduler will attempt to process documents
+     * @param  string $v new value
+     * @return DocumentJob The current object (for fluent API support)
+     */
+    public function setScheduleWeekdays($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->schedule_weekdays !== $v) {
+            $this->schedule_weekdays = $v;
+            $this->modifiedColumns[] = DocumentJobPeer::SCHEDULE_WEEKDAYS;
+        }
+
+
+        return $this;
+    } // setScheduleWeekdays()
+
+    /**
+     * Set the value of [schedule_hours] column.
+     * comma separated list of hours from 0 to 23 (cron style) in which the automatic scheduler will attempt to process documents
+     * @param  string $v new value
+     * @return DocumentJob The current object (for fluent API support)
+     */
+    public function setScheduleHours($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->schedule_hours !== $v) {
+            $this->schedule_hours = $v;
+            $this->modifiedColumns[] = DocumentJobPeer::SCHEDULE_HOURS;
+        }
+
+
+        return $this;
+    } // setScheduleHours()
+
+    /**
+     * Sets the value of [last_iteration_date] column to a normalized version of the date/time value specified.
+     * the system stores here the date in which the last batch of documents has been processed
+     * @param mixed $v string, integer (timestamp), or DateTime value.
+     *               Empty strings are treated as null.
+     * @return DocumentJob The current object (for fluent API support)
+     */
+    public function setLastIterationDate($v)
+    {
+        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
+        if ($this->last_iteration_date !== null || $dt !== null) {
+            $currentDateAsString = ($this->last_iteration_date !== null && $tmpDt = new DateTime($this->last_iteration_date)) ? $tmpDt->format('Y-m-d H:i:s') : null;
+            $newDateAsString = $dt ? $dt->format('Y-m-d H:i:s') : null;
+            if ($currentDateAsString !== $newDateAsString) {
+                $this->last_iteration_date = $newDateAsString;
+                $this->modifiedColumns[] = DocumentJobPeer::LAST_ITERATION_DATE;
+            }
+        } // if either are not null
+
+
+        return $this;
+    } // setLastIterationDate()
 
     /**
      * Set the value of [start_code_snippet_id] column.
@@ -659,14 +875,19 @@ abstract class BaseDocumentJob extends CoolPropelObject implements Persistent
             $this->name = ($row[$startcol + 1] !== null) ? (string) $row[$startcol + 1] : null;
             $this->description = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
             $this->data = ($row[$startcol + 3] !== null) ? (string) $row[$startcol + 3] : null;
-            $this->start_code_snippet_id = ($row[$startcol + 4] !== null) ? (int) $row[$startcol + 4] : null;
-            $this->finish_code_snippet_id = ($row[$startcol + 5] !== null) ? (int) $row[$startcol + 5] : null;
-            $this->ext = ($row[$startcol + 6] !== null) ? (string) $row[$startcol + 6] : null;
-            $this->creation_date = ($row[$startcol + 7] !== null) ? (string) $row[$startcol + 7] : null;
-            $this->update_date = ($row[$startcol + 8] !== null) ? (string) $row[$startcol + 8] : null;
-            $this->creation_user_id = ($row[$startcol + 9] !== null) ? (int) $row[$startcol + 9] : null;
-            $this->update_user_id = ($row[$startcol + 10] !== null) ? (int) $row[$startcol + 10] : null;
-            $this->record_version = ($row[$startcol + 11] !== null) ? (int) $row[$startcol + 11] : null;
+            $this->documents_per_iteration = ($row[$startcol + 4] !== null) ? (int) $row[$startcol + 4] : null;
+            $this->minutes_between_iterations = ($row[$startcol + 5] !== null) ? (int) $row[$startcol + 5] : null;
+            $this->schedule_weekdays = ($row[$startcol + 6] !== null) ? (string) $row[$startcol + 6] : null;
+            $this->schedule_hours = ($row[$startcol + 7] !== null) ? (string) $row[$startcol + 7] : null;
+            $this->last_iteration_date = ($row[$startcol + 8] !== null) ? (string) $row[$startcol + 8] : null;
+            $this->start_code_snippet_id = ($row[$startcol + 9] !== null) ? (int) $row[$startcol + 9] : null;
+            $this->finish_code_snippet_id = ($row[$startcol + 10] !== null) ? (int) $row[$startcol + 10] : null;
+            $this->ext = ($row[$startcol + 11] !== null) ? (string) $row[$startcol + 11] : null;
+            $this->creation_date = ($row[$startcol + 12] !== null) ? (string) $row[$startcol + 12] : null;
+            $this->update_date = ($row[$startcol + 13] !== null) ? (string) $row[$startcol + 13] : null;
+            $this->creation_user_id = ($row[$startcol + 14] !== null) ? (int) $row[$startcol + 14] : null;
+            $this->update_user_id = ($row[$startcol + 15] !== null) ? (int) $row[$startcol + 15] : null;
+            $this->record_version = ($row[$startcol + 16] !== null) ? (int) $row[$startcol + 16] : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -676,7 +897,7 @@ abstract class BaseDocumentJob extends CoolPropelObject implements Persistent
             }
             $this->postHydrate($row, $startcol, $rehydrate);
 
-            return $startcol + 12; // 12 = DocumentJobPeer::NUM_HYDRATE_COLUMNS.
+            return $startcol + 17; // 17 = DocumentJobPeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException("Error populating DocumentJob object", $e);
@@ -981,6 +1202,21 @@ abstract class BaseDocumentJob extends CoolPropelObject implements Persistent
         if ($this->isColumnModified(DocumentJobPeer::DATA)) {
             $modifiedColumns[':p' . $index++]  = 'data';
         }
+        if ($this->isColumnModified(DocumentJobPeer::DOCUMENTS_PER_ITERATION)) {
+            $modifiedColumns[':p' . $index++]  = 'documents_per_iteration';
+        }
+        if ($this->isColumnModified(DocumentJobPeer::MINUTES_BETWEEN_ITERATIONS)) {
+            $modifiedColumns[':p' . $index++]  = 'minutes_between_iterations';
+        }
+        if ($this->isColumnModified(DocumentJobPeer::SCHEDULE_WEEKDAYS)) {
+            $modifiedColumns[':p' . $index++]  = 'schedule_weekdays';
+        }
+        if ($this->isColumnModified(DocumentJobPeer::SCHEDULE_HOURS)) {
+            $modifiedColumns[':p' . $index++]  = 'schedule_hours';
+        }
+        if ($this->isColumnModified(DocumentJobPeer::LAST_ITERATION_DATE)) {
+            $modifiedColumns[':p' . $index++]  = 'last_iteration_date';
+        }
         if ($this->isColumnModified(DocumentJobPeer::START_CODE_SNIPPET_ID)) {
             $modifiedColumns[':p' . $index++]  = 'start_code_snippet_id';
         }
@@ -1027,6 +1263,21 @@ abstract class BaseDocumentJob extends CoolPropelObject implements Persistent
                         break;
                     case 'data':
                         $stmt->bindValue($identifier, $this->data, PDO::PARAM_STR);
+                        break;
+                    case 'documents_per_iteration':
+                        $stmt->bindValue($identifier, $this->documents_per_iteration, PDO::PARAM_INT);
+                        break;
+                    case 'minutes_between_iterations':
+                        $stmt->bindValue($identifier, $this->minutes_between_iterations, PDO::PARAM_INT);
+                        break;
+                    case 'schedule_weekdays':
+                        $stmt->bindValue($identifier, $this->schedule_weekdays, PDO::PARAM_STR);
+                        break;
+                    case 'schedule_hours':
+                        $stmt->bindValue($identifier, $this->schedule_hours, PDO::PARAM_STR);
+                        break;
+                    case 'last_iteration_date':
+                        $stmt->bindValue($identifier, $this->last_iteration_date, PDO::PARAM_STR);
                         break;
                     case 'start_code_snippet_id':
                         $stmt->bindValue($identifier, $this->start_code_snippet_id, PDO::PARAM_INT);
@@ -1230,27 +1481,42 @@ abstract class BaseDocumentJob extends CoolPropelObject implements Persistent
                 return $this->getData();
                 break;
             case 4:
-                return $this->getStartCodeSnippetId();
+                return $this->getDocumentsPerIteration();
                 break;
             case 5:
-                return $this->getFinishCodeSnippetId();
+                return $this->getMinutesBetweenIterations();
                 break;
             case 6:
-                return $this->getExt();
+                return $this->getScheduleWeekdays();
                 break;
             case 7:
-                return $this->getCreationDate();
+                return $this->getScheduleHours();
                 break;
             case 8:
-                return $this->getUpdateDate();
+                return $this->getLastIterationDate();
                 break;
             case 9:
-                return $this->getCreationUserId();
+                return $this->getStartCodeSnippetId();
                 break;
             case 10:
-                return $this->getUpdateUserId();
+                return $this->getFinishCodeSnippetId();
                 break;
             case 11:
+                return $this->getExt();
+                break;
+            case 12:
+                return $this->getCreationDate();
+                break;
+            case 13:
+                return $this->getUpdateDate();
+                break;
+            case 14:
+                return $this->getCreationUserId();
+                break;
+            case 15:
+                return $this->getUpdateUserId();
+                break;
+            case 16:
                 return $this->getRecordVersion();
                 break;
             default:
@@ -1286,14 +1552,19 @@ abstract class BaseDocumentJob extends CoolPropelObject implements Persistent
             $keys[1] => $this->getName(),
             $keys[2] => $this->getDescription(),
             $keys[3] => $this->getData(),
-            $keys[4] => $this->getStartCodeSnippetId(),
-            $keys[5] => $this->getFinishCodeSnippetId(),
-            $keys[6] => $this->getExt(),
-            $keys[7] => $this->getCreationDate(),
-            $keys[8] => $this->getUpdateDate(),
-            $keys[9] => $this->getCreationUserId(),
-            $keys[10] => $this->getUpdateUserId(),
-            $keys[11] => $this->getRecordVersion(),
+            $keys[4] => $this->getDocumentsPerIteration(),
+            $keys[5] => $this->getMinutesBetweenIterations(),
+            $keys[6] => $this->getScheduleWeekdays(),
+            $keys[7] => $this->getScheduleHours(),
+            $keys[8] => $this->getLastIterationDate(),
+            $keys[9] => $this->getStartCodeSnippetId(),
+            $keys[10] => $this->getFinishCodeSnippetId(),
+            $keys[11] => $this->getExt(),
+            $keys[12] => $this->getCreationDate(),
+            $keys[13] => $this->getUpdateDate(),
+            $keys[14] => $this->getCreationUserId(),
+            $keys[15] => $this->getUpdateUserId(),
+            $keys[16] => $this->getRecordVersion(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -1363,27 +1634,42 @@ abstract class BaseDocumentJob extends CoolPropelObject implements Persistent
                 $this->setData($value);
                 break;
             case 4:
-                $this->setStartCodeSnippetId($value);
+                $this->setDocumentsPerIteration($value);
                 break;
             case 5:
-                $this->setFinishCodeSnippetId($value);
+                $this->setMinutesBetweenIterations($value);
                 break;
             case 6:
-                $this->setExt($value);
+                $this->setScheduleWeekdays($value);
                 break;
             case 7:
-                $this->setCreationDate($value);
+                $this->setScheduleHours($value);
                 break;
             case 8:
-                $this->setUpdateDate($value);
+                $this->setLastIterationDate($value);
                 break;
             case 9:
-                $this->setCreationUserId($value);
+                $this->setStartCodeSnippetId($value);
                 break;
             case 10:
-                $this->setUpdateUserId($value);
+                $this->setFinishCodeSnippetId($value);
                 break;
             case 11:
+                $this->setExt($value);
+                break;
+            case 12:
+                $this->setCreationDate($value);
+                break;
+            case 13:
+                $this->setUpdateDate($value);
+                break;
+            case 14:
+                $this->setCreationUserId($value);
+                break;
+            case 15:
+                $this->setUpdateUserId($value);
+                break;
+            case 16:
                 $this->setRecordVersion($value);
                 break;
         } // switch()
@@ -1414,14 +1700,19 @@ abstract class BaseDocumentJob extends CoolPropelObject implements Persistent
         if (array_key_exists($keys[1], $arr)) $this->setName($arr[$keys[1]]);
         if (array_key_exists($keys[2], $arr)) $this->setDescription($arr[$keys[2]]);
         if (array_key_exists($keys[3], $arr)) $this->setData($arr[$keys[3]]);
-        if (array_key_exists($keys[4], $arr)) $this->setStartCodeSnippetId($arr[$keys[4]]);
-        if (array_key_exists($keys[5], $arr)) $this->setFinishCodeSnippetId($arr[$keys[5]]);
-        if (array_key_exists($keys[6], $arr)) $this->setExt($arr[$keys[6]]);
-        if (array_key_exists($keys[7], $arr)) $this->setCreationDate($arr[$keys[7]]);
-        if (array_key_exists($keys[8], $arr)) $this->setUpdateDate($arr[$keys[8]]);
-        if (array_key_exists($keys[9], $arr)) $this->setCreationUserId($arr[$keys[9]]);
-        if (array_key_exists($keys[10], $arr)) $this->setUpdateUserId($arr[$keys[10]]);
-        if (array_key_exists($keys[11], $arr)) $this->setRecordVersion($arr[$keys[11]]);
+        if (array_key_exists($keys[4], $arr)) $this->setDocumentsPerIteration($arr[$keys[4]]);
+        if (array_key_exists($keys[5], $arr)) $this->setMinutesBetweenIterations($arr[$keys[5]]);
+        if (array_key_exists($keys[6], $arr)) $this->setScheduleWeekdays($arr[$keys[6]]);
+        if (array_key_exists($keys[7], $arr)) $this->setScheduleHours($arr[$keys[7]]);
+        if (array_key_exists($keys[8], $arr)) $this->setLastIterationDate($arr[$keys[8]]);
+        if (array_key_exists($keys[9], $arr)) $this->setStartCodeSnippetId($arr[$keys[9]]);
+        if (array_key_exists($keys[10], $arr)) $this->setFinishCodeSnippetId($arr[$keys[10]]);
+        if (array_key_exists($keys[11], $arr)) $this->setExt($arr[$keys[11]]);
+        if (array_key_exists($keys[12], $arr)) $this->setCreationDate($arr[$keys[12]]);
+        if (array_key_exists($keys[13], $arr)) $this->setUpdateDate($arr[$keys[13]]);
+        if (array_key_exists($keys[14], $arr)) $this->setCreationUserId($arr[$keys[14]]);
+        if (array_key_exists($keys[15], $arr)) $this->setUpdateUserId($arr[$keys[15]]);
+        if (array_key_exists($keys[16], $arr)) $this->setRecordVersion($arr[$keys[16]]);
     }
 
     /**
@@ -1437,6 +1728,11 @@ abstract class BaseDocumentJob extends CoolPropelObject implements Persistent
         if ($this->isColumnModified(DocumentJobPeer::NAME)) $criteria->add(DocumentJobPeer::NAME, $this->name);
         if ($this->isColumnModified(DocumentJobPeer::DESCRIPTION)) $criteria->add(DocumentJobPeer::DESCRIPTION, $this->description);
         if ($this->isColumnModified(DocumentJobPeer::DATA)) $criteria->add(DocumentJobPeer::DATA, $this->data);
+        if ($this->isColumnModified(DocumentJobPeer::DOCUMENTS_PER_ITERATION)) $criteria->add(DocumentJobPeer::DOCUMENTS_PER_ITERATION, $this->documents_per_iteration);
+        if ($this->isColumnModified(DocumentJobPeer::MINUTES_BETWEEN_ITERATIONS)) $criteria->add(DocumentJobPeer::MINUTES_BETWEEN_ITERATIONS, $this->minutes_between_iterations);
+        if ($this->isColumnModified(DocumentJobPeer::SCHEDULE_WEEKDAYS)) $criteria->add(DocumentJobPeer::SCHEDULE_WEEKDAYS, $this->schedule_weekdays);
+        if ($this->isColumnModified(DocumentJobPeer::SCHEDULE_HOURS)) $criteria->add(DocumentJobPeer::SCHEDULE_HOURS, $this->schedule_hours);
+        if ($this->isColumnModified(DocumentJobPeer::LAST_ITERATION_DATE)) $criteria->add(DocumentJobPeer::LAST_ITERATION_DATE, $this->last_iteration_date);
         if ($this->isColumnModified(DocumentJobPeer::START_CODE_SNIPPET_ID)) $criteria->add(DocumentJobPeer::START_CODE_SNIPPET_ID, $this->start_code_snippet_id);
         if ($this->isColumnModified(DocumentJobPeer::FINISH_CODE_SNIPPET_ID)) $criteria->add(DocumentJobPeer::FINISH_CODE_SNIPPET_ID, $this->finish_code_snippet_id);
         if ($this->isColumnModified(DocumentJobPeer::EXT)) $criteria->add(DocumentJobPeer::EXT, $this->ext);
@@ -1511,6 +1807,11 @@ abstract class BaseDocumentJob extends CoolPropelObject implements Persistent
         $copyObj->setName($this->getName());
         $copyObj->setDescription($this->getDescription());
         $copyObj->setData($this->getData());
+        $copyObj->setDocumentsPerIteration($this->getDocumentsPerIteration());
+        $copyObj->setMinutesBetweenIterations($this->getMinutesBetweenIterations());
+        $copyObj->setScheduleWeekdays($this->getScheduleWeekdays());
+        $copyObj->setScheduleHours($this->getScheduleHours());
+        $copyObj->setLastIterationDate($this->getLastIterationDate());
         $copyObj->setStartCodeSnippetId($this->getStartCodeSnippetId());
         $copyObj->setFinishCodeSnippetId($this->getFinishCodeSnippetId());
         $copyObj->setExt($this->getExt());
@@ -2141,6 +2442,11 @@ abstract class BaseDocumentJob extends CoolPropelObject implements Persistent
         $this->name = null;
         $this->description = null;
         $this->data = null;
+        $this->documents_per_iteration = null;
+        $this->minutes_between_iterations = null;
+        $this->schedule_weekdays = null;
+        $this->schedule_hours = null;
+        $this->last_iteration_date = null;
         $this->start_code_snippet_id = null;
         $this->finish_code_snippet_id = null;
         $this->ext = null;

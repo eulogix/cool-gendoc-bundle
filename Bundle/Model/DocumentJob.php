@@ -6,6 +6,17 @@ use Eulogix\Cool\Gendoc\Bundle\Model\om\BaseDocumentJob;
 
 class DocumentJob extends BaseDocumentJob
 {
+    // some handy schedule constants
+    const SCHEDULE_DAYS_ALLWEEK = "1,2,3,4,5,6,0";
+    const SCHEDULE_DAYS_MONDAY_TO_FRIDAY = "1,2,3,4,5";
+    const SCHEDULE_DAYS_WEEKEND = "6,0";
+
+    const SCHEDULE_HOURS_ALL_DAY = "0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23";
+    const SCHEDULE_HOURS_8_TO_17 = "8,9,10,11,12,13,14,15,16,17";
+    const SCHEDULE_HOURS_DAY_HOURS = "7,8,9,10,11,12,13,14,15,16,17,18,19,20,21";
+    const SCHEDULE_HOURS_NIGHT_HOURS = "22,23,0,1,2,3,4,5,6";
+
+    // statuses
     const STATUS_NOT_STARTED    = 'NOT_STARTED';
     const STATUS_PENDING        = 'PENDING';
     const STATUS_PROCESSING     = 'PROCESSING';
@@ -33,6 +44,7 @@ class DocumentJob extends BaseDocumentJob
     /**
      * @param \DateTime|string $toDate
      * @param int $limit
+     * @throws \PropelException
      */
     public function process($toDate = null, $limit = null)
     {
@@ -54,6 +66,8 @@ class DocumentJob extends BaseDocumentJob
 
         $this->reload();
 
+        $this->setLastIterationDate(new \DateTime())->save();
+
         if($this->getStatus() == self::STATUS_FINISHED && $finishSnippet = $this->getCodeSnippetRelatedByFinishCodeSnippetId())
             $finishSnippet->evaluate($this->getSnippetContext(self::CONTEXT_FINISH));
     }
@@ -63,6 +77,7 @@ class DocumentJob extends BaseDocumentJob
      * @param \DateTime|string $toDate
      * @param string $limit
      * @return \int[]
+     * @throws \Exception
      */
     protected function getDocumentIds($status = null, $toDate = null, $limit = null)
     {

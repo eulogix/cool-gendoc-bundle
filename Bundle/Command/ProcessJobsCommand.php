@@ -12,6 +12,7 @@
 namespace Eulogix\Cool\Gendoc\Bundle\Command;
 
 use Eulogix\Cool\Gendoc\Bundle\Model\DocumentJobQuery;
+use Eulogix\Cool\Gendoc\Bundle\Model\Schema;
 use Eulogix\Cool\Lib\Cool;
 use Eulogix\Cool\Lib\Symfony\Console\CoolCommand;
 use Symfony\Component\Console\Input\InputArgument;
@@ -42,24 +43,22 @@ class ProcessJobsCommand extends CoolCommand
 
     /**
      * {@inheritDoc}
+     * @throws \Exception
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->validate($input);
 
+        /** @var Schema $gendoc */
+        $gendoc = Cool::getInstance()->getSchema('gendoc');
+
         //TODO
         $jobIds = $input->getOption('job_ids');
         $limit = $input->getOption('limit') ?? 10;
 
-        do {
-            $jobsToProcess = Cool::getInstance()->getSchema('gendoc')->fetchArray("SELECT * from document_job_calc WHERE pending_generation_nr > 0");
-            if(count($jobsToProcess) > 0) {
-                foreach($jobsToProcess as $row) {
-                    $job = DocumentJobQuery::create()->findPk($row['document_job_id']);
-                    $job->process(new \DateTime(), $limit);
-                }
-            }
-        } while(count($jobsToProcess) > 0);
+        $jobsToProcess = $gendoc->getJobsToProcess();
+        foreach($jobsToProcess as $job)
+            $job->process(new \DateTime(), $limit);
 
     }
 

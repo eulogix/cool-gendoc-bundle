@@ -46,6 +46,36 @@ class BaseDictionary extends \Eulogix\Cool\Lib\Dictionary\Dictionary {
           array (
           ),
         ),
+        'documents_per_iteration' => 
+        array (
+          'attributes' => 
+          array (
+          ),
+        ),
+        'minutes_between_iterations' => 
+        array (
+          'attributes' => 
+          array (
+          ),
+        ),
+        'schedule_weekdays' => 
+        array (
+          'attributes' => 
+          array (
+          ),
+        ),
+        'schedule_hours' => 
+        array (
+          'attributes' => 
+          array (
+          ),
+        ),
+        'last_iteration_date' => 
+        array (
+          'attributes' => 
+          array (
+          ),
+        ),
         'start_code_snippet_id' => 
         array (
           'attributes' => 

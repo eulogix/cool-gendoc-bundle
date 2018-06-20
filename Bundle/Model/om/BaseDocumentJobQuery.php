@@ -24,6 +24,11 @@ use Eulogix\Cool\Gendoc\Bundle\Model\QueuedDocument;
  * @method DocumentJobQuery orderByName($order = Criteria::ASC) Order by the name column
  * @method DocumentJobQuery orderByDescription($order = Criteria::ASC) Order by the description column
  * @method DocumentJobQuery orderByData($order = Criteria::ASC) Order by the data column
+ * @method DocumentJobQuery orderByDocumentsPerIteration($order = Criteria::ASC) Order by the documents_per_iteration column
+ * @method DocumentJobQuery orderByMinutesBetweenIterations($order = Criteria::ASC) Order by the minutes_between_iterations column
+ * @method DocumentJobQuery orderByScheduleWeekdays($order = Criteria::ASC) Order by the schedule_weekdays column
+ * @method DocumentJobQuery orderByScheduleHours($order = Criteria::ASC) Order by the schedule_hours column
+ * @method DocumentJobQuery orderByLastIterationDate($order = Criteria::ASC) Order by the last_iteration_date column
  * @method DocumentJobQuery orderByStartCodeSnippetId($order = Criteria::ASC) Order by the start_code_snippet_id column
  * @method DocumentJobQuery orderByFinishCodeSnippetId($order = Criteria::ASC) Order by the finish_code_snippet_id column
  * @method DocumentJobQuery orderByExt($order = Criteria::ASC) Order by the ext column
@@ -37,6 +42,11 @@ use Eulogix\Cool\Gendoc\Bundle\Model\QueuedDocument;
  * @method DocumentJobQuery groupByName() Group by the name column
  * @method DocumentJobQuery groupByDescription() Group by the description column
  * @method DocumentJobQuery groupByData() Group by the data column
+ * @method DocumentJobQuery groupByDocumentsPerIteration() Group by the documents_per_iteration column
+ * @method DocumentJobQuery groupByMinutesBetweenIterations() Group by the minutes_between_iterations column
+ * @method DocumentJobQuery groupByScheduleWeekdays() Group by the schedule_weekdays column
+ * @method DocumentJobQuery groupByScheduleHours() Group by the schedule_hours column
+ * @method DocumentJobQuery groupByLastIterationDate() Group by the last_iteration_date column
  * @method DocumentJobQuery groupByStartCodeSnippetId() Group by the start_code_snippet_id column
  * @method DocumentJobQuery groupByFinishCodeSnippetId() Group by the finish_code_snippet_id column
  * @method DocumentJobQuery groupByExt() Group by the ext column
@@ -76,6 +86,11 @@ use Eulogix\Cool\Gendoc\Bundle\Model\QueuedDocument;
  * @method DocumentJob findOneByName(string $name) Return the first DocumentJob filtered by the name column
  * @method DocumentJob findOneByDescription(string $description) Return the first DocumentJob filtered by the description column
  * @method DocumentJob findOneByData(string $data) Return the first DocumentJob filtered by the data column
+ * @method DocumentJob findOneByDocumentsPerIteration(int $documents_per_iteration) Return the first DocumentJob filtered by the documents_per_iteration column
+ * @method DocumentJob findOneByMinutesBetweenIterations(int $minutes_between_iterations) Return the first DocumentJob filtered by the minutes_between_iterations column
+ * @method DocumentJob findOneByScheduleWeekdays(string $schedule_weekdays) Return the first DocumentJob filtered by the schedule_weekdays column
+ * @method DocumentJob findOneByScheduleHours(string $schedule_hours) Return the first DocumentJob filtered by the schedule_hours column
+ * @method DocumentJob findOneByLastIterationDate(string $last_iteration_date) Return the first DocumentJob filtered by the last_iteration_date column
  * @method DocumentJob findOneByStartCodeSnippetId(int $start_code_snippet_id) Return the first DocumentJob filtered by the start_code_snippet_id column
  * @method DocumentJob findOneByFinishCodeSnippetId(int $finish_code_snippet_id) Return the first DocumentJob filtered by the finish_code_snippet_id column
  * @method DocumentJob findOneByExt(string $ext) Return the first DocumentJob filtered by the ext column
@@ -89,6 +104,11 @@ use Eulogix\Cool\Gendoc\Bundle\Model\QueuedDocument;
  * @method array findByName(string $name) Return DocumentJob objects filtered by the name column
  * @method array findByDescription(string $description) Return DocumentJob objects filtered by the description column
  * @method array findByData(string $data) Return DocumentJob objects filtered by the data column
+ * @method array findByDocumentsPerIteration(int $documents_per_iteration) Return DocumentJob objects filtered by the documents_per_iteration column
+ * @method array findByMinutesBetweenIterations(int $minutes_between_iterations) Return DocumentJob objects filtered by the minutes_between_iterations column
+ * @method array findByScheduleWeekdays(string $schedule_weekdays) Return DocumentJob objects filtered by the schedule_weekdays column
+ * @method array findByScheduleHours(string $schedule_hours) Return DocumentJob objects filtered by the schedule_hours column
+ * @method array findByLastIterationDate(string $last_iteration_date) Return DocumentJob objects filtered by the last_iteration_date column
  * @method array findByStartCodeSnippetId(int $start_code_snippet_id) Return DocumentJob objects filtered by the start_code_snippet_id column
  * @method array findByFinishCodeSnippetId(int $finish_code_snippet_id) Return DocumentJob objects filtered by the finish_code_snippet_id column
  * @method array findByExt(string $ext) Return DocumentJob objects filtered by the ext column
@@ -202,7 +222,7 @@ abstract class BaseDocumentJobQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT document_job_id, name, description, data, start_code_snippet_id, finish_code_snippet_id, ext, creation_date, update_date, creation_user_id, update_user_id, record_version FROM gendoc.document_job WHERE document_job_id = :p0';
+        $sql = 'SELECT document_job_id, name, description, data, documents_per_iteration, minutes_between_iterations, schedule_weekdays, schedule_hours, last_iteration_date, start_code_snippet_id, finish_code_snippet_id, ext, creation_date, update_date, creation_user_id, update_user_id, record_version FROM gendoc.document_job WHERE document_job_id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -442,6 +462,191 @@ abstract class BaseDocumentJobQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(DocumentJobPeer::DATA, $data, $comparison);
+    }
+
+    /**
+     * Filter the query on the documents_per_iteration column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByDocumentsPerIteration(1234); // WHERE documents_per_iteration = 1234
+     * $query->filterByDocumentsPerIteration(array(12, 34)); // WHERE documents_per_iteration IN (12, 34)
+     * $query->filterByDocumentsPerIteration(array('min' => 12)); // WHERE documents_per_iteration >= 12
+     * $query->filterByDocumentsPerIteration(array('max' => 12)); // WHERE documents_per_iteration <= 12
+     * </code>
+     *
+     * @param     mixed $documentsPerIteration The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return DocumentJobQuery The current query, for fluid interface
+     */
+    public function filterByDocumentsPerIteration($documentsPerIteration = null, $comparison = null)
+    {
+        if (is_array($documentsPerIteration)) {
+            $useMinMax = false;
+            if (isset($documentsPerIteration['min'])) {
+                $this->addUsingAlias(DocumentJobPeer::DOCUMENTS_PER_ITERATION, $documentsPerIteration['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($documentsPerIteration['max'])) {
+                $this->addUsingAlias(DocumentJobPeer::DOCUMENTS_PER_ITERATION, $documentsPerIteration['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(DocumentJobPeer::DOCUMENTS_PER_ITERATION, $documentsPerIteration, $comparison);
+    }
+
+    /**
+     * Filter the query on the minutes_between_iterations column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByMinutesBetweenIterations(1234); // WHERE minutes_between_iterations = 1234
+     * $query->filterByMinutesBetweenIterations(array(12, 34)); // WHERE minutes_between_iterations IN (12, 34)
+     * $query->filterByMinutesBetweenIterations(array('min' => 12)); // WHERE minutes_between_iterations >= 12
+     * $query->filterByMinutesBetweenIterations(array('max' => 12)); // WHERE minutes_between_iterations <= 12
+     * </code>
+     *
+     * @param     mixed $minutesBetweenIterations The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return DocumentJobQuery The current query, for fluid interface
+     */
+    public function filterByMinutesBetweenIterations($minutesBetweenIterations = null, $comparison = null)
+    {
+        if (is_array($minutesBetweenIterations)) {
+            $useMinMax = false;
+            if (isset($minutesBetweenIterations['min'])) {
+                $this->addUsingAlias(DocumentJobPeer::MINUTES_BETWEEN_ITERATIONS, $minutesBetweenIterations['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($minutesBetweenIterations['max'])) {
+                $this->addUsingAlias(DocumentJobPeer::MINUTES_BETWEEN_ITERATIONS, $minutesBetweenIterations['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(DocumentJobPeer::MINUTES_BETWEEN_ITERATIONS, $minutesBetweenIterations, $comparison);
+    }
+
+    /**
+     * Filter the query on the schedule_weekdays column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByScheduleWeekdays('fooValue');   // WHERE schedule_weekdays = 'fooValue'
+     * $query->filterByScheduleWeekdays('%fooValue%'); // WHERE schedule_weekdays LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $scheduleWeekdays The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return DocumentJobQuery The current query, for fluid interface
+     */
+    public function filterByScheduleWeekdays($scheduleWeekdays = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($scheduleWeekdays)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $scheduleWeekdays)) {
+                $scheduleWeekdays = str_replace('*', '%', $scheduleWeekdays);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(DocumentJobPeer::SCHEDULE_WEEKDAYS, $scheduleWeekdays, $comparison);
+    }
+
+    /**
+     * Filter the query on the schedule_hours column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByScheduleHours('fooValue');   // WHERE schedule_hours = 'fooValue'
+     * $query->filterByScheduleHours('%fooValue%'); // WHERE schedule_hours LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $scheduleHours The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return DocumentJobQuery The current query, for fluid interface
+     */
+    public function filterByScheduleHours($scheduleHours = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($scheduleHours)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $scheduleHours)) {
+                $scheduleHours = str_replace('*', '%', $scheduleHours);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(DocumentJobPeer::SCHEDULE_HOURS, $scheduleHours, $comparison);
+    }
+
+    /**
+     * Filter the query on the last_iteration_date column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByLastIterationDate('2011-03-14'); // WHERE last_iteration_date = '2011-03-14'
+     * $query->filterByLastIterationDate('now'); // WHERE last_iteration_date = '2011-03-14'
+     * $query->filterByLastIterationDate(array('max' => 'yesterday')); // WHERE last_iteration_date < '2011-03-13'
+     * </code>
+     *
+     * @param     mixed $lastIterationDate The value to use as filter.
+     *              Values can be integers (unix timestamps), DateTime objects, or strings.
+     *              Empty strings are treated as NULL.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return DocumentJobQuery The current query, for fluid interface
+     */
+    public function filterByLastIterationDate($lastIterationDate = null, $comparison = null)
+    {
+        if (is_array($lastIterationDate)) {
+            $useMinMax = false;
+            if (isset($lastIterationDate['min'])) {
+                $this->addUsingAlias(DocumentJobPeer::LAST_ITERATION_DATE, $lastIterationDate['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($lastIterationDate['max'])) {
+                $this->addUsingAlias(DocumentJobPeer::LAST_ITERATION_DATE, $lastIterationDate['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(DocumentJobPeer::LAST_ITERATION_DATE, $lastIterationDate, $comparison);
     }
 
     /**

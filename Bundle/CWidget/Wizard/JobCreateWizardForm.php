@@ -2,6 +2,7 @@
 
 namespace Eulogix\Cool\Gendoc\Bundle\CWidget\Wizard;
 
+use Eulogix\Cool\Gendoc\Bundle\Model\DocumentJob;
 use Eulogix\Cool\Gendoc\Lib\Campaign;
 use Eulogix\Cool\Gendoc\Lib\CampaignProvider;
 use Eulogix\Cool\Lib\Cool;
@@ -172,6 +173,29 @@ class JobCreateWizardForm extends HAMSFSMForm {
                     ->setValueMap(
                         $snippetsVmap->filterByAllowedValues($this->getCampaign()->getAvailableGenerationSnippetIds())
                     )->setNotNull();
+
+                $this->addFieldSelect('schedule_weekdays')
+                    ->setValueMap(
+                        new SimpleValueMap([
+                            'AllWeek' => DocumentJob::SCHEDULE_DAYS_ALLWEEK,
+                            'MondayToFriday' => DocumentJob::SCHEDULE_DAYS_MONDAY_TO_FRIDAY,
+                            'Weekends' => DocumentJob::SCHEDULE_DAYS_WEEKEND
+                        ], $this->getTranslator())
+                    )->setNotNull();
+
+                $this->addFieldSelect('schedule_hours')
+                    ->setValueMap(
+                        new SimpleValueMap([
+                            '8_to_17' => DocumentJob::SCHEDULE_HOURS_8_TO_17,
+                            '0_to_23' => DocumentJob::SCHEDULE_HOURS_ALL_DAY,
+                            '7_to_21' => DocumentJob::SCHEDULE_HOURS_DAY_HOURS,
+                            '22_to_6' => DocumentJob::SCHEDULE_HOURS_NIGHT_HOURS
+                        ], $this->getTranslator())
+                    )->setNotNull();
+
+                $this->addFieldNumber('documents_per_iteration');
+
+                $this->addFieldNumber('minutes_between_iterations');
 
                 $this->addFieldSubmit("save");
                 break;

@@ -33,13 +33,13 @@ abstract class BaseDocumentJobPeer
     const TM_CLASS = 'Eulogix\\Cool\\Gendoc\\Bundle\\Model\\map\\DocumentJobTableMap';
 
     /** The total number of columns. */
-    const NUM_COLUMNS = 12;
+    const NUM_COLUMNS = 17;
 
     /** The number of lazy-loaded columns. */
     const NUM_LAZY_LOAD_COLUMNS = 0;
 
     /** The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS) */
-    const NUM_HYDRATE_COLUMNS = 12;
+    const NUM_HYDRATE_COLUMNS = 17;
 
     /** the column name for the document_job_id field */
     const DOCUMENT_JOB_ID = 'gendoc.document_job.document_job_id';
@@ -52,6 +52,21 @@ abstract class BaseDocumentJobPeer
 
     /** the column name for the data field */
     const DATA = 'gendoc.document_job.data';
+
+    /** the column name for the documents_per_iteration field */
+    const DOCUMENTS_PER_ITERATION = 'gendoc.document_job.documents_per_iteration';
+
+    /** the column name for the minutes_between_iterations field */
+    const MINUTES_BETWEEN_ITERATIONS = 'gendoc.document_job.minutes_between_iterations';
+
+    /** the column name for the schedule_weekdays field */
+    const SCHEDULE_WEEKDAYS = 'gendoc.document_job.schedule_weekdays';
+
+    /** the column name for the schedule_hours field */
+    const SCHEDULE_HOURS = 'gendoc.document_job.schedule_hours';
+
+    /** the column name for the last_iteration_date field */
+    const LAST_ITERATION_DATE = 'gendoc.document_job.last_iteration_date';
 
     /** the column name for the start_code_snippet_id field */
     const START_CODE_SNIPPET_ID = 'gendoc.document_job.start_code_snippet_id';
@@ -96,12 +111,12 @@ abstract class BaseDocumentJobPeer
      * e.g. DocumentJobPeer::$fieldNames[DocumentJobPeer::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        BasePeer::TYPE_PHPNAME => array ('DocumentJobId', 'Name', 'Description', 'Data', 'StartCodeSnippetId', 'FinishCodeSnippetId', 'Ext', 'CreationDate', 'UpdateDate', 'CreationUserId', 'UpdateUserId', 'RecordVersion', ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('documentJobId', 'name', 'description', 'data', 'startCodeSnippetId', 'finishCodeSnippetId', 'ext', 'creationDate', 'updateDate', 'creationUserId', 'updateUserId', 'recordVersion', ),
-        BasePeer::TYPE_COLNAME => array (DocumentJobPeer::DOCUMENT_JOB_ID, DocumentJobPeer::NAME, DocumentJobPeer::DESCRIPTION, DocumentJobPeer::DATA, DocumentJobPeer::START_CODE_SNIPPET_ID, DocumentJobPeer::FINISH_CODE_SNIPPET_ID, DocumentJobPeer::EXT, DocumentJobPeer::CREATION_DATE, DocumentJobPeer::UPDATE_DATE, DocumentJobPeer::CREATION_USER_ID, DocumentJobPeer::UPDATE_USER_ID, DocumentJobPeer::RECORD_VERSION, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('DOCUMENT_JOB_ID', 'NAME', 'DESCRIPTION', 'DATA', 'START_CODE_SNIPPET_ID', 'FINISH_CODE_SNIPPET_ID', 'EXT', 'CREATION_DATE', 'UPDATE_DATE', 'CREATION_USER_ID', 'UPDATE_USER_ID', 'RECORD_VERSION', ),
-        BasePeer::TYPE_FIELDNAME => array ('document_job_id', 'name', 'description', 'data', 'start_code_snippet_id', 'finish_code_snippet_id', 'ext', 'creation_date', 'update_date', 'creation_user_id', 'update_user_id', 'record_version', ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, )
+        BasePeer::TYPE_PHPNAME => array ('DocumentJobId', 'Name', 'Description', 'Data', 'DocumentsPerIteration', 'MinutesBetweenIterations', 'ScheduleWeekdays', 'ScheduleHours', 'LastIterationDate', 'StartCodeSnippetId', 'FinishCodeSnippetId', 'Ext', 'CreationDate', 'UpdateDate', 'CreationUserId', 'UpdateUserId', 'RecordVersion', ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('documentJobId', 'name', 'description', 'data', 'documentsPerIteration', 'minutesBetweenIterations', 'scheduleWeekdays', 'scheduleHours', 'lastIterationDate', 'startCodeSnippetId', 'finishCodeSnippetId', 'ext', 'creationDate', 'updateDate', 'creationUserId', 'updateUserId', 'recordVersion', ),
+        BasePeer::TYPE_COLNAME => array (DocumentJobPeer::DOCUMENT_JOB_ID, DocumentJobPeer::NAME, DocumentJobPeer::DESCRIPTION, DocumentJobPeer::DATA, DocumentJobPeer::DOCUMENTS_PER_ITERATION, DocumentJobPeer::MINUTES_BETWEEN_ITERATIONS, DocumentJobPeer::SCHEDULE_WEEKDAYS, DocumentJobPeer::SCHEDULE_HOURS, DocumentJobPeer::LAST_ITERATION_DATE, DocumentJobPeer::START_CODE_SNIPPET_ID, DocumentJobPeer::FINISH_CODE_SNIPPET_ID, DocumentJobPeer::EXT, DocumentJobPeer::CREATION_DATE, DocumentJobPeer::UPDATE_DATE, DocumentJobPeer::CREATION_USER_ID, DocumentJobPeer::UPDATE_USER_ID, DocumentJobPeer::RECORD_VERSION, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('DOCUMENT_JOB_ID', 'NAME', 'DESCRIPTION', 'DATA', 'DOCUMENTS_PER_ITERATION', 'MINUTES_BETWEEN_ITERATIONS', 'SCHEDULE_WEEKDAYS', 'SCHEDULE_HOURS', 'LAST_ITERATION_DATE', 'START_CODE_SNIPPET_ID', 'FINISH_CODE_SNIPPET_ID', 'EXT', 'CREATION_DATE', 'UPDATE_DATE', 'CREATION_USER_ID', 'UPDATE_USER_ID', 'RECORD_VERSION', ),
+        BasePeer::TYPE_FIELDNAME => array ('document_job_id', 'name', 'description', 'data', 'documents_per_iteration', 'minutes_between_iterations', 'schedule_weekdays', 'schedule_hours', 'last_iteration_date', 'start_code_snippet_id', 'finish_code_snippet_id', 'ext', 'creation_date', 'update_date', 'creation_user_id', 'update_user_id', 'record_version', ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, )
     );
 
     /**
@@ -111,12 +126,12 @@ abstract class BaseDocumentJobPeer
      * e.g. DocumentJobPeer::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        BasePeer::TYPE_PHPNAME => array ('DocumentJobId' => 0, 'Name' => 1, 'Description' => 2, 'Data' => 3, 'StartCodeSnippetId' => 4, 'FinishCodeSnippetId' => 5, 'Ext' => 6, 'CreationDate' => 7, 'UpdateDate' => 8, 'CreationUserId' => 9, 'UpdateUserId' => 10, 'RecordVersion' => 11, ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('documentJobId' => 0, 'name' => 1, 'description' => 2, 'data' => 3, 'startCodeSnippetId' => 4, 'finishCodeSnippetId' => 5, 'ext' => 6, 'creationDate' => 7, 'updateDate' => 8, 'creationUserId' => 9, 'updateUserId' => 10, 'recordVersion' => 11, ),
-        BasePeer::TYPE_COLNAME => array (DocumentJobPeer::DOCUMENT_JOB_ID => 0, DocumentJobPeer::NAME => 1, DocumentJobPeer::DESCRIPTION => 2, DocumentJobPeer::DATA => 3, DocumentJobPeer::START_CODE_SNIPPET_ID => 4, DocumentJobPeer::FINISH_CODE_SNIPPET_ID => 5, DocumentJobPeer::EXT => 6, DocumentJobPeer::CREATION_DATE => 7, DocumentJobPeer::UPDATE_DATE => 8, DocumentJobPeer::CREATION_USER_ID => 9, DocumentJobPeer::UPDATE_USER_ID => 10, DocumentJobPeer::RECORD_VERSION => 11, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('DOCUMENT_JOB_ID' => 0, 'NAME' => 1, 'DESCRIPTION' => 2, 'DATA' => 3, 'START_CODE_SNIPPET_ID' => 4, 'FINISH_CODE_SNIPPET_ID' => 5, 'EXT' => 6, 'CREATION_DATE' => 7, 'UPDATE_DATE' => 8, 'CREATION_USER_ID' => 9, 'UPDATE_USER_ID' => 10, 'RECORD_VERSION' => 11, ),
-        BasePeer::TYPE_FIELDNAME => array ('document_job_id' => 0, 'name' => 1, 'description' => 2, 'data' => 3, 'start_code_snippet_id' => 4, 'finish_code_snippet_id' => 5, 'ext' => 6, 'creation_date' => 7, 'update_date' => 8, 'creation_user_id' => 9, 'update_user_id' => 10, 'record_version' => 11, ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, )
+        BasePeer::TYPE_PHPNAME => array ('DocumentJobId' => 0, 'Name' => 1, 'Description' => 2, 'Data' => 3, 'DocumentsPerIteration' => 4, 'MinutesBetweenIterations' => 5, 'ScheduleWeekdays' => 6, 'ScheduleHours' => 7, 'LastIterationDate' => 8, 'StartCodeSnippetId' => 9, 'FinishCodeSnippetId' => 10, 'Ext' => 11, 'CreationDate' => 12, 'UpdateDate' => 13, 'CreationUserId' => 14, 'UpdateUserId' => 15, 'RecordVersion' => 16, ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('documentJobId' => 0, 'name' => 1, 'description' => 2, 'data' => 3, 'documentsPerIteration' => 4, 'minutesBetweenIterations' => 5, 'scheduleWeekdays' => 6, 'scheduleHours' => 7, 'lastIterationDate' => 8, 'startCodeSnippetId' => 9, 'finishCodeSnippetId' => 10, 'ext' => 11, 'creationDate' => 12, 'updateDate' => 13, 'creationUserId' => 14, 'updateUserId' => 15, 'recordVersion' => 16, ),
+        BasePeer::TYPE_COLNAME => array (DocumentJobPeer::DOCUMENT_JOB_ID => 0, DocumentJobPeer::NAME => 1, DocumentJobPeer::DESCRIPTION => 2, DocumentJobPeer::DATA => 3, DocumentJobPeer::DOCUMENTS_PER_ITERATION => 4, DocumentJobPeer::MINUTES_BETWEEN_ITERATIONS => 5, DocumentJobPeer::SCHEDULE_WEEKDAYS => 6, DocumentJobPeer::SCHEDULE_HOURS => 7, DocumentJobPeer::LAST_ITERATION_DATE => 8, DocumentJobPeer::START_CODE_SNIPPET_ID => 9, DocumentJobPeer::FINISH_CODE_SNIPPET_ID => 10, DocumentJobPeer::EXT => 11, DocumentJobPeer::CREATION_DATE => 12, DocumentJobPeer::UPDATE_DATE => 13, DocumentJobPeer::CREATION_USER_ID => 14, DocumentJobPeer::UPDATE_USER_ID => 15, DocumentJobPeer::RECORD_VERSION => 16, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('DOCUMENT_JOB_ID' => 0, 'NAME' => 1, 'DESCRIPTION' => 2, 'DATA' => 3, 'DOCUMENTS_PER_ITERATION' => 4, 'MINUTES_BETWEEN_ITERATIONS' => 5, 'SCHEDULE_WEEKDAYS' => 6, 'SCHEDULE_HOURS' => 7, 'LAST_ITERATION_DATE' => 8, 'START_CODE_SNIPPET_ID' => 9, 'FINISH_CODE_SNIPPET_ID' => 10, 'EXT' => 11, 'CREATION_DATE' => 12, 'UPDATE_DATE' => 13, 'CREATION_USER_ID' => 14, 'UPDATE_USER_ID' => 15, 'RECORD_VERSION' => 16, ),
+        BasePeer::TYPE_FIELDNAME => array ('document_job_id' => 0, 'name' => 1, 'description' => 2, 'data' => 3, 'documents_per_iteration' => 4, 'minutes_between_iterations' => 5, 'schedule_weekdays' => 6, 'schedule_hours' => 7, 'last_iteration_date' => 8, 'start_code_snippet_id' => 9, 'finish_code_snippet_id' => 10, 'ext' => 11, 'creation_date' => 12, 'update_date' => 13, 'creation_user_id' => 14, 'update_user_id' => 15, 'record_version' => 16, ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, )
     );
 
     /**
@@ -194,6 +209,11 @@ abstract class BaseDocumentJobPeer
             $criteria->addSelectColumn(DocumentJobPeer::NAME);
             $criteria->addSelectColumn(DocumentJobPeer::DESCRIPTION);
             $criteria->addSelectColumn(DocumentJobPeer::DATA);
+            $criteria->addSelectColumn(DocumentJobPeer::DOCUMENTS_PER_ITERATION);
+            $criteria->addSelectColumn(DocumentJobPeer::MINUTES_BETWEEN_ITERATIONS);
+            $criteria->addSelectColumn(DocumentJobPeer::SCHEDULE_WEEKDAYS);
+            $criteria->addSelectColumn(DocumentJobPeer::SCHEDULE_HOURS);
+            $criteria->addSelectColumn(DocumentJobPeer::LAST_ITERATION_DATE);
             $criteria->addSelectColumn(DocumentJobPeer::START_CODE_SNIPPET_ID);
             $criteria->addSelectColumn(DocumentJobPeer::FINISH_CODE_SNIPPET_ID);
             $criteria->addSelectColumn(DocumentJobPeer::EXT);
@@ -207,6 +227,11 @@ abstract class BaseDocumentJobPeer
             $criteria->addSelectColumn($alias . '.name');
             $criteria->addSelectColumn($alias . '.description');
             $criteria->addSelectColumn($alias . '.data');
+            $criteria->addSelectColumn($alias . '.documents_per_iteration');
+            $criteria->addSelectColumn($alias . '.minutes_between_iterations');
+            $criteria->addSelectColumn($alias . '.schedule_weekdays');
+            $criteria->addSelectColumn($alias . '.schedule_hours');
+            $criteria->addSelectColumn($alias . '.last_iteration_date');
             $criteria->addSelectColumn($alias . '.start_code_snippet_id');
             $criteria->addSelectColumn($alias . '.finish_code_snippet_id');
             $criteria->addSelectColumn($alias . '.ext');
