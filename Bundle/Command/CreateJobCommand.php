@@ -94,8 +94,8 @@ EOF
             ->setDescription($formData['job_description'])
             ->setScheduleHours($formData['schedule_hours'])
             ->setScheduleWeekdays($formData['schedule_weekdays'])
-            ->setDocumentsPerIteration($formData['documents_per_iteration'])
-            ->setMinutesBetweenIterations($formData['minutes_between_iterations'])
+            ->setDocumentsPerIteration($formData['documents_per_iteration'] ? $formData['documents_per_iteration'] : null)
+            ->setMinutesBetweenIterations($formData['minutes_between_iterations'] ? $formData['minutes_between_iterations'] : null)
             ->save();
 
         $tempRepo = Cool::getInstance()->getFactory()->getTempFileRepository();
